@@ -20,11 +20,6 @@ body {
   min-height: 100vh;
 }
 
-/* PrimeReact Override for border-radius and box-shadow */
-* {
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
 
 a {
   font-weight: 500;

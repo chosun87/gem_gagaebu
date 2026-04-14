@@ -8,18 +8,19 @@ import { Calendar } from 'primereact/calendar';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Checkbox } from 'primereact/checkbox';
 import { fetchSpreadsheetMetadata, fetchSheetData, appendSheetData } from './services/googleSheets';
 
 function App() {
   const [token, setToken] = useState(() => localStorage.getItem('gagaebu_access_token'));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   // Data State
   const [activeYearSheet, setActiveYearSheet] = useState(null);
   const [records, setRecords] = useState([]);
   const [headers, setHeaders] = useState([]);
-  
+
   // Meta Data State
   const [assets, setAssets] = useState([]);
   const [codes, setCodes] = useState([]);
@@ -63,7 +64,7 @@ function App() {
       // 1. Get metadata to find the latest year sheet
       const meta = await fetchSpreadsheetMetadata(token);
       const sheetTitles = meta.sheets.map(s => s.properties.title);
-      
+
       // Filter numeric sheets (e.g., "2024", "2025")
       const yearSheets = sheetTitles.filter(title => !isNaN(title));
       if (yearSheets.length === 0) {
@@ -98,16 +99,35 @@ function App() {
 
       // Parse assets (skip header)
       if (assetData.length > 1) {
-        setAssets(assetData.slice(1).map(row => row[0])); // Assumes column A is account name
+        const assetHeaders = assetData[0];
+        const typeIndex = assetHeaders.findIndex(h => h.includes('구분') || h.includes('유형'));
+        const nameIndex = assetHeaders.findIndex(h => h.includes('자산') || h.includes('계좌') || h.includes('약칭'));
+
+        const typeIdx = typeIndex > -1 ? typeIndex : 0;
+        const nameIdx = nameIndex > -1 ? nameIndex : (assetHeaders.length > 1 ? 1 : 0);
+
+        setAssets(assetData.slice(1).map(row => {
+          const t = row[typeIdx] || '';
+          const n = row[nameIdx] || row[0];
+          return { label: t && t !== n ? `${t}-${n}` : n, value: n };
+        }));
       }
-      
+
       // Parse codes (skip header)
       if (codeData.length > 1) {
-        // Assuming: [코드구분(수입/지출), 코드, 명칭, 비고]
+        const codeHeaders = codeData[0];
+        const typeIdx = codeHeaders.findIndex(h => h.includes('구분'));
+        const codeIdx = codeHeaders.findIndex(h => h.includes('코드'));
+        const nameIdx = codeHeaders.findIndex(h => h.includes('명칭') || h.includes('이름'));
+
+        const actualTypeIdx = typeIdx > -1 ? typeIdx : 0;
+        const actualCodeIdx = codeIdx > -1 ? codeIdx : 1;
+        const actualNameIdx = nameIdx > -1 ? nameIdx : 2;
+
         const parsedCodes = codeData.slice(1).map(row => ({
-          type: row[0],
-          code: row[1],
-          name: row[2],
+          type: row[actualTypeIdx] || '',
+          code: row[actualCodeIdx] || '',
+          name: row[actualNameIdx] || row[actualCodeIdx] || '',
         }));
         setCodes(parsedCodes);
       }
@@ -133,18 +153,18 @@ function App() {
 
   const handleAddSubmit = async () => {
     if (!token || !activeYearSheet) return;
-    
+
     // Validate required fields
-    if (!amount || !content || !assetAccount) {
-      setError('금액, 내용, 계정은 필수 입력입니다.');
+    if (!amount || !assetAccount) {
+      setError('금액, 계정은 필수 입력입니다.');
       return;
     }
-    
+
     if (type !== '이체' && !category) {
       setError('분류를 선택해주세요.');
       return;
     }
-    
+
     if (type === '이체' && !transferTargetAccount) {
       setError('입금계좌를 선택해주세요.');
       return;
@@ -158,12 +178,12 @@ function App() {
       // Assuming a generic order here, but ideally we map according to headers.
       // E.g. [날짜, 구분, 자산(계좌/출금), 분류(입금), 금액, 내용]
       let rowData = [];
-      
+
       const dateStr = date ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` : '';
-      
+
       // If headers are known, let's map by header names (fallback to index based if exact match fails)
       const mappedRow = Array(headers.length).fill('');
-      
+
       const getFieldPos = (names) => {
         for (let n of names) {
           const idx = headers.findIndex(h => h.includes(n));
@@ -178,6 +198,12 @@ function App() {
       const catPos = getFieldPos(['분류', '입금']);
       const amtPos = getFieldPos(['금액', '돈']);
       const namePos = getFieldPos(['내용', '적요']);
+      const execPos = getFieldPos(['집행']);
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const isPastOrToday = date && date <= today;
+      const execVal = isPastOrToday ? 'TRUE' : 'FALSE';
 
       if (datePos > -1) mappedRow[datePos] = dateStr;
       if (typePos > -1) mappedRow[typePos] = type;
@@ -185,19 +211,20 @@ function App() {
       if (catPos > -1) mappedRow[catPos] = type === '이체' ? transferTargetAccount : category;
       if (amtPos > -1) mappedRow[amtPos] = amount.toString();
       if (namePos > -1) mappedRow[namePos] = content;
+      if (execPos > -1) mappedRow[execPos] = execVal;
 
       // In case headers are empty or unknown, fallback to a strict array
-      const finalRow = headers.length > 0 ? mappedRow : [dateStr, type, assetAccount, type === '이체' ? transferTargetAccount : category, amount.toString(), content];
+      const finalRow = headers.length > 0 ? mappedRow : [dateStr, type, assetAccount, type === '이체' ? transferTargetAccount : category, amount.toString(), content, execVal];
 
       await appendSheetData(token, activeYearSheet, finalRow);
-      
+
       // Reset form
       setAmount(null);
       setContent('');
-      
+
       // Reload Data
       await loadAllData();
-      
+
     } catch (err) {
       console.error(err);
       setError('데이터 추가에 실패했습니다: ' + err.message);
@@ -206,7 +233,7 @@ function App() {
     }
   };
 
-  const filteredCodes = codes.filter(c => type.includes(c.type));
+  const filteredCodes = codes.filter(c => c.type === type || (c.type && c.type.includes(type)));
 
   return (
     <div>
@@ -232,35 +259,35 @@ function App() {
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-              
+
               {/* Form Section */}
               <div style={{ padding: '1.5rem', border: '1px solid #e0e0e0', background: '#fafafa' }}>
                 <h3 style={{ margin: '0 0 1rem 0' }}>새로운 내역 추가 ({activeYearSheet})</h3>
                 <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
                   <div style={{ flex: '1 1 100px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>구분</label>
+                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>구분 <span style={{ color: '#dc2626' }}>*</span></label>
                     <Dropdown value={type} options={typeOptions} onChange={(e) => setType(e.value)} style={{ width: '100%' }} />
                   </div>
                   <div style={{ flex: '1 1 150px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>날짜</label>
-                    <Calendar value={date} onChange={(e) => setDate(e.value)} dateFormat="yy-mm-dd" style={{ width: '100%' }} />
+                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>날짜 <span style={{ color: '#dc2626' }}>*</span></label>
+                    <Calendar value={date} onChange={(e) => setDate(e.value)} locale="ko" dateFormat="yy-mm-dd" showButtonBar style={{ width: '100%' }} />
                   </div>
                   <div style={{ flex: '1 1 150px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>{type === '이체' ? '출금(계좌)' : '자산(계좌)'}</label>
-                    <Dropdown value={assetAccount} options={assets} onChange={(e) => setAssetAccount(e.value)} placeholder="선택" style={{ width: '100%' }} editable />
+                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>{type === '이체' ? '출금(계좌)' : '자산(계좌)'} <span style={{ color: '#dc2626' }}>*</span></label>
+                    <Dropdown value={assetAccount} options={assets} optionLabel="label" optionValue="value" onChange={(e) => setAssetAccount(e.value)} placeholder="선택" style={{ width: '100%' }} />
                   </div>
-                  
+
                   <div style={{ flex: '1 1 150px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>{type === '이체' ? '입금(계좌)' : '분류'}</label>
+                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>{type === '이체' ? '입금(계좌)' : '분류'} <span style={{ color: '#dc2626' }}>*</span></label>
                     {type === '이체' ? (
-                      <Dropdown value={transferTargetAccount} options={assets} onChange={(e) => setTransferTargetAccount(e.value)} placeholder="선택" style={{ width: '100%' }} editable />
+                      <Dropdown value={transferTargetAccount} options={assets} optionLabel="label" optionValue="value" onChange={(e) => setTransferTargetAccount(e.value)} placeholder="선택" style={{ width: '100%' }} />
                     ) : (
-                      <Dropdown value={category} options={filteredCodes.map(c => c.name)} onChange={(e) => setCategory(e.value)} placeholder="선택" style={{ width: '100%' }} editable />
+                      <Dropdown value={category} options={filteredCodes.map(c => c.name)} onChange={(e) => setCategory(e.value)} placeholder="선택" style={{ width: '100%' }} />
                     )}
                   </div>
 
                   <div style={{ flex: '1 1 150px' }}>
-                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>금액</label>
+                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>금액 <span style={{ color: '#dc2626' }}>*</span></label>
                     <InputNumber value={amount} onValueChange={(e) => setAmount(e.value)} style={{ width: '100%' }} />
                   </div>
                   <div style={{ flex: '2 1 200px' }}>
@@ -275,11 +302,49 @@ function App() {
 
               {/* Data Table Section */}
               <div>
-                <DataTable value={records} paginator rows={15} loading={loading} responsiveLayout="scroll" emptyMessage="데이터가 없습니다.">
-                  {headers.map((h, i) => (
-                    <Column key={i} field={h} header={h} sortable></Column>
-                  ))}
-                </DataTable>
+                {(() => {
+                  const predefinedOrder = ['집행', '구분', '날짜', '자산', '분류', '내용', '금액'];
+                  const displayHeaders = [...headers].sort((a, b) => {
+                    const getIdx = (h) => predefinedOrder.findIndex(p => h.includes(p) || p.includes(h));
+                    const idxA = getIdx(a);
+                    const idxB = getIdx(b);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return 0;
+                  });
+
+                  return (
+                    <DataTable value={records} paginator rows={15} loading={loading} responsiveLayout="scroll" emptyMessage="데이터가 없습니다." editMode="cell">
+                      {displayHeaders.map((h, i) => {
+                        const isAmount = h.includes('금액') || h.includes('돈');
+                        const isExec = h === '집행';
+                        return (
+                          <Column
+                            key={i}
+                            field={h}
+                            header={h}
+                            sortable={!isExec}
+                            align={isAmount ? 'right' : (isExec ? 'center' : 'left')}
+                            body={(rowData) => {
+                              const val = rowData[h];
+                              if (isExec) {
+                                return <Checkbox checked={val === 'TRUE' || val === true || val === 'true'} readOnly />;
+                              }
+                              if (isAmount) {
+                                if (!val && val !== 0) return '';
+                                // 기존에 콤마가 있을 수 있으므로 제거 후 포맷팅
+                                const num = Number(val.toString().replace(/,/g, ''));
+                                return isNaN(num) ? val : num.toLocaleString();
+                              }
+                              return val;
+                            }}
+                          ></Column>
+                        );
+                      })}
+                    </DataTable>
+                  );
+                })()}
               </div>
 
             </div>

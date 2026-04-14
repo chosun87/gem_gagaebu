@@ -22,6 +22,9 @@
     - 수입일때 : 자산(계좌) / 분류(수입 분류 코드) / 금액 / 내용
     - 지출일때 : 자산(계좌) / 분류(지출 분류 코드) / 금액 / 내용
     - 이체일때 : 출금(계좌) / 입금(계좌) / 금액 / 내용
+* 위에서 입력할 자산(계좌)는 자산 시트에서 읽어와서 dropdown으로 표시. 구분-자산명 형태로.
+* 위에서 입력할 분류는 코드 시트에서 읽어와서 dropdown으로 표시. 구분에 맞는 코드표를 명칭만 보여줄 것.
+* 날짜가 미래일자명 집행에 false, 오늘 포함 과거일자일때는 true로 표시
 
 #### 1) 화면 구성
   * primeReact의 테마는 기본 테마를 적용(https://primereact.org/colors/를 참고해서 primary 컬러를 적용)
@@ -31,7 +34,16 @@
   * body는 padding: 2rem을 두면 됨. backgroundColor: white;
   * 타이틀은 'gem_gagaebu'로 바꿈.
   * 타이틀 옆에 reload(아이콘) 버튼을 두고, 이 버튼을 누르면 데이터를 다시 읽어와서 DataTable에 적용
- 
+  * DataTable에 집행 컬럼은 true/false를 체크박스로 표시.
+  * 컬럼 순서 : 집행, 구분, 날짜, 자산, 분류, 내용, 금액
+  * 정렬 허용 컬럼 : 구분, 날짜, 자산, 분류, 금액, 내용
+  * DataTable의 editMode='cell'로 설정. 셀을 클릭하면 편집할 수 있도록. 편집한 값은 구글 시트에 반영.
+  * 자산, 분류 dropdown은 editable=false로 설정
+  * 모든 금액은 콤마를 사용해서 표시 / align right
+  * 필수 입력 항목 Label 뒤에 red-600 *로 표시
+  * 내용은 필수 입력 항목 아님.
+  * Calendar의 locale은 'ko'
+
 #### 2) 데이터
   * 각 item별 스타일은 google sheet(https://docs.google.com/spreadsheets/d/1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE/edit?gid=0#gid=0)에서 읽어옴
   * 단, localhost에서 구글 sheet에 접근하려고 함.
