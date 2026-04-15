@@ -51,3 +51,11 @@
   * google cloude OAuth 2.0
     - 클라이언트 ID : 660525556283-dtpdooehas3u161nsstn2l4hufvndhpr.apps.googleusercontent.com
     - 클라이언트 보안 비밀번호 : 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
+
+
+개인용 가계부 UI
+- 조회 방식은 달력/일별/월별
+- 달력에 날짜별 수입,지출,이체 합계금액 표시
+- 일별/월별은 해당 일자 혹은 월의 수입,지출,이체 목록형으로 표시
+- 왼쪽 상단에 햄버거 메뉴. 클릭시 aside 메뉴 노출
+- 화면 하단에 추가 floating 버튼 : 클릭시 수입,지출,이체 내역 등록 폼 dialog
