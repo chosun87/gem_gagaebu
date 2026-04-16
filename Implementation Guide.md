@@ -13,17 +13,55 @@
   * 추가할 package (dependencies)
     - primeflex
     - sass
+    - reset-css
     - gapi-script
     - FullCalendar : @fullcalendar/react, @fullcalendar/core, @fullcalendar/daygrid
     - sortablejs
   * 추가할 package (devDependencies)
     - eslint
     - prettier
+  * vite.config.js
+    - 아래와 같이 설정할 것.
+```
+...
+import path from "path";
+
+export default defineConfig({
+  ...
+  server: {
+    port: 3000, // 원하는 포트 번호
+    open: true  // 서버 실행 시 브라우저 자동 열기 (선택 사항)
+  },
+  resolve: {
+    alias: [
+      {
+        find: "@",
+        replacement: path.resolve(__dirname, "src")
+      },
+      {
+        find: "@components",
+        replacement: path.resolve(__dirname, "src/components")
+      },
+    ],
+  },
+  ...
+})
+```
   * 스타일링
+    - 모든 스타일은 *.scss 파일에 class로 정의해서 적용할 것.
+    - css, scss 파일은 @/assets/css 디렉토리 밑에 둠.
+    - @/assets/style 디렉토리의 모든 파일은 @/assets/css로 옮길 것.
+    - @/assets/css/all.scss에 모든 scss 파일을 @use로 import 할 것.
+    - @/assets/css에 아래와 같은 scss 파일들을 만들 것.
+      - _reset.scss
+      - _variables.scss : 변수 정의용 파일
+      - _custom.scss : import한 패키지(primereact 같은)의 style을 재정의하는 파일
+      - _global.scss : 컬러, 폰트 관련 style 정의
+      - _layout.scss : 화면 구성 관련 style 정의
+      - _common.scss : 공통으로 사용하는 style 정의
     - primeReact의 테마는 기본 테마를 적용(https://primereact.org/colors/를 참고해서 primary 컬러를 적용)
     - 테마 : /themes/lara-light-cyan/theme.css
     - Ripple 적용 (https://primereact.org/ripple/ 참고)
-    - 모든 색은 *.scss 파일에 class로 정의해서 적용할 것.
     - (중요) css 추가하지 말 것. 기본 primereact css만 적용할 것.
     - 사용되는 primereact 컴포넌트는 모두 import 해서 사용할 것.
     - toast 사용 안함.
@@ -39,14 +77,28 @@ export { Calendar } from 'primereact/calendar';
 
 ### 3. 개발할 내용 - 1단계 : 화면 구성
 1) 공통
-  * Footer에는 가계부, 통계, 자산, 설정 메뉴 있음.
-  * <Component>으로 작성한 것은 최우선적으로 primereact의 컴포넌트를 적용할 것.
-  * 즉, <button ...> 대신 <Button ...> 사용할 것.
-  * 모든 금액은 right-align이고, 천단위 쉼표 포맷.
   * 기본 locale은 'ko'
+  * 화면은 Header, Content, Footer로 구성.
+    - HTML Semantics tag인 <header class="app-header">, <main class="app-content">, <footer class="app-footer">를 사용할 것.
+    - header.jsx, footer.jsx는 별도의 컴포넌트로 만들 것.
+    - App.jsx에서 아래와 같이 import 해서 사용할 것.
+```
+import Header from './components/Header';
+import Footer from './components/Footer';
+```
+  * <Component명>으로 작성한 것은 최우선적으로 primereact의 컴포넌트를 적용할 것.
+    - 즉, <button ...> 대신 <Button ...> 사용할 것.
+
+  * Header
+    - 앱 타이틀 : 가계부
+    - 오른쪽에는 로그인 <Button>, Reload <Button>이 있음.
+
+  * Footer에는 가계부, 통계, 자산, 설정 메뉴 있음.
+    - <TabMenu> 사용
+
+  * 모든 금액은 right-align이고, 천단위 쉼표 포맷.
 2) 소스 분리
   * 각 메뉴는 별개의 jsx 파일로 만들 것.
-  * css, scss 파일은 /src/assets/css 디렉토리 밑에 둠.
 3) 가계부 메뉴 화면
   - 상단에 <TabView> UI : 달력 / 목록
   - Floating Button (원형)

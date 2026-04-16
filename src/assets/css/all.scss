@@ -1,0 +1,13 @@
+@use "reset-css";
+
+// PrimeReact Styles
+@use "primereact/resources/themes/lara-light-cyan/theme.css";
+@use "primereact/resources/primereact.min.css";
+@use "primeicons/primeicons.css";
+@use "primeflex/primeflex.css";
+
+@use "@/assets/css/_variables.scss";
+@use "@/assets/css/_global.scss";
+@use "@/assets/css/_custom.scss";
+@use "@/assets/css/_layout.scss";
+@use "@/assets/css/_common.scss";
