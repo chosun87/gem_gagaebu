@@ -1,4 +1,4 @@
-## Implementation Guide
+# Implementation Guide
 * 항상 한글, 한국어로 응답해야 함.
 
 ### 1. 개발 개요
@@ -19,18 +19,29 @@
   * 추가할 package (devDependencies)
     - eslint
     - prettier
+  * 스타일링
+    - primeReact의 테마는 기본 테마를 적용(https://primereact.org/colors/를 참고해서 primary 컬러를 적용)
+    - 테마 : /themes/lara-light-cyan/theme.css
+    - Ripple 적용 (https://primereact.org/ripple/ 참고)
+    - 모든 색은 *.scss 파일에 class로 정의해서 적용할 것.
+    - (중요) css 추가하지 말 것. 기본 primereact css만 적용할 것.
+    - 사용되는 primereact 컴포넌트는 모두 import 해서 사용할 것.
+    - toast 사용 안함.
+  * PrimeReact.js
+    - 아래와 같이 js파일을 만들고, 모든 jsx 파일에서는 PrimeReact.js를 import 해서 사용할 것.
+```
+// components/PrimeReact.js
+export { Button } from 'primereact/button';
+export { InputText } from 'primereact/inputtext';
+export { Calendar } from 'primereact/calendar';
+...
+```
 
 ### 3. 개발할 내용 - 1단계 : 화면 구성
-1) 스타일링
-  * primeReact의 테마는 기본 테마를 적용(https://primereact.org/colors/를 참고해서 primary 컬러를 적용)
-  * 테마 : /themes/lara-light-cyan/theme.css
-  * primereact의 Ripple 적용
-  * 모든 색은 *.scss 파일에 class로 정의해서 적용할 것.
-  * (중요) css 추가하지 말 것. 기본 primereact css만 적용할 것.
-  * toast 사용 안함.
+1) 공통
   * Footer에는 가계부, 통계, 자산, 설정 메뉴 있음.
-  * <Component명> 으로 작성한 것은 primereact 컴포넌트를 적용할 것.
-  * <button ...> 대신 <Button ...> 사용할 것.
+  * <Component>으로 작성한 것은 최우선적으로 primereact의 컴포넌트를 적용할 것.
+  * 즉, <button ...> 대신 <Button ...> 사용할 것.
   * 모든 금액은 right-align이고, 천단위 쉼표 포맷.
   * 기본 locale은 'ko'
 2) 소스 분리
