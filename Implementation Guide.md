@@ -13,7 +13,7 @@
   * 추가할 package (dependencies)
     - primeflex
     - sass
-    - reset-css
+    - (미사용) reset-css
     - gapi-script
     - FullCalendar : @fullcalendar/react, @fullcalendar/core, @fullcalendar/daygrid
     - sortablejs
@@ -53,7 +53,6 @@ export default defineConfig({
     - @/assets/style 디렉토리의 모든 파일은 @/assets/css로 옮길 것.
     - @/assets/css/all.scss에 모든 scss 파일을 @use로 import 할 것.
     - @/assets/css에 아래와 같은 scss 파일들을 만들 것.
-      - _reset.scss
       - _variables.scss : 변수 정의용 파일
       - _custom.scss : import한 패키지(primereact 같은)의 style을 재정의하는 파일
       - _global.scss : 컬러, 폰트 관련 style 정의
@@ -63,10 +62,10 @@ export default defineConfig({
     - 테마 : /themes/lara-light-cyan/theme.css
     - Ripple 적용 (https://primereact.org/ripple/ 참고)
     - (중요) css 추가하지 말 것. 기본 primereact css만 적용할 것.
-    - 사용되는 primereact 컴포넌트는 모두 import 해서 사용할 것.
     - toast 사용 안함.
   * PrimeReact.js
     - 아래와 같이 js파일을 만들고, 모든 jsx 파일에서는 PrimeReact.js를 import 해서 사용할 것.
+    - 사용되는 primereact 컴포넌트는 모두 이 파일에 import 해서 사용할 것.
 ```
 // components/PrimeReact.js
 export { Button } from 'primereact/button';
@@ -98,7 +97,14 @@ import Footer from './components/Footer';
 
   * 모든 금액은 right-align이고, 천단위 쉼표 포맷.
 2) 소스 분리
-  * 각 메뉴는 별개의 jsx 파일로 만들 것.
+  * 각 메뉴 클릭시 랜딩페이지는 별개의 jsx 파일로 만들 것.
+  * 가계부 : Calendar.jsx, List.jsx
+  * 통계 : Statistics.jsx
+  * 자산 : Assets.jsx
+  * 설정 : Settings.jsx
+  * 가계부~자산 메뉴를 클릭하면 App.js의 <main class="app-content"> 안에 해당 메뉴의 랜딩페이지를 렌더링 할 것.
+  * 설정 메뉴를 클릭하면 <Sidebar position="right"> 사용해서, 메뉴 화면 오른쪽에서 왼쪽으로 펼쳐짐.
+
 3) 가계부 메뉴 화면
   - 상단에 <TabView> UI : 달력 / 목록
   - Floating Button (원형)
@@ -135,11 +141,12 @@ import Footer from './components/Footer';
   - google cloude OAuth 2.0
     - 클라이언트 ID : 660525556283-dtpdooehas3u161nsstn2l4hufvndhpr.apps.googleusercontent.com
     - 클라이언트 보안 비밀번호 : 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
+    - Header의 로그인 버튼 클릭 시, 구글 로그인 화면이 나타나고, 로그인 성공 시 구글 시트에 접근할 수 있도록 할 것.
 * 구글 스프레드시트 파일에는 아래와 같은 시트가 있음
     - 자산 시트 : accType / accCode / accLabel / accIcon / accRank / accMemo
     - 코드 시트 : codeGroup / code / codeLabel / codeIcon / codeRank / codeMemo
     - 연도 시트 : 연도별로 수입/지출/이체 내역 시트 생성. 시트명은 연도 숫자 4자리.
-* 연도 시트 입력항목
+* 연도 시트 항목
     - 집행(gExcuted), 구분(gType : 수입/지출/이체), 날짜(gDate)
     - 수입일때 : 자산(gAcc1) / 분류(gCategory : 수입 분류 코드) / 금액(gAmount) / 내용(gMemo)
     - 지출일때 : 자산(gAcc1) / 분류(gCategory : 지출 분류 코드) / 금액(gAmount) / 내용(gMemo)

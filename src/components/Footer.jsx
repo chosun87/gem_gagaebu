@@ -1,15 +1,16 @@
-import { useState } from 'react';
 import { TabMenu } from '@/components/PrimeReact';
 
-export default function Footer() {
-  const [activeIndex, setActiveIndex] = useState(0);
-
+export default function Footer({ activeIndex, onMenuChange }) {
   const itemRenderer = (item, index) => {
     return (
       <a className='p-menuitem-link'
-        onClick={() => setActiveIndex(index)}
+        onClick={(e) => {
+          e.preventDefault();
+          onMenuChange(index);
+        }}
+        style={{ cursor: 'pointer' }}
       >
-        <div class="p-menuitem-icon"><i className={item.icon} /></div>
+        <div className="p-menuitem-icon"><i className={item.icon} /></div>
         <div className="p-menuitem-text">{item.label}</div>
       </a>
     );
@@ -39,8 +40,9 @@ export default function Footer() {
       <TabMenu
         model={menuItems}
         activeIndex={activeIndex}
-        onTabChange={(e) => setActiveIndex(e.index)}
+        onTabChange={(e) => onMenuChange(e.index)}
       />
     </footer>
   );
 }
+

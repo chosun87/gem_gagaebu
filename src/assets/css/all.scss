@@ -1,5 +1,7 @@
 // @use "reset-css";
 
+@use "@/assets/css/_preset_uiframework.scss";
+
 // PrimeReact Styles
 @use "primereact/resources/themes/lara-light-cyan/theme.css";
 @use "primereact/resources/primereact.min.css";
@@ -11,3 +13,10 @@
 @use "@/assets/css/_custom.scss";
 @use "@/assets/css/_layout.scss";
 @use "@/assets/css/_common.scss";
+
+@use "@/assets/css/pages/_Ledger.scss";
+@use "@/assets/css/pages/_Calendar.scss";
+@use "@/assets/css/pages/_List.scss";
+@use "@/assets/css/pages/_Statistics.scss";
+@use "@/assets/css/pages/_Assets.scss";
+@use "@/assets/css/pages/_Settings.scss";
