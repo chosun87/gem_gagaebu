@@ -6,6 +6,7 @@ import Ledger from '@/pages/Ledger';
 import Statistics from '@/pages/Statistics';
 import Assets from '@/pages/Assets';
 import Settings from '@/pages/Settings';
+import { AuthProvider } from '@/context/AuthContext';
 
 function App() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -29,17 +30,19 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <Header />
+    <AuthProvider>
+      <div className="app-container">
+        <Header />
 
-      <main className="app-content">
-        {renderContent()}
-      </main>
+        <main className="app-content">
+          {renderContent()}
+        </main>
 
-      <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
+        <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
 
-      <Settings visible={isSettingsOpen} onHide={() => setIsSettingsOpen(false)} />
-    </div >
+        <Settings visible={isSettingsOpen} onHide={() => setIsSettingsOpen(false)} />
+      </div >
+    </AuthProvider>
   );
 }
 

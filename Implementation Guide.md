@@ -147,7 +147,7 @@ import Footer from './components/Footer';
     - 코드 시트 : codeGroup / code / codeLabel / codeIcon / codeRank / codeMemo
     - 연도 시트 : 연도별로 수입/지출/이체 내역 시트 생성. 시트명은 연도 숫자 4자리.
 * 연도 시트 항목
-    - 집행(gExcuted), 구분(gType : 수입/지출/이체), 날짜(gDate)
+    - 집행(gExecuted), 구분(gType : 수입/지출/이체), 날짜(gDate)
     - 수입일때 : 자산(gAcc1) / 분류(gCategory : 수입 분류 코드) / 금액(gAmount) / 내용(gMemo)
     - 지출일때 : 자산(gAcc1) / 분류(gCategory : 지출 분류 코드) / 금액(gAmount) / 내용(gMemo)
     - 이체일때 : 출금(gAcc1) / 입금(gAcc2) / 금액(gAmount) / 내용(gMemo)
