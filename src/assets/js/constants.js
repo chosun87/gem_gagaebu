@@ -10,6 +10,13 @@ export const GOOGLE_SHEET = {
   SPREADSHEET_ID: '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE'
 }
 
+export const SHEET_NAME_RANGE = {
+  CODE: '코드!A1:F',
+  ASSET: '자산!A1:F',
+  REPEAT: '반복!A1:K',
+  YEAR: 'YYYY!A1:I'
+}
+
 export const SHEET_COL_INDEX = {
   // 코드 시트 컬럼 인덱스
   codeGroup: 0,
@@ -32,12 +39,13 @@ export const SHEET_COL_INDEX = {
   rpDateS: 1,
   rpDateE: 2,
   rpDay: 3,
-  rpType: 4,
-  rpAcc1: 5,
-  rpAcc2: 6,
-  rpCategory: 7,
-  rpAmount: 8,
-  rpMemo: 9,
+  rpComplete: 4,
+  rpType: 5,
+  rpAcc1: 6,
+  rpAcc2: 7,
+  rpCategory: 8,
+  rpAmount: 9,
+  rpMemo: 10,
 
   // 연도 시트 컬럼 인덱스
   gDate: 0,

@@ -151,3 +151,7 @@ import Footer from './components/Footer';
     - 수입일때 : 자산(gAcc1) / 분류(gCategory : 수입 분류 코드) / 금액(gAmount) / 내용(gMemo)
     - 지출일때 : 자산(gAcc1) / 분류(gCategory : 지출 분류 코드) / 금액(gAmount) / 내용(gMemo)
     - 이체일때 : 출금(gAcc1) / 입금(gAcc2) / 금액(gAmount) / 내용(gMemo)
+
+* List.jsx 보면 각 페이지별로 로그인 체크하는 로직이 있음. 이 로직을 공통으로 사용할 수 있도록 만들 것.
+* List.jsx, Calendar.jsx, Statistics.jsx, Assets.jsx 화면 이동할떄마다 연도 시트를 읽어와야 함.
+* 전역적으로 연도 시트를 읽어와서 각 화면 컴포넌트에서 사용할 수 있도록 할 것. 이를 List.jsx에 우선 적용.

@@ -5,7 +5,7 @@ import { Calendar, Checkbox, DataView, Message } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
-import { SHEET_COL_INDEX } from '@/assets/js/constants';
+import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 import { PrimeReact_locale } from '@/components/PrimeReact';
@@ -28,8 +28,8 @@ export default function List() {
     setLoading(true);
     try {
       const thisMonth = dayjs(dateObj).format("YYYY-MM");
-      const year = dateObj.getFullYear().toString();
-      const rawData = await fetchSheetData(`${year}!A:Z`);
+      const YYYY = dateObj.getFullYear().toString();
+      const rawData = await fetchSheetData(SHEET_NAME_RANGE.YEAR.replace("YYYY", YYYY));
 
       const currentMonthNum = dateObj.getMonth() + 1; // 1 ~ 12
       const parsedData = [];
@@ -58,7 +58,8 @@ export default function List() {
           const rawAmount = String(row[SHEET_COL_INDEX.gAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '');
 
           parsedData.push({
-            sheetRowNumber: i + 1, // 행 번호는 인덱스 + 1
+            sheetName: YYYY,
+            sheetRowNo: i + 1, // 행 번호는 인덱스 + 1
             gDate: row[SHEET_COL_INDEX.gDate] || '',
             gType: row[SHEET_COL_INDEX.gType] || '',
             gAcc1: row[SHEET_COL_INDEX.gAcc1] || '',
@@ -93,20 +94,19 @@ export default function List() {
   const handleChange_gExecute = async (rowData, newValue) => {
     // 1. 화면 즉각 업데이트(Optimistic Update)
     setData(prevData => prevData.map(item =>
-      item.sheetRowNumber === rowData.sheetRowNumber
+      item.sheetRowNo === rowData.sheetRowNo
         ? { ...item, gExecuted: newValue }
         : item
     ));
 
     // 2. 구글 시트 실제 값 쓰기 업데이트
     try {
-      const year = selectedDate.getFullYear().toString();
-      // 유저 매핑 기준 8번째 열(인덱스 7)이 gExecuted (H열)
-      await updateSheetCell(`${year}!H${rowData.sheetRowNumber}`, newValue);
+      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.gExecuted);
+      await updateSheetCell(`${rowData.sheetName}!${sheetColName}${rowData.sheetRowNo}`, newValue);
     } catch (error) {
       // 쓰기 실패 시 롤백 (원상복구)
       setData(prevData => prevData.map(item =>
-        item.sheetRowNumber === rowData.sheetRowNumber
+        item.sheetRowNo === rowData.sheetRowNo
           ? { ...item, gExecuted: !newValue }
           : item
       ));
