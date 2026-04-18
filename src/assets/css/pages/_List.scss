@@ -36,15 +36,15 @@
         // background-color: var(--bg-color);
 
         &.gType-수입 {
-            background-color: var(--blue-100);
+            background-color: var(--cyan-50);
         }
 
         &.gType-지출 {
-            background-color: var(--red-100);
+            background-color: var(--pink-50);
         }
 
         &.gType-이체 {
-            background-color: var(--green-100);
+            background-color: var(--teal-50);
         }
     }
 }
