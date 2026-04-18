@@ -1,12 +1,11 @@
 import { gapi } from 'gapi-script';
-
-export const SPREADSHEET_ID = '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE';
+import { GOOGLE_SHEET } from '@/assets/js/constants';
 
 // 특정 범위의 데이터를 가져옵니다. (ex: '2026!A:G')
 export const fetchSheetData = async (range) => {
   try {
     const response = await gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
+      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       range: range,
     });
     return response.result.values || [];
@@ -20,7 +19,7 @@ export const fetchSheetData = async (range) => {
 export const updateSheetCell = async (range, value) => {
   try {
     const response = await gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: SPREADSHEET_ID,
+      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       range: range,
       valueInputOption: 'USER_ENTERED',
       resource: {

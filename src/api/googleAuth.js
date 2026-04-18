@@ -1,8 +1,5 @@
 import { gapi } from 'gapi-script';
-
-const CLIENT_ID = '660525556283-dtpdooehas3u161nsstn2l4hufvndhpr.apps.googleusercontent.com';
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
-const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
+import { GOOGLE_AUTH } from '@/assets/js/constants';
 
 let tokenClient = null;
 
@@ -12,7 +9,7 @@ export const initGoogleApi = () => {
     gapi.load('client', async () => {
       try {
         await gapi.client.init({
-          discoveryDocs: DISCOVERY_DOCS,
+          discoveryDocs: GOOGLE_AUTH.DISCOVERY_DOCS,
           plugin_name: "gagaebu"
         });
         resolve();
@@ -28,13 +25,13 @@ export const initGoogleApi = () => {
 export const initGoogleAuth = () => {
   return new Promise((resolve) => {
     const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
+    script.src = GOOGLE_AUTH.SRC;
     script.async = true;
     script.defer = true;
     script.onload = () => {
       tokenClient = window.google.accounts.oauth2.initTokenClient({
-        client_id: CLIENT_ID,
-        scope: SCOPES,
+        client_id: GOOGLE_AUTH.CLIENT_ID,
+        scope: GOOGLE_AUTH.SCOPES,
         callback: '', // signIn() 에서 동적으로 덮어씀
       });
       resolve();
@@ -50,7 +47,7 @@ export const signIn = () => {
       reject(new Error('Token client not initialized'));
       return;
     }
-    
+
     tokenClient.callback = (tokenResponse) => {
       if (tokenResponse.error) {
         reject(tokenResponse);
@@ -60,7 +57,7 @@ export const signIn = () => {
         resolve(tokenResponse);
       }
     };
-    
+
     // 팝업 트리거
     tokenClient.requestAccessToken({ prompt: 'consent' });
   });
