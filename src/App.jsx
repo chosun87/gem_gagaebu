@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import AuthGuard from '@/components/AuthGuard';
 
 import Ledger from '@/pages/Ledger';
 import Statistics from '@/pages/Statistics';
 import Assets from '@/pages/Assets';
 import Settings from '@/pages/Settings';
 import { AuthProvider } from '@/context/AuthContext';
+import { DataProvider } from '@/context/DataContext';
 
 function App() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -32,17 +34,21 @@ function App() {
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <AuthProvider>
-      <div className="app-container">
-        <Header />
+      <DataProvider>
+        <div className="app-container">
+          <Header />
 
-        <main className="app-content">
-          {renderMainContent()}
-        </main>
+          <main className="app-content">
+            <AuthGuard>
+              {renderMainContent()}
+            </AuthGuard>
+          </main>
 
-        <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
+          <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
 
-        <Settings visible={isSettingsOpen} onHide={() => setIsSettingsOpen(false)} />
-      </div >
+          <Settings visible={isSettingsOpen} onHide={() => setIsSettingsOpen(false)} />
+        </div >
+      </DataProvider>
     </AuthProvider>
   );
 }

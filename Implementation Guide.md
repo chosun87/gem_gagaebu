@@ -105,6 +105,8 @@ import Footer from './components/Footer';
   * 가계부~자산 메뉴를 클릭하면 App.js의 <main class="app-content"> 안에 해당 메뉴의 랜딩페이지를 렌더링 할 것.
   * 설정 메뉴를 클릭하면 <Sidebar position="right"> 사용해서, 메뉴 화면 오른쪽에서 왼쪽으로 펼쳐짐.
 
+  * List.jsx 참고해서 Repeat.jsx 페이지 추가. 상단에 월 선택 기능은 불필요.
+
 3) 가계부 메뉴 화면
   - 상단에 <TabView> UI : 달력 / 목록
   - Floating Button (원형)
@@ -155,3 +157,9 @@ import Footer from './components/Footer';
 * List.jsx 보면 각 페이지별로 로그인 체크하는 로직이 있음. 이 로직을 공통으로 사용할 수 있도록 만들 것.
 * List.jsx, Calendar.jsx, Statistics.jsx, Assets.jsx 화면 이동할떄마다 연도 시트를 읽어와야 함.
 * 전역적으로 연도 시트를 읽어와서 각 화면 컴포넌트에서 사용할 수 있도록 할 것. 이를 List.jsx에 우선 적용.
+* 연도 시트가 여러개 있을 수 있음. 예를 들어, 2025, 2026, 2027 등등.
+* yearData를 연도별로 배열로 만들 것. 예를 들어, sheetYYYYData['2026'] = 2026년 시트 데이터.
+* 읽어온 연도 시트 데이터를 다시 읽지 않도록 loadedSheetYYYY 배열을 만들 것. (초기값 : false)
+* 연도 시트 데이터를 읽어오면, 해당 연도의 loadedSheetYYYY 배열의 값을 true로 변경할 것. 예를 들어, loadedSheetYYYY['2026'] = true
+* 시트 데이터에 변경이 있으면 해당 연도의 loadedSheetYYYY 배열의 값을 false로 변경할 것. 예를 들어, loadedSheetYYYY['2026'] = false
+* 
