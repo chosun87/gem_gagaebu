@@ -40,14 +40,9 @@ export default function List() {
       const parsedData = [];
 
       // 0번째 인덱스부터 모두 검사 (헤더가 없을 수도 있으므로)
-      for (let i = 0; i < rawData.length; i++) {
+      for (let i = 1; i < rawData.length; i++) {
         const row = rawData[i];
         if (!row || row.length < 3) continue;
-
-        const gDate = String(row[1] || '').trim();
-
-        // 날짜 헤더 문자열 판별 (예: '날짜', 'date' 등)
-        if (gDate.includes('gDate') || gDate.toLowerCase().includes('date') || gDate === '날짜') continue;
 
         let isSameMonth = false;
 
