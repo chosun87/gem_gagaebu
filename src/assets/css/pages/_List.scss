@@ -1,3 +1,50 @@
 .list-page {
-  
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    .month-calendar {
+        .p-datepicker {
+            padding: 0;
+            border: 0;
+
+            .p-datepicker-header {
+                padding: 0;
+            }
+
+            .p-datepicker-calendar-container {
+                display: none;
+            }
+        }
+    }
+
+    .list-dataview {
+        .p-dataview-content {
+            .p-grid {
+                gap: 0.5rem;
+            }
+        }
+    }
+
+    .list-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        // background-color: var(--bg-color);
+
+        &.gType-수입 {
+            background-color: var(--blue-100);
+        }
+
+        &.gType-지출 {
+            background-color: var(--red-100);
+        }
+
+        &.gType-이체 {
+            background-color: var(--green-100);
+        }
+    }
 }

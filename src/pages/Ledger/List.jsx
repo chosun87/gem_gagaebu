@@ -3,6 +3,7 @@ import { locale, addLocale } from 'primereact/api';
 import { DataView, Checkbox, Calendar, Button } from '@/components/PrimeReact';
 import { fetchSheetData, updateSheetCell } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
+import dayjs from 'dayjs';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 addLocale('ko', {
@@ -48,9 +49,6 @@ export default function List() {
         // 날짜 헤더 문자열 판별 (예: '날짜', 'date' 등)
         if (gDate.includes('gDate') || gDate.toLowerCase().includes('date') || gDate === '날짜') continue;
 
-        const gExecuted = String(row[7]).toUpperCase() === 'TRUE';
-        const gType = row[0] || '';
-
         let isSameMonth = false;
 
         // 날짜 형식 유연하게 처리 (-, /, . 혹은 공백 구분자)
@@ -65,17 +63,17 @@ export default function List() {
         if (isSameMonth) {
           // 쉼표 제거나 원(₩), 달러($) 등의 문자 제거
           const rawAmount = String(row[5] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '');
-          const gAmount = Number(rawAmount) || 0;
 
           parsedData.push({
             sheetRowNumber: i + 1, // 행 번호는 인덱스 + 1
-            gExecuted,
-            gType,
-            gDate,
-            gAcc1: row[3] || '',
-            gCategoryOrAcc2: row[4] || '',
-            gAmount,
-            gMemo: row[6] || ''
+            gDate: row[0] || '',
+            gType: row[1] || '',
+            gAcc1: row[2] || '',
+            gAcc2: row[3] || '',
+            gCategory: row[4] || '',
+            gAmount: Number(rawAmount) || 0,
+            gMemo: row[6] || '',
+            gExecuted: (String(row[7]).toUpperCase() === 'TRUE') ? true : false,
           });
         }
       }
@@ -90,7 +88,7 @@ export default function List() {
     }
   };
 
-  const onExecuteChange = async (rowData, newValue) => {
+  const onChange_gExecute = async (rowData, newValue) => {
     // 1. 화면 즉각 업데이트(Optimistic Update)
     setData(prevData => prevData.map(item =>
       item.sheetRowNumber === rowData.sheetRowNumber
@@ -113,22 +111,28 @@ export default function List() {
     }
   };
 
-  const itemTemplate = (item) => {
-    let typeColor = 'var(--text-color)';
-    if (item.gType === '수입') typeColor = 'var(--blue-500)';
-    if (item.gType === '지출') typeColor = 'var(--red-500)';
-    if (item.gType === '이체') typeColor = 'var(--green-500)';
+  const changeMonth = (offset) => {
+    const newDate = new Date(selectedDate);
+    newDate.setMonth(newDate.getMonth() + offset);
+    setSelectedDate(newDate);
+  };
 
+  const handleMonthChange = (e) => {
+    console.log("새로운 월:", e, dayjs(new Date(e.year, e.month - 1, 1)).format("YYYY-MM"));
+  }
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const itemTemplate = (item) => {
     return (
-      <div className="list-item flex align-items-center p-3 border-bottom-1 surface-border w-full">
+      <div className={`list-item gType-${item.gType} col-12`}>
         <Checkbox
+          className="gExecute mr-3"
           checked={item.gExecuted}
-          onChange={(e) => onExecuteChange(item, e.checked)}
-          className="mr-3"
+          onChange={(e) => onChange_gExecute(item, e.checked)}
         />
         <div className="flex-grow-1 flex flex-column gap-1">
           <div className="flex align-items-center gap-2">
-            <span className="font-bold text-sm" style={{ color: typeColor }}>[{item.gType}]</span>
+            <span className="font-bold text-sm">[{item.gType}]</span>
             <span className="text-500 text-sm">{item.gDate}</span>
           </div>
           <div className="text-base font-semibold">{item.gMemo || '내용 없음'}</div>
@@ -136,21 +140,20 @@ export default function List() {
             {item.gAcc1} {item.gCategoryOrAcc2 ? `> ${item.gCategoryOrAcc2}` : ''}
           </div>
         </div>
-        <div className="text-right font-bold text-lg ml-3">
+        <div className="gAmount monospace text-right font-bold text-lg ml-3">
           {item.gAmount.toLocaleString()}원
         </div>
       </div>
     );
   };
 
-  const changeMonth = (offset) => {
-    const newDate = new Date(selectedDate);
-    newDate.setMonth(newDate.getMonth() + offset);
-    setSelectedDate(newDate);
-  };
-
   return (
-    <div className="list-page h-full flex flex-column bg-white">
+    <div className="list-page">
+      <Calendar className="month-calendar" value={selectedDate} onMonthChange={handleMonthChange} inline
+        locale="ko"
+      />
+      <div>{`${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}`}</div>
+
       {/* Month Navigator 렌더링 구역 */}
       <div className="flex justify-content-between align-items-center p-3 surface-0 border-bottom-1 surface-border">
         <Button icon="pi pi-angle-left" rounded text onClick={() => changeMonth(-1)} className="p-button-secondary" />
@@ -183,7 +186,7 @@ export default function List() {
         <DataView
           value={data}
           itemTemplate={itemTemplate}
-          className="flex-grow-1 w-full"
+          className="list-dataview flex-grow-1 w-full"
         />
       )}
     </div>

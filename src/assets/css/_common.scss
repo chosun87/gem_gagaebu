@@ -1,1 +1,7 @@
 /* Common commonly used style definitions */
+
+.monospace {
+    font-feature-settings: "tnum";
+    /* 최신 브라우저 권장 */
+    font-variant-numeric: tabular-nums;
+}

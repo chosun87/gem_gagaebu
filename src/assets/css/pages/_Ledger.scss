@@ -10,5 +10,13 @@
                 justify-content: center;
             }
         }
+
+        .p-tabview-panels {
+            padding: 0;
+
+            .p-tabview-panel {
+                padding: 20px;
+            }
+        }
     }
 }

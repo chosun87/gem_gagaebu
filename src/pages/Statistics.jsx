@@ -1,4 +1,6 @@
 export default function Statistics() {
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <div className="statistics-page">
       <h2>통계</h2>

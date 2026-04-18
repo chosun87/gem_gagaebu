@@ -12,15 +12,7 @@ function App() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  const handleMenuChange = (index) => {
-    if (index === 3) {
-      setIsSettingsOpen(true);
-    } else {
-      setActiveIndex(index);
-    }
-  };
-
-  const renderContent = () => {
+  const renderMainContent = () => {
     switch (activeIndex) {
       case 0: return <Ledger />;
       case 1: return <Statistics />;
@@ -29,13 +21,22 @@ function App() {
     }
   };
 
+  const handleMenuChange = (menuIndex) => {
+    if (menuIndex === 3) {  // 설정
+      setIsSettingsOpen(true);
+    } else {
+      setActiveIndex(menuIndex);
+    }
+  };
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <AuthProvider>
       <div className="app-container">
         <Header />
 
         <main className="app-content">
-          {renderContent()}
+          {renderMainContent()}
         </main>
 
         <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
