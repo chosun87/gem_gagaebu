@@ -1,7 +1,9 @@
 // components/PrimeReact.js
+export { Badge } from 'primereact/badge';
 export { Button } from 'primereact/button';
 export { Calendar } from 'primereact/calendar';
 export { Checkbox } from 'primereact/checkbox';
+export { Chips } from 'primereact/chips';
 export { DataView } from 'primereact/dataview';
 export { InputText } from 'primereact/inputtext';
 export { Message } from 'primereact/message';
@@ -9,7 +11,8 @@ export { Ripple } from 'primereact/ripple';
 export { Sidebar } from 'primereact/sidebar';
 export { TabMenu } from 'primereact/tabmenu';
 export { TabView, TabPanel } from 'primereact/tabview';
-
+export { Tag } from 'primereact/tag';
+export { ToggleButton } from 'primereact/togglebutton';
 // 필요 시 PrimeReact의 다른 컴포넌트들을 여기에 추가하세요.
 
 export const PrimeReact_locale = {

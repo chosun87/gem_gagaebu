@@ -1,18 +1,25 @@
 import { useData } from '@/context/DataContext';
-import { Checkbox, DataView, Message } from '@/components/PrimeReact';
+import { Badge, Checkbox, DataView, Message, Tag, ToggleButton } from '@/components/PrimeReact';
 
 export default function Repeat() {
-  const { sheet반복Data, loading, handleChange_rpComplete } = useData();
+  const { sheet반복Data, sheetYYYYData, loading, handleChange_rpComplete } = useData();
   const data = sheet반복Data || [];
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const itemTemplate = (item) => {
     const categoryOrAcc2 = item.rpCategory || item.rpAcc2;
+    let n회차 = 0
+    console.log(sheetYYYYData)
+    // sheetYYYYData.forEach(yearData => {
+    // n회차 += yearData.filter((row) => row.g_rpID === item.rpID && row.gExecuted).length;
+    // });
 
     return (
       <div className={`list-item gType-${item.rpType} col-12`}>
         <Checkbox
-          className="gExecute mr-3"
+          className="rpComplete mr-2"
+          tooltip="완료"
+          tooltipOptions={{ position: 'top' }}
           checked={item.rpComplete}
           onChange={(e) => {
             if (handleChange_rpComplete) {
@@ -20,17 +27,30 @@ export default function Repeat() {
             }
           }}
         />
+
+        <Badge size="large"
+          className={`gType-${item.rpType} mr-1`}
+          value={item.rpType}
+        />
+
         <div className="flex-grow-1 flex flex-column gap-1">
           <div className="flex align-items-center gap-2">
-            <span className="font-bold text-sm">[{item.rpType}]</span>
-            <span className="text-500 text-sm">{item.rpDateS} ~ {item.rpDateE} (매월 {item.rpDay}일)</span>
+            <div className="rpDate">{item.rpDateS} ~ {item.rpDateE}</div>
           </div>
-          <div className="text-base font-semibold">{item.rpMemo || '내용 없음'}</div>
-          <div className="text-sm text-600">
-            {item.rpAcc1} {categoryOrAcc2 ? `> ${categoryOrAcc2}` : ''}
+          <div className="flex align-items-center gap-2">
+            <span className="rpDay font-semibold">매월 {item.rpDay}일</span>
+            <span className="rpAcc">{item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}</span>
+          </div>
+          <div className="flex align-items-center gap-1">
+            <Tag
+              className="rpCategory" rounded
+              value={item.rpCategory || '내용 없음'}
+            />
+            <span className="rpMemo font-semibold">{item.rpMemo || '내용 없음'}</span>
           </div>
         </div>
-        <div className="gAmount monospace text-right font-bold text-lg ml-3">
+
+        <div className="rpAmount monospace text-right font-bold text-lg ml-3">
           {item.rpAmount.toLocaleString()}원
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useData } from '@/context/DataContext';
-import { Calendar, Checkbox, DataView, Message } from '@/components/PrimeReact';
+import { Badge, Calendar, Checkbox, DataView, Message, Tag } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
@@ -35,21 +35,33 @@ export default function List() {
     return (
       <div className={`list-item gType-${item.gType} col-12`}>
         <Checkbox
-          className="gExecute mr-3"
+          className="gExecute mr-2"
+          tooltip="집행"
+          tooltipOptions={{ position: 'top' }}
           checked={item.gExecuted}
           onChange={(e) => handleChange_gExecute(item, e.checked)}
         />
+
+        <Badge size="large"
+          className={`gType-${item.gType} mr-1`}
+          value={item.gType}
+        />
+
         <div className="flex-grow-1 flex flex-column gap-1">
           <div className="flex align-items-center gap-2">
-            <span className="font-bold text-sm">[{item.gType}]</span>
-            <span className="text-500 text-sm">{item.gDate}</span>
+            <span className="gDate font-semibold">{dayjs(item.gDate).format('DD일')}</span>
+            <span className="gAcc">{item.gAcc2 ? `${item.gAcc1} → ${item.gAcc2}` : item.gAcc1}</span>
           </div>
-          <div className="text-base font-semibold">{item.gMemo || '내용 없음'}</div>
-          <div className="text-sm text-600">
-            {item.gAcc1} {categoryOrAcc2 ? `> ${categoryOrAcc2}` : ''}
+          <div className="flex align-items-center gap-1">
+            <Tag
+              className="gCategory" rounded
+              value={item.gCategory || '내용 없음'}
+            />
+            <span className="gMemo font-semibold">{item.gMemo || '내용 없음'}</span>
           </div>
         </div>
-        <div className="gAmount monospace text-right font-bold text-lg ml-3">
+
+        <div className="gAmount monospace text-right font-bold text-lg ml-2">
           {item.gAmount.toLocaleString()}원
         </div>
       </div>

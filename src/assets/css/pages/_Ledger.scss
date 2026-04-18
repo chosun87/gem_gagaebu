@@ -20,3 +20,47 @@
         }
     }
 }
+
+.list-item {
+    &.gType-수입 {
+        background-color: var(--blue-50);
+    }
+
+    &.gType-지출 {
+        background-color: var(--orange-50);
+    }
+
+    &.gType-이체 {
+        background-color: var(--green-50);
+    }
+
+    .p-tag.gCategory,
+    .p-tag.rpCategory {
+        color: var(--text-color);
+        background-color: var(--bluegray-100);
+    }
+
+    .p-badge {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        padding: 0;
+        border-radius: 50%;
+        font-size: 1rem;
+        color: white;
+
+        &.gType-수입 {
+            background-color: var(--blue-500);
+        }
+
+        &.gType-지출 {
+            background-color: var(--orange-500);
+        }
+
+        &.gType-이체 {
+            background-color: var(--green-500);
+        }
+    }
+}
