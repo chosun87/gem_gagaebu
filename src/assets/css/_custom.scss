@@ -1,1 +1,44 @@
 /* Redefining styles for imported packages like primereact */
+
+/* 일요일 (첫 번째 열) 색상 설정 */
+.p-datepicker {
+    table {
+
+        /* 헤더(요일) */
+        th:nth-child(1)>span {
+            color: #d32f2f;
+            /* 빨간색 계열 */
+        }
+
+        /* 날짜 */
+        td:nth-child(1):not(.p-datepicker-other-month)>span {
+            color: #d32f2f;
+        }
+    }
+}
+
+/* 토요일 (일곱 번째 열) 색상 설정 */
+.p-datepicker {
+    table {
+
+        /* 헤더(요일) */
+        th:nth-child(7)>span {
+            color: #1976d2;
+            /* 파란색 계열 */
+        }
+
+        /* 날짜 */
+        td:nth-child(7):not(.p-datepicker-other-month)>span {
+            color: #1976d2;
+        }
+    }
+}
+
+/* 선택된 날짜나 오늘 날짜의 텍스트 색상이 묻히지 않도록 조정 (필요시) */
+// .p-datepicker table td>span.p-highlight {
+//     color: #ffffff !important;
+// }
+
+.p-datepicker .p-datepicker-header .p-datepicker-title .p-inputtext-sm {
+    line-height: normal;
+}

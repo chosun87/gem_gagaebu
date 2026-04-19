@@ -5,3 +5,22 @@
     /* 최신 브라우저 권장 */
     font-variant-numeric: tabular-nums;
 }
+
+.unit {
+    font-size: 0.875rem;
+    font-weight: normal;
+}
+
+.padding-bottom-20 {
+    padding-bottom: var(--base-padding);
+}
+
+.btn-floating-action {
+    position: sticky;
+    bottom: var(--base-padding);
+    left: 100%;
+    z-index: 1000;
+
+    width: 3.5rem;
+    min-height: 3.5rem;
+}

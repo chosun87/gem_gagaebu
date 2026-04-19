@@ -7,7 +7,7 @@ export default function Ledger() {
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
-    <div className="ledger-page">
+    <div className="app-page ledger-page">
       <TabView className="ledger-tabview">
         <TabPanel header="달력" leftIcon="pi pi-calendar mr-2">
           <Calendar />

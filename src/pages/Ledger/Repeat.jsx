@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Checkbox, DataView, Message, Tag, ToggleButton } from '@/components/PrimeReact';
+import { Badge, Button, InputSwitch, DataView, Dialog, Message, Tag } from '@/components/PrimeReact';
 
 export default function Repeat() {
   const { sheet반복Data, sheetYYYYData, loading, handleChange_rpComplete } = useData();
+  const [showForm, setShowForm] = useState(false);
+
   const data = sheet반복Data || [];
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -16,20 +19,14 @@ export default function Repeat() {
 
     return (
       <div className={`list-item gType-${item.rpType} col-12`}>
-        <Checkbox
-          className="rpComplete mr-2"
+        <InputSwitch checked={item.rpComplete}
           tooltip="완료"
           tooltipOptions={{ position: 'top' }}
-          checked={item.rpComplete}
-          onChange={(e) => {
-            if (handleChange_rpComplete) {
-              handleChange_rpComplete(item, e.checked);
-            }
-          }}
+          onChange={(e) => handleChange_rpComplete(item, e.target.value)}
         />
 
         <Badge size="large"
-          className={`gType-${item.rpType} mr-1`}
+          className={`gType-${item.rpType}`}
           value={item.rpType}
         />
 
@@ -50,15 +47,15 @@ export default function Repeat() {
           </div>
         </div>
 
-        <div className="rpAmount monospace text-right font-bold text-lg ml-3">
-          {item.rpAmount.toLocaleString()}원
+        <div className="rpAmount monospace text-right font-bold text-lg">
+          {item.rpAmount.toLocaleString()}<span class="unit">원</span>
         </div>
       </div>
     );
   };
 
   return (
-    <div className="list-page repeat-page">
+    <div className="panel-inner list-page repeat-page">
       {loading && data.length === 0 ? (
         <div className="flex align-items-center justify-content-center h-full p-5">
           <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
@@ -75,6 +72,29 @@ export default function Repeat() {
           itemTemplate={itemTemplate}
         />
       )}
+
+      {/* Floating Action Button */}
+      <Button
+        className="btn-floating-action btn-add-repeat shadow-6"
+        severity="primary" size="large" rounded
+        icon="pi pi-plus"
+        onClick={() => setShowForm(true)}
+        tooltip="반복 추가"
+        tooltipOptions={{ position: 'top' }}
+      />
+
+      {/* 가계부 입력 폼 다이얼로그 */}
+      <Dialog
+        header="가계부 입력폼"
+        visible={showForm}
+        style={{ width: '90vw', maxWidth: '600px' }}
+        modal
+        onHide={() => setShowForm(false)}
+      >
+        <p className="m-0 text-center p-5">
+          가계부 입력폼
+        </p>
+      </Dialog>
     </div>
   );
 }

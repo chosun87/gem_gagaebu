@@ -162,4 +162,8 @@ import Footer from './components/Footer';
 * 읽어온 연도 시트 데이터를 다시 읽지 않도록 loadedSheetYYYY 배열을 만들 것. (초기값 : false)
 * 연도 시트 데이터를 읽어오면, 해당 연도의 loadedSheetYYYY 배열의 값을 true로 변경할 것. 예를 들어, loadedSheetYYYY['2026'] = true
 * 시트 데이터에 변경이 있으면 해당 연도의 loadedSheetYYYY 배열의 값을 false로 변경할 것. 예를 들어, loadedSheetYYYY['2026'] = false
-* 
+
+* 가계부 메뉴 화면
+   - Floating Button (원형)
+    - 화면 오른쪽 하단, Footer 바로 위에 위치
+    - 클릭하면 <Dialog> 위에 '가계부 입력폼'가 보임.

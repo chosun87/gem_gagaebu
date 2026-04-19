@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Calendar, Checkbox, DataView, Message, Tag } from '@/components/PrimeReact';
+import { Badge, Button, Calendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
@@ -10,11 +11,18 @@ locale('ko');
 
 export default function List() {
   const { yearData, loading, selectedDate, setSelectedDate, handleChange_gExecute } = useData();
+  const [showForm, setShowForm] = useState(false);
 
   // 월 변경
   const handleMonthChange = (e) => {
+    console.log(e);
     const newDate = new Date(e.year, e.month - 1, 1);
     setSelectedDate(newDate);
+  }
+
+  // yearNavigator monthNavigator에 의한 월 변경
+  const handleViewDateChange = (e) => {
+    setSelectedDate(e.value);
   }
 
   // yearData에서 현재 선택된 달의 데이터만 필터링
@@ -29,21 +37,36 @@ export default function List() {
   });
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  // Calendar 월 선택 템플릿
+  const monthNavigatorTemplate = (e) => {
+    return (
+      <Dropdown
+        className="month-dropdown p-inputtext-sm"
+        value={e.value}
+        options={e.options}
+        onChange={(event) => e.onChange(event.originalEvent, event.value)}
+      />
+    );
+  };
+  // Calendar 연도 선택 템플릿
+  const yearNavigatorTemplate = (e) => {
+    return (
+      <Dropdown
+        className="year-dropdown p-inputtext-sm"
+        value={e.value}
+        options={e.options}
+        onChange={(event) => e.onChange(event.originalEvent, event.value)}
+      />
+    );
+  };
+
   const itemTemplate = (item) => {
     const categoryOrAcc2 = item.gCategory || item.gAcc2;
 
     return (
       <div className={`list-item gType-${item.gType} col-12`}>
-        <Checkbox
-          className="gExecute mr-2"
-          tooltip="집행"
-          tooltipOptions={{ position: 'top' }}
-          checked={item.gExecuted}
-          onChange={(e) => handleChange_gExecute(item, e.checked)}
-        />
-
-        <Badge size="large"
-          className={`gType-${item.gType} mr-1`}
+        <Badge
+          className={`gType-${item.gType} text-normal`}
           value={item.gType}
         />
 
@@ -61,20 +84,29 @@ export default function List() {
           </div>
         </div>
 
-        <div className="gAmount monospace text-right font-bold text-lg ml-2">
-          {item.gAmount.toLocaleString()}원
+        <div className="gAmount monospace text-right font-bold text-lg">
+          {item.gAmount.toLocaleString()}<span class="unit">원</span>
         </div>
+
+        <InputSwitch checked={item.gExecuted}
+          tooltip="집행"
+          tooltipOptions={{ position: 'top' }}
+          onChange={(e) => handleChange_gExecute(item, e.target.value)}
+        />
       </div>
     );
   };
 
   return (
-    <div className="list-page">
-      <Calendar className="month-calendar"
+    <div className="panel-inner list-page">
+      <Calendar className="month-calendar padding-bottom-20"
         inline
         locale="ko"
+        yearNavigator yearNavigatorTemplate={yearNavigatorTemplate}
+        monthNavigator monthNavigatorTemplate={monthNavigatorTemplate}
         value={selectedDate}
         onMonthChange={handleMonthChange}
+        onViewDateChange={handleViewDateChange}
       />
 
       {loading ? (
@@ -88,11 +120,34 @@ export default function List() {
         </div>
       ) : (
         <DataView
-          className="list-dataview flex-grow-1 w-full"
+          className="list-dataview flex-grow-1 w-full padding-bottom-20"
           value={monthData}
           itemTemplate={itemTemplate}
         />
       )}
+
+      {/* Floating Action Button */}
+      <Button
+        className="btn-floating-action btn-add-item shadow-6"
+        severity="primary" size="large" rounded
+        icon="pi pi-plus"
+        onClick={() => setShowForm(true)}
+        tooltip="목록 추가"
+        tooltipOptions={{ position: 'top' }}
+      />
+
+      {/* 가계부 입력 폼 다이얼로그 */}
+      <Dialog
+        header="가계부 입력폼"
+        visible={showForm}
+        style={{ width: '90vw', maxWidth: '600px' }}
+        modal
+        onHide={() => setShowForm(false)}
+      >
+        <p className="m-0 text-center p-5">
+          가계부 입력폼
+        </p>
+      </Dialog>
     </div>
   );
 }

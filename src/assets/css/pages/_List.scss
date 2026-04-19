@@ -1,13 +1,12 @@
 .list-page {
     height: 100%;
-    padding: 0 20px;
 
     display: flex;
     flex-direction: column;
 
-    .month-calendar {
-        margin-bottom: 10px;
+    position: relative;
 
+    .month-calendar {
         .p-datepicker {
             padding: 0;
             border: 0;
@@ -15,6 +14,21 @@
             .p-datepicker-header {
                 padding: 0;
                 border: 0;
+
+                .p-datepicker-title {
+                    display: flex;
+                    gap: 0.5rem;
+                    line-height: normal;
+
+                    .month-dropdown,
+                    .year-dropdown {
+                        width: 8rem;
+
+                        .p-dropdown-label {
+                            font-size: 1.125rem;
+                        }
+                    }
+                }
 
                 .p-datepicker-month,
                 .p-datepicker-year {
@@ -45,7 +59,7 @@
     .list-item {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 1rem;
         padding: 1rem;
         border-radius: 0.5rem;
     }

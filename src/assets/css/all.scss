@@ -1,6 +1,7 @@
 // @use "reset-css";
+@use "@/assets/css/_reset.scss";
 
-@use "@/assets/css/_preset_uiframework.scss";
+// @use "@/assets/css/_preset_uiframework.scss";
 
 // PrimeReact Styles
 @use "primereact/resources/themes/lara-light-cyan/theme.css";
