@@ -17,6 +17,18 @@ export const SHEET_NAME_RANGE = {
   YEAR: 'YYYY!A1:I'
 }
 
+export const G_TYPE = {
+  수입: { label: '수입', value: '수입' },
+  지출: { label: '지출', value: '지출' },
+  이체: { label: '이체', value: '이체' }
+}
+
+export const RP_TYPE = {
+  수입: { label: '수입', value: '수입' },
+  지출: { label: '지출', value: '지출' },
+  이체: { label: '이체', value: '이체' }
+}
+
 export const SHEET_COL_INDEX = {
   // 코드 시트 컬럼 인덱스
   codeGroup: 0,

@@ -99,7 +99,10 @@
 .p-sidebar-bottom {
     .p-sidebar {
         width: var(--screen-md);
+        height: auto;
+        max-height: 80vh;
         min-height: 50vh;
+        border-radius: 10px 10px 0 0;
     }
 }
 
@@ -129,6 +132,9 @@
         .p-panel-footer {
             border: 0;
             border-top: 1px solid var(--surface-border);
+
+            position: sticky;
+            bottom: 0;
         }
 
         .p-panel-footer {
@@ -155,12 +161,22 @@
         align-items: center;
 
         label {
-            width: 7rem;
+            min-width: 5rem;
         }
 
         .p-inputtext,
         .p-inputnumber {
             flex-grow: 1;
+        }
+
+        .p-selectbutton {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+
+            .p-button {
+                width: 100%;
+            }
         }
     }
 }
