@@ -167,3 +167,9 @@ import Footer from './components/Footer';
    - Floating Button (원형)
     - 화면 오른쪽 하단, Footer 바로 위에 위치
     - 클릭하면 <Dialog> 위에 '가계부 입력폼'가 보임.
+
+* 테마 페이지
+  - Header의 테마 버튼 클릭 시, <Sidebar position="right"> 사용해서, 메뉴 화면 오른쪽에서 왼쪽으로 펼쳐짐.
+  - 화면 내용은 https://primereact.org/theming/을 참고해서 구현.
+  - 특히, Built-in Themes 섹션의 Configurator를 참고해서 동일하게 구현.
+  - 한글화 적용.
