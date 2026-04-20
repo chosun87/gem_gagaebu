@@ -13,6 +13,7 @@ export { InputNumber } from 'primereact/inputnumber';
 export { InputSwitch } from 'primereact/inputswitch';
 export { InputText } from 'primereact/inputtext';
 export { Message } from 'primereact/message';
+export { Panel } from 'primereact/panel';
 export { Ripple } from 'primereact/ripple';
 export { SelectButton } from 'primereact/selectbutton';
 export { Sidebar } from 'primereact/sidebar';

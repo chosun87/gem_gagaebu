@@ -96,7 +96,6 @@
     }
 }
 
-
 .p-sidebar-bottom {
     .p-sidebar {
         width: var(--screen-md);
@@ -108,7 +107,42 @@
     .p-sidebar-header {
         font-size: 1.2em;
     }
+
+    .p-sidebar-content {
+        padding: 0;
+    }
+
+    .p-panel {
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+
+        .p-toggleable-content {
+            flex: 1 1 auto;
+        }
+
+        .p-panel-content {
+            border: none;
+        }
+
+        .p-panel-footer {
+            border: 0;
+            border-top: 1px solid var(--surface-border);
+        }
+
+        .p-panel-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+
+            .p-button {
+                width: 100%;
+            }
+        }
+    }
 }
+
 
 /* Form */
 .formWrap {
