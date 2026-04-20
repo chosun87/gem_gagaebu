@@ -4,8 +4,9 @@ export default function Settings({ visible, onHide }) {
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
-    <Sidebar header="설정"
+    <Sidebar
       className="app-sidebar"
+      header="설정"
       position="right"
       visible={visible}
       onHide={onHide}

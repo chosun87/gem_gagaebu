@@ -4,6 +4,8 @@ import { Badge, Button, Calendar, DataView, Dialog, Dropdown, InputSwitch, Messa
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
+import DialogLedger from '@/components/DialogLedger';
+
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 import { PrimeReact_locale } from '@/components/PrimeReact';
 addLocale('ko', PrimeReact_locale.ko.Calendar);
@@ -11,7 +13,8 @@ locale('ko');
 
 export default function List() {
   const { yearData, loading, selectedDate, setSelectedDate, handleChange_gExecute } = useData();
-  const [showForm, setShowForm] = useState(false);
+  const [ledger, setLedger] = useState(null);
+  const [showDialogLedger, setShowDialogLedger] = useState(false);
 
   // 월 변경
   const handleMonthChange = (e) => {
@@ -35,6 +38,16 @@ export default function List() {
     }
     return false;
   });
+
+  const fnOpenDialogLedger = (ledger) => {
+    setLedger(ledger);
+    setShowDialogLedger(true);
+  }
+
+  const fnHideDialogLedger = () => {
+
+    setShowDialogLedger(false);
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿
@@ -61,10 +74,14 @@ export default function List() {
   };
 
   const itemTemplate = (item) => {
-    const categoryOrAcc2 = item.gCategory || item.gAcc2;
+    const gTypeClass = `gType-${item.gType}`;
+    const gExecutedClass = `gExecuted-${(item.gExecuted) ? 'Y' : 'N'}`;
 
     return (
-      <div className={`list-item gType-${item.gType} col-12`}>
+      <div
+        className={`list-item ${gTypeClass} ${gExecutedClass} col-12`}
+        onClick={() => fnOpenDialogLedger(item)}
+      >
         <Badge
           className={`gType-${item.gType} text-normal`}
           value={item.gType}
@@ -131,23 +148,17 @@ export default function List() {
         className="btn-floating-action btn-add-item shadow-6"
         severity="primary" size="large" rounded
         icon="pi pi-plus"
-        onClick={() => setShowForm(true)}
+        onClick={() => fnOpenDialogLedger(null)}
         tooltip="목록 추가"
         tooltipOptions={{ position: 'top' }}
       />
 
       {/* 가계부 입력 폼 다이얼로그 */}
-      <Dialog
-        header="가계부 입력폼"
-        visible={showForm}
-        style={{ width: '90vw', maxWidth: '600px' }}
-        modal
-        onHide={() => setShowForm(false)}
-      >
-        <p className="m-0 text-center p-5">
-          가계부 입력폼
-        </p>
-      </Dialog>
+      <DialogLedger
+        ledger={ledger}
+        visible={showDialogLedger}
+        onHide={() => fnHideDialogLedger()}
+      />
     </div>
   );
 }

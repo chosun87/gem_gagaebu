@@ -1,16 +1,29 @@
 import { useState } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, InputSwitch, DataView, Dialog, Message, Tag } from '@/components/PrimeReact';
+import { Badge, Button, InputSwitch, DataView, Message, Tag } from '@/components/PrimeReact';
+
+import DialogRepeat from '@/components/DialogRepeat';
 
 export default function Repeat() {
   const { sheet반복Data, sheetYYYYData, loading, handleChange_rpComplete } = useData();
-  const [showForm, setShowForm] = useState(false);
+  const [repeat, setRepeat] = useState(null);
+  const [showDialogRepeat, setShowDialogRepeat] = useState(false);
 
   const data = sheet반복Data || [];
 
+  const fnOpenDialogRepeat = (repeat) => {
+    setRepeat(repeat);
+    setShowDialogRepeat(true);
+  }
+
+  const fnHideDialogRepeat = () => {
+    setShowDialogRepeat(false);
+  }
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const itemTemplate = (item) => {
-    const categoryOrAcc2 = item.rpCategory || item.rpAcc2;
+    const rpTypeClass = `rpType-${item.rpType}`;
+    const rpCompleteClass = `rpComplete-${(item.rpComplete) ? 'Y' : 'N'}`;
     let n회차 = 0
     console.log(sheetYYYYData)
     // sheetYYYYData.forEach(yearData => {
@@ -18,7 +31,10 @@ export default function Repeat() {
     // });
 
     return (
-      <div className={`list-item gType-${item.rpType} col-12`}>
+      <div
+        className={`list-item ${rpTypeClass} ${rpCompleteClass} col-12`}
+        onClick={() => fnOpenDialogRepeat(item)}
+      >
         <InputSwitch checked={item.rpComplete}
           tooltip="완료"
           tooltipOptions={{ position: 'top' }}
@@ -78,23 +94,17 @@ export default function Repeat() {
         className="btn-floating-action btn-add-repeat shadow-6"
         severity="primary" size="large" rounded
         icon="pi pi-plus"
-        onClick={() => setShowForm(true)}
+        onClick={() => fnOpenDialogRepeat(null)}
         tooltip="반복 추가"
         tooltipOptions={{ position: 'top' }}
       />
 
-      {/* 가계부 입력 폼 다이얼로그 */}
-      <Dialog
-        header="가계부 입력폼"
-        visible={showForm}
-        style={{ width: '90vw', maxWidth: '600px' }}
-        modal
-        onHide={() => setShowForm(false)}
-      >
-        <p className="m-0 text-center p-5">
-          가계부 입력폼
-        </p>
-      </Dialog>
+      {/* 반복 입력 폼 다이얼로그 */}
+      <DialogRepeat
+        repeat={repeat}
+        visible={showDialogRepeat}
+        onHide={() => fnHideDialogRepeat()}
+      />
     </div>
   );
 }

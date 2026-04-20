@@ -97,6 +97,19 @@
 }
 
 
+.p-sidebar-bottom {
+    .p-sidebar {
+        width: var(--screen-md);
+        min-height: 50vh;
+    }
+}
+
+.p-sidebar {
+    .p-sidebar-header {
+        font-size: 1.2em;
+    }
+}
+
 /* Form */
 .formWrap {
     display: flex;

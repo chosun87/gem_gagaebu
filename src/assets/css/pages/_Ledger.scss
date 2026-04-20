@@ -41,15 +41,19 @@
 }
 
 .list-item {
-    &.gType-수입 {
+
+    &.gType-수입,
+    &.rpType-수입 {
         background-color: var(--blue-50);
     }
 
-    &.gType-지출 {
+    &.gType-지출,
+    &.rpType-지출 {
         background-color: var(--orange-50);
     }
 
-    &.gType-이체 {
+    &.gType-이체,
+    &.rpType-이체 {
         background-color: var(--green-50);
     }
 

@@ -46,7 +46,10 @@ function App() {
 
           <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
 
-          <Settings visible={isSettingsOpen} onHide={() => setIsSettingsOpen(false)} />
+          <Settings
+            visible={isSettingsOpen}
+            onHide={() => setIsSettingsOpen(false)}
+          />
         </div >
       </DataProvider>
     </AuthProvider>
