@@ -9,10 +9,13 @@ import Assets from '@/pages/Assets';
 import Settings from '@/pages/Settings';
 import { AuthProvider } from '@/context/AuthContext';
 import { DataProvider } from '@/context/DataContext';
+import { ThemeProvider } from '@/context/ThemeContext';
+import DialogTheme from '@/components/DialogTheme';
 
 function App() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isThemeOpen, setIsThemeOpen] = useState(false);
 
   const renderMainContent = () => {
     switch (activeIndex) {
@@ -33,26 +36,33 @@ function App() {
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
-    <AuthProvider>
-      <DataProvider>
-        <div className="app-container">
-          <Header />
+    <ThemeProvider>
+      <AuthProvider>
+        <DataProvider>
+          <div className="app-container">
+            <Header onThemeClick={() => setIsThemeOpen(true)} />
 
-          <main className="app-content">
-            <AuthGuard>
-              {renderMainContent()}
-            </AuthGuard>
-          </main>
+            <main className="app-content">
+              <AuthGuard>
+                {renderMainContent()}
+              </AuthGuard>
+            </main>
 
-          <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
+            <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
 
-          <Settings
-            visible={isSettingsOpen}
-            onHide={() => setIsSettingsOpen(false)}
-          />
-        </div >
-      </DataProvider>
-    </AuthProvider>
+            <Settings
+              visible={isSettingsOpen}
+              onHide={() => setIsSettingsOpen(false)}
+            />
+
+            <DialogTheme
+              visible={isThemeOpen}
+              onHide={() => setIsThemeOpen(false)}
+            />
+          </div >
+        </DataProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

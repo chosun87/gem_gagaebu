@@ -1,7 +1,7 @@
 import { Button } from '@/components/PrimeReact';
 import { useAuth } from '@/context/AuthContext';
 
-export default function Header() {
+export default function Header({ onThemeClick }) {
   const { isInitialized, isSignedIn, login, logout } = useAuth();
 
   return (
@@ -11,6 +11,7 @@ export default function Header() {
         <Button className="theme" icon="pi pi-palette" severity="secondary" rounded text raised size="small"
           tooltip="테마"
           tooltipOptions={{ position: 'left' }}
+          onClick={onThemeClick}
         />
         <Button className="refresh" icon="pi pi-refresh" severity="primary" rounded text raised size="small"
           tooltip="새로고침"

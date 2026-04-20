@@ -173,3 +173,8 @@ import Footer from './components/Footer';
   - 화면 내용은 https://primereact.org/theming/을 참고해서 구현.
   - 특히, Built-in Themes 섹션의 Configurator를 참고해서 동일하게 구현.
   - 한글화 적용.
+  - 변경한 테마는 로컬 스토리지에 저장해서, 화면 reload 시에도 동일한 테마가 적용되도록 할 것.
+  - Scale, Input Style, Repple Effect, Dark Mode 기능도 동일하게 구현.
+  - Theme 선택기는 Dropdown을 이용할 것.
+    - Group을 이용해서 계열별로 목록 생성 구현.
+    - Template을 이용해서 각 테마별로 색상을 보여줄 것.
