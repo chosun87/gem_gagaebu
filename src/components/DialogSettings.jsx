@@ -6,7 +6,7 @@ export default function Settings({ visible, onHide }) {
   return (
     <Sidebar
       className="app-sidebar"
-      header="설정"
+      header={<h3 className="text-2xl">설정</h3>}
       position="right"
       visible={visible}
       onHide={onHide}

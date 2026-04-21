@@ -6,7 +6,7 @@ import AuthGuard from '@/components/AuthGuard';
 import Ledger from '@/pages/Ledger';
 import Statistics from '@/pages/Statistics';
 import Assets from '@/pages/Assets';
-import Settings from '@/pages/Settings';
+import DialogSettings from '@/components/DialogSettings';
 import { AuthProvider } from '@/context/AuthContext';
 import { DataProvider } from '@/context/DataContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -50,7 +50,7 @@ function App() {
 
             <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
 
-            <Settings
+            <DialogSettings
               visible={isSettingsOpen}
               onHide={() => setIsSettingsOpen(false)}
             />

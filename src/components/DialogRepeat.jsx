@@ -96,19 +96,36 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     }
   };
 
+  const onDelete = async () => {
+    try {
+      await deleteRepeatEntry(repeat);
+      onHide();
+    } catch (error) {
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const footerTemplate = (options) => {
     return (
       <div className={options.className}>
         <Button
-          severity="secondary" outlined label="취소"
+          severity="secondary" size="large" outlined label="취소"
           onClick={onHide}
           disabled={dataLoading}
         />
         <Button
-          severity="primary" label="저장"
+          severity="primary" size="large" label="저장"
           icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-check"}
           onClick={onSave}
+          disabled={dataLoading}
+        />
+        <Button className={(repeat === null) ? 'hidden' : ''}
+          severity="danger" size="large"
+          tooltip="삭제"
+          tooltipOptions={{ position: 'top' }}
+          icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-trash"}
+          onClick={onDelete}
           disabled={dataLoading}
         />
       </div>
@@ -118,7 +135,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   return (
     <Sidebar
       className="dialog-repeat"
-      header="반복 내역 설정"
+      header={<h3 className="text-2xl">반복 내역 설정</h3>}
       position="bottom"
       visible={visible}
       onHide={onHide}
@@ -128,10 +145,11 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       >
         <div className="formWrap">
           <div className="inputWrap">
-            <SelectButton id="rpType"
-              options={Object.values(RP_TYPE)}
-              value={rpType} onChange={(e) => set_rpType(e.target.value)}
+            <SelectButton id="rpType" size="large"
               className={classNames({ 'p-invalid': submitted && !rpType })}
+              options={Object.values(RP_TYPE)}
+              value={rpType}
+              onChange={(e) => set_rpType(e.target.value)}
             />
           </div>
 
@@ -139,17 +157,17 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <label htmlFor="rpDateS" className="required">시작일</label>
             <div className="flex align-items-center gap-2">
               <Calendar id="rpDateS"
+                className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
                 locale="ko" dateFormat="yy-mm-dd"
                 value={rpDateS}
                 onChange={(e) => set_rpDateS(e.target.value)}
-                className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
               />
               <span>~</span>
               <Calendar id="rpDateE"
+                className="flex-grow-1"
                 locale="ko" dateFormat="yy-mm-dd"
                 value={rpDateE}
                 onChange={(e) => set_rpDateE(e.target.value)}
-                className="flex-grow-1"
               />
             </div>
           </div>
@@ -157,10 +175,10 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           <div className="inputWrap">
             <label htmlFor="rpPeriod" className="required">반복 주기</label>
             <SelectButton id="rpPeriod"
+              className={classNames('w-full', { 'p-invalid': submitted && !rpPeriod })}
               options={periodOptions}
               value={rpPeriod}
               onChange={(e) => set_rpPeriod(e.value)}
-              className={classNames('w-full', { 'p-invalid': submitted && !rpPeriod })}
             />
           </div>
 
@@ -168,10 +186,10 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <label htmlFor="rpDay" className="required">반복일</label>
             <div className="flex align-items-center gap-2">
               <InputNumber id="rpDay"
-                value={rpDay} onValueChange={(e) => set_rpDay(e.value)}
-                min={1} max={31}
-                prefix="매월 " suffix=" 일"
                 className={classNames('w-full', { 'p-invalid': submitted && (rpDay === null) })}
+                min={1} max={31}
+                value={rpDay} onValueChange={(e) => set_rpDay(e.value)}
+                prefix="매월 " suffix=" 일"
               />
             </div>
           </div>
@@ -179,33 +197,33 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           <div className="inputWrap">
             <label htmlFor="rpAcc1" className="required">{rpAcc1Label}</label>
             <TreeSelect id="rpAcc1"
-              value={rpAcc1}
-              options={assetNodes}
-              onChange={(e) => set_rpAcc1(e.value)}
-              placeholder="자산 선택"
               className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
+              placeholder="자산 선택"
+              options={assetNodes}
+              value={rpAcc1}
+              onChange={(e) => set_rpAcc1(e.value)}
             />
           </div>
 
           <div className={`inputWrap ${rpType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="rpAcc2" className="required">{rpAcc2Label}</label>
             <TreeSelect id="rpAcc2"
-              value={rpAcc2}
-              options={assetNodes}
-              onChange={(e) => set_rpAcc2(e.value)}
-              placeholder="자산 선택"
               className={classNames('w-full', { 'p-invalid': submitted && rpType === '이체' && !rpAcc2 })}
+              placeholder="자산 선택"
+              options={assetNodes}
+              value={rpAcc2}
+              onChange={(e) => set_rpAcc2(e.value)}
             />
           </div>
 
           <div className="inputWrap">
             <label htmlFor="rpCategory" className="required">분류</label>
             <TreeSelect id="rpCategory"
-              value={rpCategory}
-              options={categoryNodes.filter(node => node.key === rpType)}
-              onChange={(e) => set_rpCategory(e.value)}
-              placeholder="분류 선택"
               className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
+              placeholder="분류 선택"
+              options={categoryNodes.filter(node => node.key === rpType)}
+              value={rpCategory}
+              onChange={(e) => set_rpCategory(e.value)}
             />
           </div>
 
@@ -220,10 +238,10 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           <div className="inputWrap">
             <label htmlFor="rpAmount" className="required">금액</label>
             <InputNumber id="rpAmount"
+              className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
               mode="currency" currency="KRW" locale="ko-KR"
               value={rpAmount}
               onValueChange={(e) => set_rpAmount(e.target.value)}
-              className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
             />
           </div>
         </div>

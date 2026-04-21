@@ -80,11 +80,11 @@ export default function DialogTheme({ visible, onHide }) {
 
   return (
     <Sidebar
+      className="dialog-theme w-full md:w-30rem"
+      header={<h3 className="text-2xl">테마 설정</h3>}
+      position="right"
       visible={visible}
       onHide={onHide}
-      position="right"
-      header="테마 설정"
-      className="dialog-theme w-full md:w-30rem"
     >
       <Panel>
         <div class="formWrap">

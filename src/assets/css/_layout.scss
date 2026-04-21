@@ -70,6 +70,10 @@
             height: 100%;
             border-width: 2px 0 0 0;
 
+            .p-tabmenu-ink-bar {
+                top: -2px;
+            }
+
             .p-tabmenuitem {
                 .p-menuitem-link {
                     display: flex;
@@ -91,6 +95,10 @@
 
                 &.p-highlight {
                     background-color: var(--highlight-bg);
+
+                    .p-menuitem-link {
+                        color: var(--highlight-text-color);
+                    }
                 }
             }
         }
@@ -145,6 +153,10 @@
 
             .p-button {
                 width: 100%;
+
+                &.p-button-icon-only {
+                    width: auto;
+                }
             }
         }
     }

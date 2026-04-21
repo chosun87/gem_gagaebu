@@ -54,7 +54,7 @@ export default function List() {
   const monthNavigatorTemplate = (e) => {
     return (
       <Dropdown
-        className="month-dropdown p-inputtext-sm"
+        className="month-dropdown"
         value={e.value}
         options={e.options}
         onChange={(event) => e.onChange(event.originalEvent, event.value)}
@@ -65,7 +65,7 @@ export default function List() {
   const yearNavigatorTemplate = (e) => {
     return (
       <Dropdown
-        className="year-dropdown p-inputtext-sm"
+        className="year-dropdown"
         value={e.value}
         options={e.options}
         onChange={(event) => e.onChange(event.originalEvent, event.value)}
@@ -83,7 +83,7 @@ export default function List() {
         onClick={() => fnOpenDialogLedger(item)}
       >
         <Badge
-          className={`gType-${item.gType} text-normal`}
+          className={`gType-${item.gType} text-base`}
           value={item.gType}
         />
 
@@ -102,7 +102,7 @@ export default function List() {
         </div>
 
         <div className="gAmount monospace text-right font-bold text-lg">
-          {item.gAmount.toLocaleString()}<span class="unit">원</span>
+          {item.gAmount.toLocaleString()}<span className="unit text-sm">원</span>
         </div>
 
         <InputSwitch checked={item.gExecuted}
@@ -146,7 +146,7 @@ export default function List() {
 
       {/* Floating Action Button */}
       <Button
-        className="btn-floating-action btn-add-item shadow-6"
+        className="btn-floating-action btn-add-item shadow-7"
         severity="secondary" size="large" rounded
         icon="pi pi-plus"
         onClick={() => fnOpenDialogLedger(null)}

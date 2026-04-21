@@ -43,7 +43,7 @@ export default function Repeat() {
         />
 
         <Badge size="large"
-          className={`gType-${item.rpType}`}
+          className={`gType-${item.rpType} text-base`}
           value={item.rpType}
         />
 
@@ -65,7 +65,7 @@ export default function Repeat() {
         </div>
 
         <div className="rpAmount monospace text-right font-bold text-lg">
-          {item.rpAmount.toLocaleString()}<span class="unit">원</span>
+          {item.rpAmount.toLocaleString()}<span className="unit text-sm">원</span>
         </div>
       </div>
     );
@@ -92,8 +92,8 @@ export default function Repeat() {
 
       {/* Floating Action Button */}
       <Button
-        className="btn-floating-action btn-add-repeat shadow-6"
-        severity="Secondary" size="large" rounded
+        className="btn-floating-action btn-add-repeat shadow-7"
+        severity="secondary" size="large" rounded
         icon="pi pi-plus"
         onClick={() => fnOpenDialogRepeat(null)}
         tooltip="반복 추가"

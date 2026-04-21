@@ -12,7 +12,7 @@
             border: 0;
 
             .p-datepicker-header {
-                padding: 0.5rem;
+                padding: 0.25rem;
                 border: 0;
 
                 .p-datepicker-title {
@@ -25,7 +25,8 @@
                         width: 8rem;
 
                         .p-dropdown-label {
-                            // font-size: 1.125rem;
+                            font-size: 1.125rem;
+                            font-weight: bold;
                         }
                     }
                 }
@@ -62,5 +63,10 @@
         gap: 1rem;
         padding: 1rem;
         border-radius: 0.5rem;
+
+        &.gExecuted-Y,
+        &.rpComplete-Y {
+            opacity: 0.6;
+        }
     }
 }

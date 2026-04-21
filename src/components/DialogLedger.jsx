@@ -83,19 +83,36 @@ export default function DialogLedger({ ledger, visible, onHide }) {
     }
   };
 
+  const onDelete = async () => {
+    try {
+      await deleteLedgerEntry(ledger);
+      onHide();
+    } catch (error) {
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+  };
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const footerTemplate = (options) => {
     return (
       <div className={options.className}>
         <Button
-          severity="secondary" outlined label="취소"
+          severity="secondary" size="large" outlined label="취소"
           onClick={onHide}
           disabled={dataLoading}
         />
         <Button
-          severity="primary" label="저장"
+          severity="primary" size="large" label="저장"
           icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-check"}
           onClick={onSave}
+          disabled={dataLoading}
+        />
+        <Button className={(ledger === null) ? 'hidden' : ''}
+          severity="danger" size="large"
+          tooltip="삭제"
+          tooltipOptions={{ position: 'top' }}
+          icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-trash"}
+          onClick={onDelete}
           disabled={dataLoading}
         />
       </div>
@@ -105,7 +122,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
   return (
     <Sidebar
       className="dialog-ledger"
-      header="가계부 입력"
+      header={<h3 className="text-2xl">가계부 입력</h3>}
       position="bottom"
       visible={visible}
       onHide={onHide}
