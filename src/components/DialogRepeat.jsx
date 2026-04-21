@@ -195,7 +195,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpMemo">내용(메모)</label>
+            <label htmlFor="rpMemo">내용</label>
             <InputText id="rpMemo"
               value={rpMemo}
               onChange={(e) => set_rpMemo(e.target.value)}

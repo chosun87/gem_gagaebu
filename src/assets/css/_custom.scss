@@ -2,17 +2,23 @@
 
 /* 일요일 (첫 번째 열) 색상 설정 */
 .p-datepicker {
+    background: transparent !important;
+
+    .p-datepicker-header {
+        background: transparent !important;
+    }
+
     table {
 
         /* 헤더(요일) */
         th:nth-child(1)>span {
-            color: #d32f2f;
+            color: var(--red-500);
             /* 빨간색 계열 */
         }
 
         /* 날짜 */
         td:nth-child(1):not(.p-datepicker-other-month)>span {
-            color: #d32f2f;
+            color: var(--red-500);
         }
     }
 }
@@ -23,13 +29,13 @@
 
         /* 헤더(요일) */
         th:nth-child(7)>span {
-            color: #1976d2;
+            color: var(--blue-500);
             /* 파란색 계열 */
         }
 
         /* 날짜 */
         td:nth-child(7):not(.p-datepicker-other-month)>span {
-            color: #1976d2;
+            color: var(--blue-500);
         }
     }
 }

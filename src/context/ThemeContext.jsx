@@ -18,6 +18,14 @@ export const ThemeProvider = ({ children }) => {
       const finalTheme = (condensed && theme.startsWith('md-')) ? theme.replace('md-', 'mdc-') : theme;
       themeLink.href = `https://unpkg.com/primereact/resources/themes/${finalTheme}/theme.css`;
     }
+
+    // 다크 모드 클래스 적용
+    if (theme.includes('dark')) {
+      document.documentElement.classList.add('dark-mode');
+    } else {
+      document.documentElement.classList.remove('dark-mode');
+    }
+
     localStorage.setItem('app-theme', theme);
   }, [theme, condensed]);
 

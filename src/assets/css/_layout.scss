@@ -1,5 +1,5 @@
 .app-container {
-    color: var(--text-color);
+    // color: var(--text-color);
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -24,9 +24,9 @@
     .app-header-title {
         margin: 0;
         padding-left: 0.5rem;
-        font-size: 1.5em;
+        // font-size: 1.5em;
         font-weight: bold;
-        color: white;
+        color: var(--primary-color-text);
     }
 
     .app-header-buttons {
@@ -109,7 +109,7 @@
 
 .p-sidebar {
     .p-sidebar-header {
-        font-size: 1.2em;
+        // font-size: 1.2em;
     }
 
     .p-sidebar-content {

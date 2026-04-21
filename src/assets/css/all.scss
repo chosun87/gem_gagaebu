@@ -1,5 +1,5 @@
 // @use "reset-css";
-@use "@/assets/css/_reset.scss";
+@use "./_reset.scss";
 
 // @use "@/assets/css/_preset_uiframework.scss";
 
@@ -7,17 +7,18 @@
 @use "primereact/resources/primereact.min.css";
 @use "primeicons/primeicons.css";
 @use "primeflex/primeflex.css";
+@use "./_mixins.scss";
 
-@use "@/assets/css/_variables.scss";
-@use "@/assets/css/_global.scss";
-@use "@/assets/css/_custom.scss";
-@use "@/assets/css/_layout.scss";
-@use "@/assets/css/_common.scss";
+@use "./_variables.scss";
+@use "./_global.scss";
+@use "./_custom.scss";
+@use "./_layout.scss";
+@use "./_common.scss";
 
-@use "@/assets/css/pages/_Ledger.scss";
-@use "@/assets/css/pages/_Calendar.scss";
-@use "@/assets/css/pages/_List.scss";
-@use "@/assets/css/pages/_Statistics.scss";
-@use "@/assets/css/pages/_Assets.scss";
-@use "@/assets/css/pages/_Settings.scss";
-@use "@/assets/css/DialogTheme.scss";
+@use "./pages/_Ledger.scss";
+@use "./pages/_Calendar.scss";
+@use "./pages/_List.scss";
+@use "./pages/_Statistics.scss";
+@use "./pages/_Assets.scss";
+@use "./pages/_Settings.scss";
+@use "./DialogTheme.scss";

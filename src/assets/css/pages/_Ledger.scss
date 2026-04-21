@@ -1,3 +1,5 @@
+@use "../_mixins.scss" as *;
+
 .ledger-page {
     .p-tabview.ledger-tabview {
         height: 100%;
@@ -41,6 +43,7 @@
 }
 
 .list-item {
+    color: var(--text-color);
 
     &.gType-수입,
     &.rpType-수입 {
@@ -49,7 +52,7 @@
 
     &.gType-지출,
     &.rpType-지출 {
-        background-color: var(--orange-50);
+        background-color: var(--pink-50);
     }
 
     &.gType-이체,
@@ -73,7 +76,7 @@
         border: solid 1px transparent;
         border-radius: 50%;
         background-color: transparent;
-        font-size: 1rem;
+        // font-size: 1rem;
 
         &.gType-수입 {
             color: var(--blue-500);
@@ -81,13 +84,57 @@
         }
 
         &.gType-지출 {
-            color: var(--orange-500);
-            border-color: var(--orange-500);
+            color: var(--pink-500);
+            border-color: var(--pink-500);
         }
 
         &.gType-이체 {
             color: var(--green-500);
             border-color: var(--green-500);
+        }
+    }
+}
+
+
+.list-item {
+    @include dark-mode {
+
+        &.gType-수입,
+        &.rpType-수입 {
+            background-color: var(--blue-800);
+        }
+
+        &.gType-지출,
+        &.rpType-지출 {
+            background-color: var(--pink-800);
+        }
+
+        &.gType-이체,
+        &.rpType-이체 {
+            background-color: var(--green-800);
+        }
+
+        .p-tag.gCategory,
+        .p-tag.rpCategory {
+            color: var(--text-color);
+            background-color: var(--bluegray-900);
+        }
+
+        .p-badge {
+            &.gType-수입 {
+                color: var(--blue-500);
+                border-color: var(--blue-500);
+            }
+
+            &.gType-지출 {
+                color: var(--pink-500);
+                border-color: var(--pink-500);
+            }
+
+            &.gType-이체 {
+                color: var(--green-500);
+                border-color: var(--green-500);
+            }
         }
     }
 }
