@@ -21,39 +21,39 @@ export default function Statistics() {
       <p>통계 화면입니다.</p>
 
       <Card title="Form">
-        <div class="formWrap">
-          <div class="inputWrap">
+        <div className="formWrap">
+          <div className="inputWrap">
             <label htmlFor="inputText">InputText</label>
             <InputText id="inputText" className="p-inputtext-sm" value={inputText} onChange={(e) => setInputText(e.target.value)} />
           </div>
 
-          <div class="inputWrap">
+          <div className="inputWrap">
             <label htmlFor="dropdown">Dropdown</label>
             <Dropdown id="dropdown" className="p-inputtext-sm" value={dropdown} onChange={(e) => setDropdown(e.target.value)} />
           </div>
 
-          <div class="inputWrap">
+          <div className="inputWrap">
             <label htmlFor="gType">gType</label>
             <SelectButton id="gType"
               options={[{ label: '수입', value: '수입' }, { label: '지출', value: '지출' }, { label: '이체', value: '이체' }]}
               value={gType} onChange={(e) => set_gType(e.target.value)} />
           </div>
 
-          <div class="inputWrap">
+          <div className="inputWrap">
             <label htmlFor="gDate">gDate</label>
             <Calendar id="gDate"
               locale="ko" dateFormat="yy-mm-dd (D)"
               value={gDate} onChange={(e) => set_gDate(e.target.value)} />
           </div>
 
-          <div class="inputWrap">
+          <div className="inputWrap">
             <label htmlFor="gAcc1">gAcc1</label>
             <SelectButton id="gAcc1"
               options={[{ label: '수입', value: '수입' }, { label: '지출', value: '지출' }, { label: '이체', value: '이체' }]}
               value={gAcc1} onChange={(e) => set_gAcc1(e.target.value)} />
           </div>
 
-          <div class="inputWrap">
+          <div className="inputWrap">
             <label htmlFor="gAmount">gAmount</label>
             <InputNumber id="gAmount" mode="currency"
               currency="KRW"
@@ -61,7 +61,7 @@ export default function Statistics() {
               value={gAmount} onValueChange={(e) => set_gAmount(e.target.value)} />
           </div>
 
-          <div class="inputWrap">
+          <div className="inputWrap">
             <InputSwitch id="gExecuted" checked={gExecuted} onChange={(e) => set_gExecuted(e.target.value)} />
             <label htmlFor="gExecuted">gExecuted</label>
           </div>

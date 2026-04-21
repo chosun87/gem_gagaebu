@@ -87,52 +87,64 @@ export default function DialogTheme({ visible, onHide }) {
       onHide={onHide}
     >
       <Panel>
-        <div class="formWrap">
-          {/* <div className="flex flex-column gap-2"> */}
-          <section>
-            <h5 className="mt-0 mb-3 text-900">화면 배율 (Scale)</h5>
+        <div className="formWrap">
+          <Divider />
+
+          <div className="inputWrap" style={{ gap: '3rem' }}>
+            <label htmlFor="inputStyle" className="text-lg">글씨 크기 ({scale}px)</label>
             <div className="flex align-items-center gap-3">
-              <Button icon="pi pi-minus" onClick={() => onScaleChange('minus')} className="p-button-text p-button-rounded w-2rem h-2rem" disabled={scale === 12} />
+              <Button icon="pi pi-minus" className="p-button-text p-button-rounded w-2rem h-2rem" disabled={scale === 12}
+                onClick={() => onScaleChange('minus')}
+              />
               <div className="flex align-items-center gap-2 flex-grow-1">
                 {SCALES.map((s) => (
-                  <i key={s} className={`pi pi-circle-fill text-xs transition-duration-200 ${s <= scale ? 'text-primary' : 'text-300'}`} />
+                  <i key={s} className={`${s == scale ? 'pi pi-circle-fill text-primary' : 'pi pi-circle text-200'} text-normal transition-duration-200`} />
                 ))}
               </div>
-              <Button icon="pi pi-plus" onClick={() => onScaleChange('plus')} className="p-button-text p-button-rounded w-2rem h-2rem" disabled={scale === 16} />
+              <Button icon="pi pi-plus" className="p-button-text p-button-rounded w-2rem h-2rem" disabled={scale === 16}
+                onClick={() => onScaleChange('plus')}
+              />
             </div>
-          </section>
+          </div>
 
           <Divider />
 
-          <section>
-            <h5 className="mt-0 mb-3 text-900">입력 스타일 (Input Style)</h5>
-            <SelectButton
+          <div className="inputWrap" style={{ gap: '3rem' }}>
+            <label htmlFor="inputStyle" className="text-lg">입력 스타일</label>
+            <SelectButton id="inputStyle"
               value={inputStyle}
               onChange={(e) => set_inputStyle(e.value)}
               options={INPUT_STYLE_OPTIONS}
-              className="w-full"
             />
-          </section>
+          </div>
 
           <Divider />
 
-          <section className="flex align-items-center justify-content-between">
-            <h5 className="m-0 text-900">리플 효과 (Ripple Effect)</h5>
-            <InputSwitch checked={ripple} onChange={(e) => set_ripple(e.value)} />
-          </section>
+          <div className="inputWrap">
+            <label htmlFor="ripple" className="text-lg">리플 효과 (Ripple Effect)</label>
+            <InputSwitch id="ripple"
+              className="ml-auto"
+              tooltip="리플 효과"
+              tooltipOptions={{ position: 'left' }}
+              checked={ripple} onChange={(e) => set_ripple(e.value)} />
+          </div>
 
           <Divider />
 
-          <section className="flex align-items-center justify-content-between">
-            <h5 className="m-0 text-900">다크 모드 (Dark Mode)</h5>
-            <InputSwitch checked={isDarkMode} onChange={onDarkModeToggle} />
-          </section>
+          <div className="inputWrap">
+            <label htmlFor="darkmode" className="text-lg">다크 모드 (Dark Mode)</label>
+            <InputSwitch id="darkmode"
+              className="ml-auto"
+              tooltip="다크 모드"
+              tooltipOptions={{ position: 'left' }}
+              checked={isDarkMode} onChange={onDarkModeToggle} />
+          </div>
 
           <Divider />
 
-          <section>
-            <h5 className="mt-0 mb-3 text-900">다양한 테마 (Themes)</h5>
-            <TreeSelect
+          <div className="inputWrap">
+            <label htmlFor="theme" className="text-lg mb-2">테마</label>
+            <TreeSelect id="theme"
               className="themeSelector w-full"
               value={theme}
               options={THEME_NODES}
@@ -143,14 +155,14 @@ export default function DialogTheme({ visible, onHide }) {
               display="comma"
               selectionMode="single"
             />
-          </section>
+          </div>
 
           <div className={!isMaterialTheme ? 'hidden' : ''}>
             <Divider />
 
-            <div class="inputWrap">
-              <label htmlFor="Condensed">Condensed</label>
-              <InputSwitch id="Condensed"
+            <div className="inputWrap">
+              <label htmlFor="condensed" className="text-lg">Condensed</label>
+              <InputSwitch id="condensed"
                 className="ml-auto"
                 tooltip="Material 테마 전용 압축 레이아웃"
                 tooltipOptions={{ position: 'left' }}

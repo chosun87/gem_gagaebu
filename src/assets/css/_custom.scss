@@ -1,5 +1,9 @@
 /* Redefining styles for imported packages like primereact */
 
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
 /* 일요일 (첫 번째 열) 색상 설정 */
 .p-datepicker {
     background: transparent !important;
