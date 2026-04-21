@@ -1,4 +1,4 @@
-import { Sidebar, Button, Divider, InputSwitch, SelectButton, Panel, TreeSelect } from '@/components/PrimeReact';
+import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, TreeSelect } from '@/components/PrimeReact';
 import { useTheme } from '@/context/ThemeContext';
 import { THEME_NODES, INPUT_STYLE_OPTIONS, SCALES } from '@/assets/js/constants_theme';
 
@@ -87,7 +87,8 @@ export default function DialogTheme({ visible, onHide }) {
       className="dialog-theme w-full md:w-30rem"
     >
       <Panel>
-        <div className="flex flex-column gap-2">
+        <div class="formWrap">
+          {/* <div className="flex flex-column gap-2"> */}
           <section>
             <h5 className="mt-0 mb-3 text-900">화면 배율 (Scale)</h5>
             <div className="flex align-items-center gap-3">
@@ -147,13 +148,15 @@ export default function DialogTheme({ visible, onHide }) {
           <div className={!isMaterialTheme ? 'hidden' : ''}>
             <Divider />
 
-            <section className="flex align-items-center justify-content-between">
-              <div>
-                <h5 className="m-0 text-900">Condensed</h5>
-                <small className="text-600">Material 테마 전용 압축 레이아웃</small>
-              </div>
-              <InputSwitch checked={condensed} onChange={(e) => set_condensed(e.value)} />
-            </section>
+            <div class="inputWrap">
+              <label htmlFor="Condensed">Condensed</label>
+              <InputSwitch id="Condensed"
+                className="ml-auto"
+                tooltip="Material 테마 전용 압축 레이아웃"
+                tooltipOptions={{ position: 'left' }}
+                checked={condensed} onChange={(e) => set_condensed(e.value)}
+              />
+            </div>
           </div>
         </div>
       </Panel>
