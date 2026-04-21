@@ -9,6 +9,8 @@ import { G_TYPE } from '@/assets/js/constants';
 
 export default function DialogLedger({ ledger, visible, onHide }) {
 
+  const { saveLedgerEntry, loading: dataLoading } = useData();
+
   const [gType, set_gType] = useState(ledger?.gType || '');
   const [gDate, set_gDate] = useState(ledger?.gDate ? dayjs(ledger.gDate).toDate() : new Date());
   const [gAmount, set_gAmount] = useState(ledger?.gAmount || 0);
@@ -23,6 +25,23 @@ export default function DialogLedger({ ledger, visible, onHide }) {
     }
   }, [ledger, visible]);
 
+  const onSave = async () => {
+    const formData = {
+      ...ledger,
+      gType,
+      gDate: dayjs(gDate).format('YYYY-MM-DD'),
+      gAmount,
+      gMemo
+    };
+
+    try {
+      await saveLedgerEntry(ledger, formData);
+      onHide();
+    } catch (error) {
+      alert('저장 중 오류가 발생했습니다.');
+    }
+  };
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const footerTemplate = (options) => {
     return (
@@ -30,10 +49,13 @@ export default function DialogLedger({ ledger, visible, onHide }) {
         <Button
           severity="secondary" outlined label="취소"
           onClick={onHide}
+          disabled={dataLoading}
         />
         <Button
           severity="primary" label="저장"
-          onClick={onHide}
+          icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-check"}
+          onClick={onSave}
+          disabled={dataLoading}
         />
       </div>
     );

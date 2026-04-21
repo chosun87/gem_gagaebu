@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { fetchSheetData, updateSheetCell } from '@/api/sheetApi';
+import { fetchSheetData, updateSheetCell, appendSheetRow, updateSheetRow, createSheet, updateSheetHeaders } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
 import dayjs from 'dayjs';
@@ -31,27 +31,29 @@ export const DataProvider = ({ children }) => {
         const row = rawData[i];
         if (!row || row.length < 3) continue;
 
+        // 삭제 마킹된 행 제외
+        if (row[SHEET_COL_INDEX.REPEAT.rpDeleted]) continue;
+
         parsedData.push({
           sheetName: '반복',
           sheetRowNo: i + 1,
-          rpID: row[SHEET_COL_INDEX.rpID] || '',
-          rpDateS: row[SHEET_COL_INDEX.rpDateS] || '',
-          rpDateE: row[SHEET_COL_INDEX.rpDateE] || '',
-          rpDay: row[SHEET_COL_INDEX.rpDay] || '',
-          rpComplete: (String(row[SHEET_COL_INDEX.rpComplete]).toUpperCase() === 'TRUE') ? true : false,
-          rpType: row[SHEET_COL_INDEX.rpType] || '',
-          rpAcc1: row[SHEET_COL_INDEX.rpAcc1] || '',
-          rpAcc2: row[SHEET_COL_INDEX.rpAcc2] || '',
-          rpCategory: row[SHEET_COL_INDEX.rpCategory] || '',
-          rpAmount: Number(String(row[SHEET_COL_INDEX.rpAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
-          rpMemo: row[SHEET_COL_INDEX.rpMemo] || '',
+          rpID: row[SHEET_COL_INDEX.REPEAT.rpID] || '',
+          rpDateS: row[SHEET_COL_INDEX.REPEAT.rpDateS] || '',
+          rpDateE: row[SHEET_COL_INDEX.REPEAT.rpDateE] || '',
+          rpDay: row[SHEET_COL_INDEX.REPEAT.rpDay] || '',
+          rpComplete: (String(row[SHEET_COL_INDEX.REPEAT.rpComplete]).toUpperCase() === 'TRUE') ? true : false,
+          rpType: row[SHEET_COL_INDEX.REPEAT.rpType] || '',
+          rpAcc1: row[SHEET_COL_INDEX.REPEAT.rpAcc1] || '',
+          rpAcc2: row[SHEET_COL_INDEX.REPEAT.rpAcc2] || '',
+          rpCategory: row[SHEET_COL_INDEX.REPEAT.rpCategory] || '',
+          rpAmount: Number(String(row[SHEET_COL_INDEX.REPEAT.rpAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
+          rpMemo: row[SHEET_COL_INDEX.REPEAT.rpMemo] || '',
         });
       }
 
       setSheet반복Data(parsedData.reverse());
     } catch (error) {
       console.error('Data loading error', error);
-      // 에러 시에도 무한 반복 패치를 막기 위해 true로 설정, 데이터는 빈 배열
       setSheet반복Data([]);
     } finally {
       setLoading(false);
@@ -88,18 +90,21 @@ export const DataProvider = ({ children }) => {
         const row = rawData[i];
         if (!row || row.length < 3) continue;
 
+        // 삭제 마킹된 행 제외
+        if (row[SHEET_COL_INDEX.YYYY.gDeleted]) continue;
+
         parsedData.push({
           sheetName: targetYear,
           sheetRowNo: i + 1,
-          gDate: row[SHEET_COL_INDEX.gDate] || '',
-          gType: row[SHEET_COL_INDEX.gType] || '',
-          gAcc1: row[SHEET_COL_INDEX.gAcc1] || '',
-          gAcc2: row[SHEET_COL_INDEX.gAcc2] || '',
-          gCategory: row[SHEET_COL_INDEX.gCategory] || '',
-          gAmount: Number(String(row[SHEET_COL_INDEX.gAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
-          gMemo: row[SHEET_COL_INDEX.gMemo] || '',
-          gExecuted: (String(row[SHEET_COL_INDEX.gExecuted]).toUpperCase() === 'TRUE') ? true : false,
-          g_rpID: row[SHEET_COL_INDEX.g_rpID] || '',
+          gDate: row[SHEET_COL_INDEX.YYYY.gDate] || '',
+          gType: row[SHEET_COL_INDEX.YYYY.gType] || '',
+          gAcc1: row[SHEET_COL_INDEX.YYYY.gAcc1] || '',
+          gAcc2: row[SHEET_COL_INDEX.YYYY.gAcc2] || '',
+          gCategory: row[SHEET_COL_INDEX.YYYY.gCategory] || '',
+          gAmount: Number(String(row[SHEET_COL_INDEX.YYYY.gAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
+          gMemo: row[SHEET_COL_INDEX.YYYY.gMemo] || '',
+          gExecuted: (String(row[SHEET_COL_INDEX.YYYY.gExecuted]).toUpperCase() === 'TRUE') ? true : false,
+          g_rpID: row[SHEET_COL_INDEX.YYYY.g_rpID] || '',
         });
       }
 
@@ -107,7 +112,6 @@ export const DataProvider = ({ children }) => {
       setLoadedSheetYYYY(prev => ({ ...prev, [targetYear]: true }));
     } catch (error) {
       console.error('Data loading error', error);
-      // 에러 시에도 무한 반복 패치를 막기 위해 true로 설정, 데이터는 빈 배열
       setSheetYYYYData(prev => ({ ...prev, [targetYear]: [] }));
       setLoadedSheetYYYY(prev => ({ ...prev, [targetYear]: true }));
     } finally {
@@ -118,7 +122,6 @@ export const DataProvider = ({ children }) => {
   const handleChange_gExecute = async (rowData, newValue) => {
     const YYYY = rowData.sheetName; // 연도
 
-    // 1. 화면 즉각 업데이트(Optimistic Update)
     setSheetYYYYData(prev => ({
       ...prev,
       [YYYY]: (prev[YYYY] || []).map(item =>
@@ -128,12 +131,8 @@ export const DataProvider = ({ children }) => {
       )
     }));
 
-    // (여기서는 불필요) 사용자 요구사항: 데이터 변경이 있으면 loadedSheetYYYY 값을 false로 변경
-    // setLoadedSheetYYYY(prev => ({ ...prev, [YYYY]: false }));
-
-    // 2. 구글 시트 실제 값 쓰기 업데이트
     try {
-      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.gExecuted);
+      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gExecuted);
       await updateSheetCell(`${rowData.sheetName}!${sheetColName}${rowData.sheetRowNo}`, newValue);
     } catch (error) {
       setSheetYYYYData(prev => ({
@@ -144,6 +143,69 @@ export const DataProvider = ({ children }) => {
             : item
         )
       }));
+    }
+  };
+
+  // 가계부 데이터 저장 (신규/수정/이동)
+  const saveLedgerEntry = async (ledger, formData) => {
+    setLoading(true);
+    try {
+      const gDate = dayjs(formData.gDate);
+      const newYear = gDate.format('YYYY');
+
+      const rowValues = [];
+      rowValues[SHEET_COL_INDEX.YYYY.gDate] = gDate.format('YYYY-MM-DD');
+      rowValues[SHEET_COL_INDEX.YYYY.gType] = formData.gType || '';
+      rowValues[SHEET_COL_INDEX.YYYY.gAcc1] = formData.gAcc1 || '';
+      rowValues[SHEET_COL_INDEX.YYYY.gAcc2] = formData.gAcc2 || '';
+      rowValues[SHEET_COL_INDEX.YYYY.gCategory] = formData.gCategory || '';
+      rowValues[SHEET_COL_INDEX.YYYY.gAmount] = formData.gAmount || 0;
+      rowValues[SHEET_COL_INDEX.YYYY.gMemo] = formData.gMemo || '';
+      rowValues[SHEET_COL_INDEX.YYYY.gExecuted] = formData.gExecuted ?? false;
+      rowValues[SHEET_COL_INDEX.YYYY.g_rpID] = formData.g_rpID || '';
+      rowValues[SHEET_COL_INDEX.YYYY.gDeleted] = ''; // 초기값은 비어있음
+
+      const ensureSheetExists = async (sheetName) => {
+        try {
+          await fetchSheetData(`${sheetName}!A1:A1`);
+        } catch (error) {
+          // 시트가 없으면 생성 및 헤더 초기화
+          await createSheet(sheetName);
+          const headers = Object.keys(SHEET_COL_INDEX.YYYY).sort((a, b) => SHEET_COL_INDEX.YYYY[a] - SHEET_COL_INDEX.YYYY[b]);
+          await updateSheetHeaders(sheetName, headers);
+        }
+      };
+
+      if (!ledger) {
+        // [신규 입력]
+        await ensureSheetExists(newYear);
+        await appendSheetRow(newYear, rowValues);
+      } else {
+        // [기존 수정]
+        if (ledger.sheetName === newYear) {
+          // 연도 동일: 기존 행 업데이트
+          await updateSheetRow(newYear, ledger.sheetRowNo, rowValues);
+        } else {
+          // 연도 변경: 기존 행 삭제 마킹 후 새 연도에 추가
+          const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gDeleted);
+          await updateSheetCell(`${ledger.sheetName}!${sheetColName}${ledger.sheetRowNo}`, dayjs().format('YYYY-MM-DD HH:mm:ss'));
+
+          await ensureSheetExists(newYear);
+          await appendSheetRow(newYear, rowValues);
+        }
+      }
+
+      // 데이터 갱신
+      await loadSheet연도Data(newYear);
+      if (ledger && ledger.sheetName !== newYear) {
+        await loadSheet연도Data(ledger.sheetName);
+      }
+      return true;
+    } catch (error) {
+      console.error('Error saving ledger entry:', error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -158,7 +220,7 @@ export const DataProvider = ({ children }) => {
     ));
 
     try {
-      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.rpComplete);
+      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpComplete);
       await updateSheetCell(`반복!${sheetColName}${rowData.sheetRowNo}`, newValue);
     } catch (error) {
       setSheet반복Data(prevData => prevData.map(item =>
@@ -179,7 +241,8 @@ export const DataProvider = ({ children }) => {
       selectedDate,
       setSelectedDate,
       handleChange_gExecute,
-      handleChange_rpComplete
+      handleChange_rpComplete,
+      saveLedgerEntry
     }}>
       {children}
     </DataContext.Provider>

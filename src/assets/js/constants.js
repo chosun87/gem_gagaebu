@@ -11,11 +11,12 @@ export const GOOGLE_SHEET = {
 }
 
 export const SHEET_NAME_RANGE = {
-  CODE: '코드!A1:F',
-  ASSET: '자산!A1:F',
-  REPEAT: '반복!A1:K',
-  YEAR: 'YYYY!A1:I'
+  CODE: '코드!A1:G',
+  ASSET: '자산!A1:G',
+  REPEAT: '반복!A1:L',
+  YEAR: 'YYYY!A1:J'
 }
+
 
 export const G_TYPE = {
   수입: { label: '수입', value: '수입' },
@@ -31,42 +32,54 @@ export const RP_TYPE = {
 
 export const SHEET_COL_INDEX = {
   // 코드 시트 컬럼 인덱스
-  codeGroup: 0,
-  code: 1,
-  codeLabel: 2,
-  codeIcon: 3,
-  codeOrder: 4,
-  codeMemo: 5,
+  CODE: {
+    cdGroup: 0,
+    cd: 1,
+    cdLabel: 2,
+    cdIcon: 3,
+    cdOrder: 4,
+    cdMemo: 5,
+    cdDeleted: 6,
+  },
 
   // 자산 시트 컬럼 인덱스
-  accType: 0,
-  accCode: 1,
-  accLabel: 2,
-  accIcon: 3,
-  accOrder: 4,
-  accMemo: 5,
+  ASSET: {
+    accType: 0,
+    accCode: 1,
+    accLabel: 2,
+    accIcon: 3,
+    accOrder: 4,
+    accMemo: 5,
+    accDeleted: 6,
+  },
 
   // 반복 시트 컬럼 인덱스
-  rpID: 0,
-  rpDateS: 1,
-  rpDateE: 2,
-  rpDay: 3,
-  rpComplete: 4,
-  rpType: 5,
-  rpAcc1: 6,
-  rpAcc2: 7,
-  rpCategory: 8,
-  rpAmount: 9,
-  rpMemo: 10,
+  REPEAT: {
+    rpID: 0,
+    rpDateS: 1,
+    rpDateE: 2,
+    rpDay: 3,
+    rpComplete: 4,
+    rpType: 5,
+    rpAcc1: 6,
+    rpAcc2: 7,
+    rpCategory: 8,
+    rpAmount: 9,
+    rpMemo: 10,
+    rpDeleted: 11,
+  },
 
   // 연도 시트 컬럼 인덱스
-  gDate: 0,
-  gType: 1,
-  gAcc1: 2,
-  gAcc2: 3,
-  gCategory: 4,
-  gAmount: 5,
-  gMemo: 6,
-  gExecuted: 7,
-  g_rpID: 8,
+  YYYY: {
+    gDate: 0,
+    gType: 1,
+    gAcc1: 2,
+    gAcc2: 3,
+    gCategory: 4,
+    gAmount: 5,
+    gMemo: 6,
+    gExecuted: 7,
+    g_rpID: 8,
+    gDeleted: 9,
+  }
 }

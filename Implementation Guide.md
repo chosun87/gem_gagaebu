@@ -179,3 +179,15 @@ import Footer from './components/Footer';
     - Group을 Root로 하되 선택은 불가하게. 펼쳐지는 것만 가능.
     - Group에는 아이콘 왼쪽에 보이도록. 아이콘은 https://primereact.org/theming/ 의 Configurator 화면과 동일하게
     - Template을 이용해서 각 테마별로 색상을 보여줄 것.
+
+* DialogLedger.jsx에서 저장 버튼을 누르면 google sheet에 저장하는 기능을 추가
+  - 기존값(ledger = null)이면 신규 입력
+    - 날짜(gDate)를 기준으로 해당 연도의 시트에 ledger값으로 행 추가.
+    - 해당 연도의 시트가 없을때는 시트 추가 후 1번째 줄에 헤더 추가.
+      - 해더는 constants.js의  
+  - 기존값(ledger != null)이면 수정
+    - 날짜(gDate)를 기준으로 해당 연도의 시트에 행 수정.
+    - 연도가 변경되었으면, 기존 연도의 시트에서 행 삭제 마킹(gDeleted=Date.now()) 후, 신규 연도의 시트에 ledger값으로 행 추가.
+      - 기존 sheet명은 ledger.sheetName, 기존 행번호는 ledger.sheetRowNo로 식별.
+      - 바뀐 시트명, 행번호를 ledger.sheetName, ledger.sheetRowNo에 업데이트.
+    - 연도가 변경되지 않았으면, 기존 sheet명(ledger.sheetName), 기존 행번호(ledger.sheetRowNo)로 위치를 찾아 변경된 ledger값을 시트에 업데이트.
