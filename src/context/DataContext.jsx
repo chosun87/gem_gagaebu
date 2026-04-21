@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { fetchSheetData, updateSheetCell, appendSheetRow, updateSheetRow, createSheet, updateSheetHeaders } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -11,15 +11,119 @@ export const DataProvider = ({ children }) => {
 
   const [loading, setLoading] = useState(false);
 
+  // 시트 데이터 상태
+  const [sheet자산Data, setSheet자산Data] = useState([]);
+  const [sheet반복Data, setSheet반복Data] = useState([]);
+  const [sheetYYYYData, setSheetYYYYData] = useState({});
+  const [loadedSheetYYYY, setLoadedSheetYYYY] = useState({});
 
-  // 반복 시트 데이터 로드
-  const [sheet반복Data, setSheet반복Data] = useState({});
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // 코드 데이터 (반복주기 등)
+  const [periodOptions, setPeriodOptions] = useState([]);
 
   useEffect(() => {
     if (isSignedIn) {
       loadSheet반복Data();
+      loadSheet자산Data();
+      loadSheet코드Data();
     }
   }, [isSignedIn]);
+
+  const loadSheet코드Data = async () => {
+    try {
+      const rawData = await fetchSheetData(SHEET_NAME_RANGE.CODE);
+      const periods = [];
+
+      for (let i = 1; i < rawData.length; i++) {
+        const row = rawData[i];
+        if (!row || row.length < 3) continue;
+
+        if (row[SHEET_COL_INDEX.CODE.cdDeleted]) continue;
+
+        const group = row[SHEET_COL_INDEX.CODE.cdGroup];
+        if (group === '반복주기') {
+          periods.push({
+            label: row[SHEET_COL_INDEX.CODE.cdLabel],
+            value: row[SHEET_COL_INDEX.CODE.cd]
+          });
+        }
+      }
+      setPeriodOptions(periods);
+    } catch (error) {
+      console.error('Code data loading error', error);
+    }
+  };
+
+  const loadSheet자산Data = async () => {
+    setLoading(true);
+    try {
+      const rawData = await fetchSheetData(SHEET_NAME_RANGE.ASSET);
+      const parsedData = [];
+
+      for (let i = 1; i < rawData.length; i++) {
+        const row = rawData[i];
+        if (!row || row.length < 3) continue;
+
+        if (row[SHEET_COL_INDEX.ASSET.accDeleted]) continue;
+
+        parsedData.push({
+          accType: row[SHEET_COL_INDEX.ASSET.accType] || '',
+          accCode: row[SHEET_COL_INDEX.ASSET.accCode] || '',
+          accLabel: row[SHEET_COL_INDEX.ASSET.accLabel] || '',
+          accIcon: row[SHEET_COL_INDEX.ASSET.accIcon] || '',
+          accDefault: (String(row[SHEET_COL_INDEX.ASSET.accDefault]).toUpperCase() === 'TRUE'),
+          accOrder: Number(row[SHEET_COL_INDEX.ASSET.accOrder]) || 0,
+        });
+      }
+
+      setSheet자산Data(parsedData);
+    } catch (error) {
+      console.error('Asset data loading error', error);
+      setSheet자산Data([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // TreeSelect용 자산 노드 생성
+  const assetNodes = useMemo(() => {
+    const groups = {};
+
+    // accType + accOrder 정렬
+    const sortedData = [...sheet자산Data].sort((a, b) => {
+      if (a.accType < b.accType) return -1;
+      if (a.accType > b.accType) return 1;
+      return a.accOrder - b.accOrder;
+    });
+
+    sortedData.forEach(item => {
+      if (!groups[item.accType]) {
+        groups[item.accType] = {
+          key: item.accType,
+          label: item.accType,
+          selectable: false,
+          children: []
+        };
+      }
+      groups[item.accType].children.push({
+        key: item.accCode,
+        label: item.accLabel,
+        data: item.accCode,
+        icon: item.accIcon || 'pi pi-fw pi-wallet'
+      });
+    });
+
+    return Object.values(groups);
+  }, [sheet자산Data]);
+
+  // 기본 자산 코드 추출
+  const defaultAssetCode = useMemo(() => {
+    const defaultItem = sheet자산Data.find(item => item.accDefault);
+    return defaultItem ? defaultItem.accCode : '';
+  }, [sheet자산Data]);
+
+  // 반복 시트 데이터 로드
 
   const loadSheet반복Data = async () => {
     setLoading(true);
@@ -40,6 +144,7 @@ export const DataProvider = ({ children }) => {
           rpID: row[SHEET_COL_INDEX.REPEAT.rpID] || '',
           rpDateS: row[SHEET_COL_INDEX.REPEAT.rpDateS] || '',
           rpDateE: row[SHEET_COL_INDEX.REPEAT.rpDateE] || '',
+          rpPeriod: row[SHEET_COL_INDEX.REPEAT.rpPeriod] || '',
           rpDay: row[SHEET_COL_INDEX.REPEAT.rpDay] || '',
           rpComplete: (String(row[SHEET_COL_INDEX.REPEAT.rpComplete]).toUpperCase() === 'TRUE') ? true : false,
           rpType: row[SHEET_COL_INDEX.REPEAT.rpType] || '',
@@ -60,12 +165,6 @@ export const DataProvider = ({ children }) => {
     }
   }
 
-  // 연도 시트 데이터 로드
-  const [sheetYYYYData, setSheetYYYYData] = useState({});
-  const [loadedSheetYYYY, setLoadedSheetYYYY] = useState({});
-
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
   // 선택된 연도 추적
   const selectedYear = selectedDate.getFullYear().toString();
 
@@ -78,7 +177,7 @@ export const DataProvider = ({ children }) => {
       setSheetYYYYData({});
       setLoadedSheetYYYY({});
     }
-  }, [isSignedIn, selectedYear, loadedSheetYYYY[selectedYear]]);
+  }, [isSignedIn, selectedYear]);
 
   const loadSheet연도Data = async (targetYear) => {
     setLoading(true);
@@ -108,7 +207,12 @@ export const DataProvider = ({ children }) => {
         });
       }
 
-      setSheetYYYYData(prev => ({ ...prev, [targetYear]: parsedData.reverse() }));
+      const sortedData = parsedData.sort((a, b) => {
+        const diff = dayjs(b.gDate).unix() - dayjs(a.gDate).unix();
+        if (diff !== 0) return diff;
+        return b.sheetRowNo - a.sheetRowNo;
+      });
+      setSheetYYYYData(prev => ({ ...prev, [targetYear]: sortedData }));
       setLoadedSheetYYYY(prev => ({ ...prev, [targetYear]: true }));
     } catch (error) {
       console.error('Data loading error', error);
@@ -212,6 +316,46 @@ export const DataProvider = ({ children }) => {
   // List.jsx 등 다른 컴포넌트와의 호환성을 위해 현재 선택된 연도의 데이터를 yearData로 제공
   const yearData = sheetYYYYData[selectedYear] || [];
 
+  // 반복 데이터 저장 (신규/수정)
+  const saveRepeatEntry = async (repeat, formData) => {
+    setLoading(true);
+    try {
+      const rowValues = [];
+      const rpID = repeat ? repeat.rpID : Date.now().toString();
+
+      rowValues[SHEET_COL_INDEX.REPEAT.rpID] = rpID;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDateS] = formData.rpDateS ? dayjs(formData.rpDateS).format('YYYY-MM-DD') : '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDateE] = formData.rpDateE ? dayjs(formData.rpDateE).format('YYYY-MM-DD') : '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpPeriod] = formData.rpPeriod || 'M';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDay] = formData.rpDay || '1';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpComplete] = formData.rpComplete ?? false;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpType] = formData.rpType || '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpAcc1] = formData.rpAcc1 || '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2] = formData.rpAcc2 || '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpCategory] = formData.rpCategory || '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpAmount] = formData.rpAmount || 0;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = formData.rpMemo || '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = ''; // 초기값
+
+      if (!repeat) {
+        // [신규 입력]
+        await appendSheetRow('반복', rowValues);
+      } else {
+        // [기존 수정]
+        await updateSheetRow('반복', repeat.sheetRowNo, rowValues);
+      }
+
+      // 데이터 갱신
+      await loadSheet반복Data();
+      return true;
+    } catch (error) {
+      console.error('Error saving repeat entry:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleChange_rpComplete = async (rowData, newValue) => {
     setSheet반복Data(prevData => prevData.map(item =>
       item.sheetRowNo === rowData.sheetRowNo
@@ -242,7 +386,13 @@ export const DataProvider = ({ children }) => {
       setSelectedDate,
       handleChange_gExecute,
       handleChange_rpComplete,
-      saveLedgerEntry
+      saveLedgerEntry,
+      saveRepeatEntry,
+      assetNodes,
+      defaultAssetCode,
+      periodOptions,
+      selectedDate,
+      setSelectedDate,
     }}>
       {children}
     </DataContext.Provider>

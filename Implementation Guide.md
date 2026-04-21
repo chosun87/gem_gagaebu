@@ -191,3 +191,30 @@ import Footer from './components/Footer';
       - 기존 sheet명은 ledger.sheetName, 기존 행번호는 ledger.sheetRowNo로 식별.
       - 바뀐 시트명, 행번호를 ledger.sheetName, ledger.sheetRowNo에 업데이트.
     - 연도가 변경되지 않았으면, 기존 sheet명(ledger.sheetName), 기존 행번호(ledger.sheetRowNo)로 위치를 찾아 변경된 ledger값을 시트에 업데이트.
+
+* 자산 선택기
+  - TreeSelect로 구현.
+  - option은 자산 sheet에서 읽어옴.
+    - accType으로 grouping
+    - value는 accCode
+    - label은 accLabel
+    - 보여지는 순서는 accType + accOrder로 정렬.
+    - accDefault=TRUE인 옵션을 default로 선택되게 함.
+
+* 반복 시트 저장
+  - DialogRepeat.jsx에서 저장 버튼을 누르면 google sheet에 저장하는 기능을 추가
+  - 기존값(repeat = null)이면 신규 입력
+    - '반복' 시트에 repeat값으로 행 추가.
+    - rpID=Date.now()로 설정.
+  - 기존값(repeat != null)이면 수정
+    - '반복' 시트에 기존 행번호(repeat.sheetRowNo)로 위치를 찾아 변경된 repeat값을 시트에 업데이트.
+
+* DialogRepeat.jsx에, 자산 선택기 추가
+  - List.jsx의 자산 선택기와 동일한 기능.
+  - TreeSelect로 구현.
+  - option은 자산 sheet에서 읽어옴.
+    - accType으로 grouping
+    - value는 accCode
+    - label은 accLabel
+    - 보여지는 순서는 accType + accOrder로 정렬.
+    - accDefault=TRUE인 옵션을 default로 선택되게 함.
