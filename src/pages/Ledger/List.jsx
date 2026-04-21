@@ -109,6 +109,7 @@ export default function List() {
           tooltip="집행"
           tooltipOptions={{ position: 'top' }}
           onChange={(e) => handleChange_gExecute(item, e.target.value)}
+          onClick={(e) => e.stopPropagation()}
         />
       </div>
     );

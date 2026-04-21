@@ -39,6 +39,7 @@ export default function Repeat() {
           tooltip="완료"
           tooltipOptions={{ position: 'top' }}
           onChange={(e) => handleChange_rpComplete(item, e.target.value)}
+          onClick={(e) => e.stopPropagation()}
         />
 
         <Badge size="large"

@@ -12,8 +12,8 @@ export const GOOGLE_SHEET = {
 
 export const SHEET_NAME_RANGE = {
   CODE: '코드!A1:G',
-  ASSET: '자산!A1:G',
-  REPEAT: '반복!A1:L',
+  ASSET: '자산!A1:H',
+  REPEAT: '반복!A1:M',
   YEAR: 'YYYY!A1:J'
 }
 
@@ -48,9 +48,10 @@ export const SHEET_COL_INDEX = {
     accCode: 1,
     accLabel: 2,
     accIcon: 3,
-    accOrder: 4,
-    accMemo: 5,
-    accDeleted: 6,
+    accDefault: 4,
+    accOrder: 5,
+    accMemo: 6,
+    accDeleted: 7,
   },
 
   // 반복 시트 컬럼 인덱스
@@ -58,15 +59,16 @@ export const SHEET_COL_INDEX = {
     rpID: 0,
     rpDateS: 1,
     rpDateE: 2,
-    rpDay: 3,
-    rpComplete: 4,
-    rpType: 5,
-    rpAcc1: 6,
-    rpAcc2: 7,
-    rpCategory: 8,
-    rpAmount: 9,
-    rpMemo: 10,
-    rpDeleted: 11,
+    rpPeriod: 3,
+    rpDay: 4,
+    rpComplete: 5,
+    rpType: 6,
+    rpAcc1: 7,
+    rpAcc2: 8,
+    rpCategory: 9,
+    rpAmount: 10,
+    rpMemo: 11,
+    rpDeleted: 12,
   },
 
   // 연도 시트 컬럼 인덱스
