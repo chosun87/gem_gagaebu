@@ -93,7 +93,7 @@ export default function Repeat() {
       {/* Floating Action Button */}
       <Button
         className="btn-floating-action btn-add-repeat shadow-6"
-        severity="primary" size="large" rounded
+        severity="Secondary" size="large" rounded
         icon="pi pi-plus"
         onClick={() => fnOpenDialogRepeat(null)}
         tooltip="반복 추가"

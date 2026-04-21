@@ -21,6 +21,7 @@ export const DataProvider = ({ children }) => {
 
   // 코드 데이터 (반복주기 등)
   const [periodOptions, setPeriodOptions] = useState([]);
+  const [categoryNodes, setCategoryNodes] = useState([]);
 
   useEffect(() => {
     if (isSignedIn) {
@@ -34,6 +35,7 @@ export const DataProvider = ({ children }) => {
     try {
       const rawData = await fetchSheetData(SHEET_NAME_RANGE.CODE);
       const periods = [];
+      const categoryMap = {};
 
       for (let i = 1; i < rawData.length; i++) {
         const row = rawData[i];
@@ -47,9 +49,25 @@ export const DataProvider = ({ children }) => {
             label: row[SHEET_COL_INDEX.CODE.cdLabel],
             value: row[SHEET_COL_INDEX.CODE.cd]
           });
+        } else if (group.includes('분류')) {
+          if (!categoryMap[group]) {
+            categoryMap[group] = {
+              key: group.replace('분류', ''),
+              label: group,
+              selectable: false,
+              children: []
+            };
+          }
+          categoryMap[group].children.push({
+            key: row[SHEET_COL_INDEX.CODE.cd],
+            label: row[SHEET_COL_INDEX.CODE.cdLabel],
+            data: row[SHEET_COL_INDEX.CODE.cd],
+            icon: row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag'
+          });
         }
       }
       setPeriodOptions(periods);
+      setCategoryNodes(Object.values(categoryMap));
     } catch (error) {
       console.error('Code data loading error', error);
     }
@@ -389,6 +407,7 @@ export const DataProvider = ({ children }) => {
       saveLedgerEntry,
       saveRepeatEntry,
       assetNodes,
+      categoryNodes,
       defaultAssetCode,
       periodOptions,
       selectedDate,

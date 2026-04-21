@@ -218,3 +218,15 @@ import Footer from './components/Footer';
     - label은 accLabel
     - 보여지는 순서는 accType + accOrder로 정렬.
     - accDefault=TRUE인 옵션을 default로 선택되게 함.
+
+* DialogLedger.jsx에 필수 입력항목 처리
+  - 필수 입력항목 : 날짜(gDate), gType, 금액(gAmount), 분류(gCategory), gAcc1, gAcc2(이체일때)
+  - Label에 필수일떄 class="required"로 표시. css로 .required:after { content: "*"; color: red; }
+  - 필수 입력항목이 입력되지 않았을때, 저장 버튼을 클릭하면, 해당 입력항목에 빨간색 테두리 표시.
+  - 필수 입력항목이 모두 입력되었을때, 저장 버튼을 클릭하면, google sheet에 저장.
+
+* DialogRepeat.jsx에 필수 입력항목 처리
+  - 필수 입력항목 : 시작일(rpDateS), 반복주기(rpPeriod), 반복일(rpDay), rpType, 금액(rpAmount), 분류(rpCategory), rpAcc1, rpAcc2(이체일때)
+  - Label에 필수일떄 class="required"로 표시. css로 .required:after { content: "*"; color: red; }
+  - 필수 입력항목이 입력되지 않았을때, 저장 버튼을 클릭하면, 해당 입력항목에 빨간색 테두리 표시.
+  - 필수 입력항목이 모두 입력되었을때, 저장 버튼을 클릭하면, google sheet에 저장.

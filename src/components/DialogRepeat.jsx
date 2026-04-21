@@ -3,13 +3,14 @@ import { useData } from '@/context/DataContext';
 import { Button, Panel, Sidebar, TreeSelect } from '@/components/PrimeReact';
 import { Calendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
+import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
 
 import { RP_TYPE } from '@/assets/js/constants';
 
 export default function DialogRepeat({ repeat, visible, onHide }) {
 
-  const { saveRepeatEntry, loading: dataLoading, assetNodes, defaultAssetCode, periodOptions } = useData();
+  const { saveRepeatEntry, loading: dataLoading, assetNodes, categoryNodes, defaultAssetCode, periodOptions } = useData();
 
   const [rpType, set_rpType] = useState(repeat?.rpType || '');
   const [rpDateS, set_rpDateS] = useState(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
@@ -25,6 +26,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
   const [rpAcc1Label, set_rpAcc1Label] = useState('자산1');
   const [rpAcc2Label, set_rpAcc2Label] = useState('자산2');
+  const [submitted, set_submitted] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -39,6 +41,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       set_rpAmount(repeat?.rpAmount || 0);
       set_rpMemo(repeat?.rpMemo || '');
       set_rpComplete(repeat?.rpComplete || false);
+      set_submitted(false);
 
       const [acc1Label, acc2Label] = _getAccLabels(repeat?.rpType || '지출');
       set_rpAcc1Label(acc1Label);
@@ -62,6 +65,14 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   }
 
   const onSave = async () => {
+    set_submitted(true);
+
+    // 필수 항목 검증
+    const isInvalid = !rpDateS || !rpPeriod || (rpDay === null) || !rpType || (rpAmount === 0 || rpAmount === null) || !rpCategory || !rpAcc1 || (rpType === '이체' && !rpAcc2);
+    if (isInvalid) {
+      return;
+    }
+
     const formData = {
       ...repeat,
       rpType,
@@ -120,17 +131,18 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <SelectButton id="rpType"
               options={Object.values(RP_TYPE)}
               value={rpType} onChange={(e) => set_rpType(e.target.value)}
+              className={classNames({ 'p-invalid': submitted && !rpType })}
             />
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpDateS">반복 기간</label>
+            <label htmlFor="rpDateS" className="required">시작일</label>
             <div className="flex align-items-center gap-2">
               <Calendar id="rpDateS"
                 locale="ko" dateFormat="yy-mm-dd"
                 value={rpDateS}
                 onChange={(e) => set_rpDateS(e.target.value)}
-                className="flex-grow-1"
+                className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
               />
               <span>~</span>
               <Calendar id="rpDateE"
@@ -143,54 +155,57 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpPeriod">반복 주기</label>
+            <label htmlFor="rpPeriod" className="required">반복 주기</label>
             <SelectButton id="rpPeriod"
               options={periodOptions}
               value={rpPeriod}
               onChange={(e) => set_rpPeriod(e.value)}
-              className="w-full"
+              className={classNames('w-full', { 'p-invalid': submitted && !rpPeriod })}
             />
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpDay">반복일</label>
+            <label htmlFor="rpDay" className="required">반복일</label>
             <div className="flex align-items-center gap-2">
               <InputNumber id="rpDay"
                 value={rpDay} onValueChange={(e) => set_rpDay(e.value)}
                 min={1} max={31}
                 prefix="매월 " suffix=" 일"
-                className="w-full"
+                className={classNames('w-full', { 'p-invalid': submitted && (rpDay === null) })}
               />
             </div>
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpAcc1">{rpAcc1Label}</label>
+            <label htmlFor="rpAcc1" className="required">{rpAcc1Label}</label>
             <TreeSelect id="rpAcc1"
               value={rpAcc1}
               options={assetNodes}
               onChange={(e) => set_rpAcc1(e.value)}
               placeholder="자산 선택"
-              className="w-full"
+              className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
             />
           </div>
 
           <div className={`inputWrap ${rpType !== '이체' ? 'hidden' : ''}`}>
-            <label htmlFor="rpAcc2">{rpAcc2Label}</label>
+            <label htmlFor="rpAcc2" className="required">{rpAcc2Label}</label>
             <TreeSelect id="rpAcc2"
               value={rpAcc2}
               options={assetNodes}
               onChange={(e) => set_rpAcc2(e.value)}
               placeholder="자산 선택"
-              className="w-full"
+              className={classNames('w-full', { 'p-invalid': submitted && rpType === '이체' && !rpAcc2 })}
             />
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpCategory">카테고리</label>
-            <InputText id="rpCategory"
+            <label htmlFor="rpCategory" className="required">분류</label>
+            <TreeSelect id="rpCategory"
               value={rpCategory}
-              onChange={(e) => set_rpCategory(e.target.value)}
+              options={categoryNodes.filter(node => node.key === rpType)}
+              onChange={(e) => set_rpCategory(e.value)}
+              placeholder="분류 선택"
+              className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
             />
           </div>
 
@@ -203,11 +218,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpAmount">금액</label>
+            <label htmlFor="rpAmount" className="required">금액</label>
             <InputNumber id="rpAmount"
               mode="currency" currency="KRW" locale="ko-KR"
               value={rpAmount}
               onValueChange={(e) => set_rpAmount(e.target.value)}
+              className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
             />
           </div>
         </div>

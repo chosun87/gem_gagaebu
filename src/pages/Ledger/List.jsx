@@ -147,7 +147,7 @@ export default function List() {
       {/* Floating Action Button */}
       <Button
         className="btn-floating-action btn-add-item shadow-6"
-        severity="primary" size="large" rounded
+        severity="secondary" size="large" rounded
         icon="pi pi-plus"
         onClick={() => fnOpenDialogLedger(null)}
         tooltip="목록 추가"

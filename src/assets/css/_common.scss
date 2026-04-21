@@ -24,3 +24,11 @@
     width: 3.5rem;
     min-height: 3.5rem;
 }
+
+label.required {
+    &::after {
+        content: "*";
+        color: var(--pink-500);
+        margin-left: 0.25rem;
+    }
+}
