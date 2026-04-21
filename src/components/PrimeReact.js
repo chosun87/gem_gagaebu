@@ -21,6 +21,7 @@ export { Sidebar } from 'primereact/sidebar';
 export { TabMenu } from 'primereact/tabmenu';
 export { TabView, TabPanel } from 'primereact/tabview';
 export { Tag } from 'primereact/tag';
+export { TreeSelect } from 'primereact/treeselect';
 export { ToggleButton } from 'primereact/togglebutton';
 // 필요 시 PrimeReact의 다른 컴포넌트들을 여기에 추가하세요.
 

@@ -175,6 +175,7 @@ import Footer from './components/Footer';
   - 한글화 적용.
   - 변경한 테마는 로컬 스토리지에 저장해서, 화면 reload 시에도 동일한 테마가 적용되도록 할 것.
   - Scale, Input Style, Repple Effect, Dark Mode 기능도 동일하게 구현.
-  - Theme 선택기는 Dropdown을 이용할 것.
-    - Group을 이용해서 계열별로 목록 생성 구현.
+  - Theme 선택기는 TreeSelect을 이용할 것.
+    - Group을 Root로 하되 선택은 불가하게. 펼쳐지는 것만 가능.
+    - Group에는 아이콘 왼쪽에 보이도록. 아이콘은 https://primereact.org/theming/ 의 Configurator 화면과 동일하게
     - Template을 이용해서 각 테마별로 색상을 보여줄 것.
