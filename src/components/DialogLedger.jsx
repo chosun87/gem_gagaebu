@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog } from '@/components/PrimeReact';
 import { Calendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
@@ -10,7 +10,7 @@ import { G_TYPE } from '@/assets/js/constants';
 
 export default function DialogLedger({ ledger, visible, onHide }) {
 
-  const { saveLedgerEntry, loading: dataLoading, assetNodes, categoryNodes, defaultAssetCode } = useData();
+  const { saveLedgerEntry, deleteLedgerEntry, loading: dataLoading, assetNodes, categoryNodes, defaultAssetCode } = useData();
 
   const [gDate, set_gDate] = useState(ledger?.gDate ? dayjs(ledger.gDate).toDate() : new Date());
   const [gType, set_gType] = useState(ledger?.gType || '');
@@ -83,13 +83,23 @@ export default function DialogLedger({ ledger, visible, onHide }) {
     }
   };
 
-  const onDelete = async () => {
-    try {
-      await deleteLedgerEntry(ledger);
-      onHide();
-    } catch (error) {
-      alert('삭제 중 오류가 발생했습니다.');
-    }
+  const onDelete = () => {
+    confirmDialog({
+      message: '정말로 삭제하시겠습니까?',
+      header: '삭제 확인',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: '삭제',
+      rejectLabel: '취소',
+      acceptClassName: 'p-button-danger',
+      accept: async () => {
+        try {
+          await deleteLedgerEntry(ledger);
+          onHide();
+        } catch (error) {
+          alert('삭제 중 오류가 발생했습니다.');
+        }
+      }
+    });
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -201,6 +211,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
           </div>
         </div>
       </Panel>
+      <ConfirmDialog />
     </Sidebar>
   );
 }

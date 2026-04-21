@@ -5,6 +5,7 @@ export { Calendar } from 'primereact/calendar';
 export { Card } from 'primereact/card';
 export { Checkbox } from 'primereact/checkbox';
 export { Chips } from 'primereact/chips';
+export { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 export { DataView } from 'primereact/dataview';
 export { Divider } from 'primereact/divider';
 export { Dialog } from 'primereact/dialog';

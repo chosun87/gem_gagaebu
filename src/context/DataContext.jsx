@@ -331,6 +331,46 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  // 가계부 데이터 삭제 (마킹)
+  const deleteLedgerEntry = async (ledger) => {
+    if (!ledger) return;
+    setLoading(true);
+    try {
+      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gDeleted);
+      const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');
+      await updateSheetCell(`${ledger.sheetName}!${sheetColName}${ledger.sheetRowNo}`, timestamp);
+
+      // 데이터 갱신
+      await loadSheet연도Data(ledger.sheetName);
+      return true;
+    } catch (error) {
+      console.error('Error deleting ledger entry:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 반복 데이터 삭제 (마킹)
+  const deleteRepeatEntry = async (repeat) => {
+    if (!repeat) return;
+    setLoading(true);
+    try {
+      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpDeleted);
+      const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');
+      await updateSheetCell(`반복!${sheetColName}${repeat.sheetRowNo}`, timestamp);
+
+      // 데이터 갱신
+      await loadSheet반복Data();
+      return true;
+    } catch (error) {
+      console.error('Error deleting repeat entry:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // List.jsx 등 다른 컴포넌트와의 호환성을 위해 현재 선택된 연도의 데이터를 yearData로 제공
   const yearData = sheetYYYYData[selectedYear] || [];
 
@@ -405,7 +445,9 @@ export const DataProvider = ({ children }) => {
       handleChange_gExecute,
       handleChange_rpComplete,
       saveLedgerEntry,
+      deleteLedgerEntry,
       saveRepeatEntry,
+      deleteRepeatEntry,
       assetNodes,
       categoryNodes,
       defaultAssetCode,

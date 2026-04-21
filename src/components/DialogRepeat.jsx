@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog } from '@/components/PrimeReact';
 import { Calendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
@@ -10,7 +10,7 @@ import { RP_TYPE } from '@/assets/js/constants';
 
 export default function DialogRepeat({ repeat, visible, onHide }) {
 
-  const { saveRepeatEntry, loading: dataLoading, assetNodes, categoryNodes, defaultAssetCode, periodOptions } = useData();
+  const { saveRepeatEntry, deleteRepeatEntry, loading: dataLoading, assetNodes, categoryNodes, defaultAssetCode, periodOptions } = useData();
 
   const [rpType, set_rpType] = useState(repeat?.rpType || '');
   const [rpDateS, set_rpDateS] = useState(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
@@ -96,13 +96,23 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     }
   };
 
-  const onDelete = async () => {
-    try {
-      await deleteRepeatEntry(repeat);
-      onHide();
-    } catch (error) {
-      alert('삭제 중 오류가 발생했습니다.');
-    }
+  const onDelete = () => {
+    confirmDialog({
+      message: '정말로 삭제하시겠습니까?',
+      header: '삭제 확인',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: '삭제',
+      rejectLabel: '취소',
+      acceptClassName: 'p-button-danger',
+      accept: async () => {
+        try {
+          await deleteRepeatEntry(repeat);
+          onHide();
+        } catch (error) {
+          alert('삭제 중 오류가 발생했습니다.');
+        }
+      }
+    });
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -246,6 +256,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
         </div>
       </Panel>
+      <ConfirmDialog />
     </Sidebar>
   );
 }
