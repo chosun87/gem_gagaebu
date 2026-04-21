@@ -10,14 +10,16 @@ export const ThemeProvider = ({ children }) => {
   const [scale, set_scale] = useState(parseInt(localStorage.getItem('app-scale')) || 14);
   const [ripple, set_ripple] = useState(localStorage.getItem('app-ripple') === 'false' ? false : true);
   const [inputStyle, set_inputStyle] = useState(localStorage.getItem('app-inputStyle') || 'outlined');
+  const [condensed, set_condensed] = useState(localStorage.getItem('app-condensed') === 'true');
 
   useEffect(() => {
     const themeLink = document.getElementById('theme-link');
     if (themeLink) {
-      themeLink.href = `https://unpkg.com/primereact/resources/themes/${theme}/theme.css`;
+      const finalTheme = (condensed && theme.startsWith('md-')) ? theme.replace('md-', 'mdc-') : theme;
+      themeLink.href = `https://unpkg.com/primereact/resources/themes/${finalTheme}/theme.css`;
     }
     localStorage.setItem('app-theme', theme);
-  }, [theme]);
+  }, [theme, condensed]);
 
   useEffect(() => {
     document.documentElement.style.fontSize = scale + 'px';
@@ -34,6 +36,10 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('app-inputStyle', inputStyle);
   }, [inputStyle]);
 
+  useEffect(() => {
+    localStorage.setItem('app-condensed', condensed);
+  }, [condensed]);
+
   const changeTheme = (newTheme) => {
     setTheme(newTheme);
   };
@@ -43,7 +49,8 @@ export const ThemeProvider = ({ children }) => {
       theme, changeTheme,
       scale, set_scale,
       ripple, set_ripple,
-      inputStyle, set_inputStyle
+      inputStyle, set_inputStyle,
+      condensed, set_condensed
     }}>
       {children}
     </ThemeContext.Provider>
