@@ -12,8 +12,16 @@ export default function DialogTheme({ visible, onHide }) {
     condensed, set_condensed
   } = useTheme();
 
+  const allThemes = THEME_NODES.flatMap(group => group.children || []);
+  const currentThemeNode = allThemes.find(t => {
+    const pattern = t.key.replace('{MODE}', '(light|dark)');
+    const regex = new RegExp(`^${pattern}$`);
+    return regex.test(theme);
+  });
+
   const isDarkMode = theme.includes('dark');
   const isMaterialTheme = theme.startsWith('md-');
+  const supportsDarkMode = currentThemeNode?.darkMode !== false;
 
   const onScaleChange = (type) => {
     if (type === 'plus') {
@@ -110,6 +118,60 @@ export default function DialogTheme({ visible, onHide }) {
 
           <Divider />
 
+          <div className="inputWrap">
+            <label htmlFor="theme" className="text-lg mb-2">테마</label>
+            <TreeSelect id="theme"
+              className="themeSelector w-full"
+              placeholder="테마를 선택하세요"
+              display="comma"
+              selectionMode="single"
+              options={THEME_NODES}
+              value={theme}
+              nodeTemplate={templateTreeSelectNode}
+              valueTemplate={() => templateSelectedTheme(theme)}
+              onChange={(e) => {
+                let newTheme = e.value;
+                if (newTheme.includes('{MODE}')) {
+                  newTheme = newTheme.replace('{MODE}', isDarkMode ? 'dark' : 'light');
+                }
+                changeTheme(newTheme);
+              }}
+            />
+            {/* expandedKeys={expandedKeysTheme}
+              onToggle={(e) => setExpandedKeysTheme(e.value)} */}
+          </div>
+
+          <Divider />
+
+          <div className="inputWrap">
+            <label htmlFor="darkmode" className={!supportsDarkMode ? 'text-lg opacity-50' : 'text-lg'}>
+              다크 모드 (Dark Mode)
+            </label>
+            <InputSwitch id="darkmode"
+              className="ml-auto"
+              disabled={!supportsDarkMode}
+              tooltip="다크 모드"
+              tooltipOptions={{ position: 'left' }}
+              checked={isDarkMode} onChange={onDarkModeToggle} />
+          </div>
+
+          <Divider />
+
+          <div className="inputWrap">
+            <label htmlFor="condensed" className={!isMaterialTheme ? 'text-lg opacity-50' : 'text-lg'}>
+              Condensed (Material 테마 전용)
+            </label>
+            <InputSwitch id="condensed"
+              className="ml-auto"
+              disabled={!isMaterialTheme}
+              tooltip="Material 테마 전용 압축 레이아웃"
+              tooltipOptions={{ position: 'left' }}
+              checked={condensed} onChange={(e) => set_condensed(e.value)}
+            />
+          </div>
+
+          <Divider />
+
           <div className="inputWrap" style={{ gap: '3rem' }}>
             <label htmlFor="inputStyle" className="text-lg">입력 스타일</label>
             <SelectButton id="inputStyle"
@@ -128,50 +190,6 @@ export default function DialogTheme({ visible, onHide }) {
               tooltip="리플 효과"
               tooltipOptions={{ position: 'left' }}
               checked={ripple} onChange={(e) => set_ripple(e.value)} />
-          </div>
-
-          <Divider />
-
-          <div className="inputWrap">
-            <label htmlFor="darkmode" className="text-lg">다크 모드 (Dark Mode)</label>
-            <InputSwitch id="darkmode"
-              className="ml-auto"
-              tooltip="다크 모드"
-              tooltipOptions={{ position: 'left' }}
-              checked={isDarkMode} onChange={onDarkModeToggle} />
-          </div>
-
-          <Divider />
-
-          <div className="inputWrap">
-            <label htmlFor="theme" className="text-lg mb-2">테마</label>
-            <TreeSelect id="theme"
-              className="themeSelector w-full"
-              placeholder="테마를 선택하세요"
-              display="comma"
-              selectionMode="single"
-              options={THEME_NODES}
-              value={theme}
-              nodeTemplate={templateTreeSelectNode}
-              valueTemplate={() => templateSelectedTheme(theme)}
-              onChange={(e) => changeTheme(e.value)}
-            />
-            {/* expandedKeys={expandedKeysTheme}
-              onToggle={(e) => setExpandedKeysTheme(e.value)} */}
-          </div>
-
-          <div className={!isMaterialTheme ? 'hidden' : ''}>
-            <Divider />
-
-            <div className="inputWrap">
-              <label htmlFor="condensed" className="text-lg">Condensed</label>
-              <InputSwitch id="condensed"
-                className="ml-auto"
-                tooltip="Material 테마 전용 압축 레이아웃"
-                tooltipOptions={{ position: 'left' }}
-                checked={condensed} onChange={(e) => set_condensed(e.value)}
-              />
-            </div>
           </div>
         </div>
       </Panel>

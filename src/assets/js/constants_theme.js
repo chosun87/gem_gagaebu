@@ -14,14 +14,14 @@ export const THEME_NODES = [
     iconUrl: laraIcon,
     selectable: false,
     children: [
-      { key: 'lara-light-cyan', label: '라라 라이트 시안', color: '#06b6d4' },
-      { key: 'lara-light-teal', label: '라라 라이트 틸', color: '#14b8a6' },
-      { key: 'lara-light-blue', label: '라라 라이트 블루', color: '#3b82f6' },
-      { key: 'lara-light-indigo', label: '라라 라이트 인디고', color: '#6366f1' },
-      { key: 'lara-light-purple', label: '라라 라이트 퍼플', color: '#a855f7' },
-      { key: 'lara-light-amber', label: '라라 라이트 앰버', color: '#f59e0b' },
-      { key: 'lara-light-green', label: '라라 라이트 그린', color: '#22c55e' },
-      { key: 'lara-light-pink', label: '라라 라이트 핑크', color: '#ec4899' },
+      { key: 'lara-{MODE}-cyan', label: '라라 시안', color: '#06b6d4' },
+      { key: 'lara-{MODE}-teal', label: '라라 틸', color: '#14b8a6' },
+      { key: 'lara-{MODE}-blue', label: '라라 블루', color: '#3b82f6' },
+      { key: 'lara-{MODE}-indigo', label: '라라 인디고', color: '#6366f1' },
+      { key: 'lara-{MODE}-purple', label: '라라 퍼플', color: '#8b5cf6' },
+      { key: 'lara-{MODE}-amber', label: '라라 앰버', color: '#f59e0b' },
+      { key: 'lara-{MODE}-green', label: '라라 그린', color: '#10b981' },
+      { key: 'lara-{MODE}-pink', label: '라라 핑크', color: '#ec4899' },
     ]
   },
   {
@@ -30,8 +30,8 @@ export const THEME_NODES = [
     iconUrl: bootstrapIcon,
     selectable: false,
     children: [
-      { key: 'bootstrap4-light-blue', label: 'BS4 라이트 블루', color: '#007bff' },
-      { key: 'bootstrap4-light-purple', label: 'BS4 라이트 퍼플', color: '#6f42c1' },
+      { key: 'bootstrap4-{MODE}-blue', label: 'BS4 블루', color: '#007bff' },
+      { key: 'bootstrap4-{MODE}-purple', label: 'BS4 퍼플', color: '#883cae' },
     ]
   },
   {
@@ -40,8 +40,8 @@ export const THEME_NODES = [
     iconUrl: materialIcon,
     selectable: false,
     children: [
-      { key: 'md-light-indigo', label: 'MD 라이트 인디고', color: '#3f51b5' },
-      { key: 'md-light-deeppurple', label: 'MD 라이트 퍼플', color: '#673ab7' },
+      { key: 'md-{MODE}-indigo', label: 'MD 인디고', color: '#3f51b5' },
+      { key: 'md-{MODE}-deeppurple', label: 'MD 퍼플', color: '#673ab7' },
     ]
   },
   {
@@ -50,7 +50,7 @@ export const THEME_NODES = [
     iconUrl: sohoIcon,
     selectable: false,
     children: [
-      { key: 'soho-light', label: '소호 라이트', color: '#495057' },
+      { key: 'soho-{MODE}', label: '소호', color: '#7254f3' },
     ]
   },
   {
@@ -59,7 +59,7 @@ export const THEME_NODES = [
     iconUrl: vivaIcon,
     selectable: false,
     children: [
-      { key: 'viva-light', label: '비바 라이트', color: '#4f46e5' },
+      { key: 'viva-{MODE}', label: '비바', color: '#5472d4' },
     ]
   },
   {
@@ -68,7 +68,7 @@ export const THEME_NODES = [
     iconUrl: fluentIcon,
     selectable: false,
     children: [
-      { key: 'fluent-light', label: '플루언트 라이트', color: '#0078d4' },
+      { key: 'fluent-{MODE}', label: '플루언트', color: '#0078d4' },
     ]
   },
   {
@@ -77,7 +77,7 @@ export const THEME_NODES = [
     iconUrl: miraIcon,
     selectable: false,
     children: [
-      { key: 'mira', label: '미라 (Mira)', color: '#10b981' },
+      { key: 'mira', label: '미라 (Mira)', color: '#5e81ac', darkMode: false },
     ]
   },
   {
@@ -86,7 +86,7 @@ export const THEME_NODES = [
     iconUrl: nanoIcon,
     selectable: false,
     children: [
-      { key: 'nano', label: '나노 (Nano)', color: '#10b981' },
+      { key: 'nano', label: '나노 (Nano)', color: '#1174c0', darkMode: false },
     ]
   }
 ];
