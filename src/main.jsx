@@ -9,12 +9,16 @@ import '@/assets/css/all.scss';
 import { PrimeReactProvider } from 'primereact/api';
 import PrimeReact from 'primereact/api';
 
+import { HashRouter } from 'react-router-dom';
+
 PrimeReact.ripple = true;
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <PrimeReactProvider>
-      <App />
+      <HashRouter>
+        <App />
+      </HashRouter>
     </PrimeReactProvider>
   </StrictMode>,
 );

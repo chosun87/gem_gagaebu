@@ -45,7 +45,6 @@ export default function List() {
   }
 
   const fnHideDialogLedger = () => {
-
     setShowDialogLedger(false);
   }
 

@@ -14,7 +14,8 @@
     - primeflex
     - sass
     - (미사용) reset-css
-    - gapi-script
+    - react-router-dom
+    - @react-oauth/google
     - FullCalendar : @fullcalendar/react, @fullcalendar/core, @fullcalendar/daygrid
     - sortablejs
   * 추가할 package (devDependencies)

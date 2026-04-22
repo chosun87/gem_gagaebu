@@ -23,6 +23,7 @@
     "primereact": "^10.9.7",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-router-dom": "^7.14.2",
     "reset-css": "^5.0.2",
     "sass": "^1.99.0",
     "sortablejs": "^1.15.7"
