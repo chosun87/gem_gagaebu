@@ -239,3 +239,4 @@ import Footer from './components/Footer';
 
 * FullCalendar 적용
   - Calendar의 각 날짜 칸에 해당 일자의 총수입, 총지출, 총이체를 계산해서 templateDayCell()를 이용해서 출력
+  - FullCalendar에 swipe로 전달, 다음달로 이동 기능 적용.

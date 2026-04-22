@@ -49,6 +49,14 @@
     }
   }
 
+  .fc-swipe-wrapper {
+    flex: 1 1 auto;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
   .fc {
     flex: 1 1 auto;
 

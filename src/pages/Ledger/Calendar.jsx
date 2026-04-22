@@ -79,6 +79,31 @@ export default function Calendar() {
     console.log('Date clicked:', info.dateStr);
   };
 
+  // 스와이프 핸들러 추가
+  const touchStart = useRef(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    touchStart.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = (e) => {
+    if (!touchStart.current) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const distance = touchStart.current - touchEnd;
+
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // 왼쪽으로 스와이프 -> 다음 달
+        setSelectedDate(dayjs(selectedDate).add(1, 'month').toDate());
+      } else {
+        // 오른쪽으로 스와이프 -> 이전 달
+        setSelectedDate(dayjs(selectedDate).subtract(1, 'month').toDate());
+      }
+    }
+    touchStart.current = null;
+  };
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿
   const templateMonthNavigator = (e) => {
@@ -133,20 +158,24 @@ export default function Calendar() {
         onViewDateChange={handleViewDateChange}
       />
 
-      <FullCalendar
-        ref={fcRef}
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="dayGridMonth"
-        headerToolbar={{
-          left: 'prev,next',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        }}
-        dayCellContent={templateDayCell}
-        locale="ko"
-        initialDate={selectedDate}
-        dateClick={handleDateClick}
-      />
+      <div className="fc-swipe-wrapper" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <FullCalendar
+          ref={fcRef}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          height="100%"
+          expandRows={true}
+          headerToolbar={{
+            left: 'prev,next',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }}
+          dayCellContent={templateDayCell}
+          locale="ko"
+          initialDate={selectedDate}
+          dateClick={handleDateClick}
+        />
+      </div>
     </div>
   );
 }
