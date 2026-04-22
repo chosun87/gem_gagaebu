@@ -1,10 +1,9 @@
-import { gapi } from 'gapi-script';
 import { GOOGLE_SHEET } from '@/assets/js/constants';
 
 // 특정 범위의 데이터를 가져옵니다. (ex: '2026!A:G')
 export const fetchSheetData = async (range) => {
   try {
-    const response = await gapi.client.sheets.spreadsheets.values.get({
+    const response = await window.gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       range: range,
     });
@@ -18,7 +17,7 @@ export const fetchSheetData = async (range) => {
 // 특정 셀의 데이터를 업데이트합니다. (ex: range='2026!A3', value=TRUE)
 export const updateSheetCell = async (range, value) => {
   try {
-    const response = await gapi.client.sheets.spreadsheets.values.update({
+    const response = await window.gapi.client.sheets.spreadsheets.values.update({
       spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       range: range,
       valueInputOption: 'USER_ENTERED',
@@ -36,7 +35,7 @@ export const updateSheetCell = async (range, value) => {
 // 특정 시트의 마지막에 행을 추가합니다.
 export const appendSheetRow = async (sheetName, values) => {
   try {
-    const response = await gapi.client.sheets.spreadsheets.values.append({
+    const response = await window.gapi.client.sheets.spreadsheets.values.append({
       spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       range: `${sheetName}!A1`,
       valueInputOption: 'USER_ENTERED',
@@ -54,7 +53,7 @@ export const appendSheetRow = async (sheetName, values) => {
 // 특정 행의 데이터를 업데이트합니다.
 export const updateSheetRow = async (sheetName, rowNo, values) => {
   try {
-    const response = await gapi.client.sheets.spreadsheets.values.update({
+    const response = await window.gapi.client.sheets.spreadsheets.values.update({
       spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       range: `${sheetName}!A${rowNo}`,
       valueInputOption: 'USER_ENTERED',
@@ -72,7 +71,7 @@ export const updateSheetRow = async (sheetName, rowNo, values) => {
 // 새로운 시트를 생성합니다.
 export const createSheet = async (sheetName) => {
   try {
-    const response = await gapi.client.sheets.spreadsheets.batchUpdate({
+    const response = await window.gapi.client.sheets.spreadsheets.batchUpdate({
       spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       resource: {
         requests: [
@@ -97,7 +96,7 @@ export const createSheet = async (sheetName) => {
 // 시트의 헤더(1행)를 초기화합니다.
 export const updateSheetHeaders = async (sheetName, headers) => {
   try {
-    const response = await gapi.client.sheets.spreadsheets.values.update({
+    const response = await window.gapi.client.sheets.spreadsheets.values.update({
       spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
       range: `${sheetName}!1:1`,
       valueInputOption: 'USER_ENTERED',

@@ -1,28 +1,40 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { initGoogleApi, initGoogleAuth, signIn, signOut, setToken } from '@/api/googleAuth';
+import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
+import { initGoogleApi, signOut, setToken } from '@/api/googleAuth';
+import { GOOGLE_AUTH } from '@/assets/js/constants';
 
 const AuthContext = createContext(null);
 
-export const AuthProvider = ({ children }) => {
+const AuthInternalProvider = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isSignedIn, setIsSignedIn] = useState(false);
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      const expiresIn = tokenResponse.expires_in * 1000;
+      localStorage.setItem('gagaebu_token', tokenResponse.access_token);
+      localStorage.setItem('gagaebu_token_expiry', Date.now() + expiresIn - 60000);
+
+      setToken(tokenResponse.access_token);
+      setIsSignedIn(true);
+    },
+    onError: (error) => console.error('Login Failed:', error),
+    scope: GOOGLE_AUTH.SCOPES,
+  });
 
   useEffect(() => {
     const setup = async () => {
       try {
-        // GAPI 및 GIS 각각 비동기 초기화
+        // GAPI 초기화 (index.html에서 로드됨)
         await initGoogleApi();
-        await initGoogleAuth();
 
-        // 로컬 스토리지에 저장된 토큰이 있는지, 만료되지는 않았는지 검사
         const storedToken = localStorage.getItem('gagaebu_token');
         const tokenExpiry = localStorage.getItem('gagaebu_token_expiry');
 
         if (storedToken && tokenExpiry && Date.now() < Number(tokenExpiry)) {
-          setToken(storedToken); // GAPI에 기존 토큰 주입
+          setToken(storedToken);
           setIsSignedIn(true);
         } else {
-          // 토큰이 만료되었거나 없으면 삭제
           localStorage.removeItem('gagaebu_token');
           localStorage.removeItem('gagaebu_token_expiry');
         }
@@ -37,20 +49,8 @@ export const AuthProvider = ({ children }) => {
     setup();
   }, []);
 
-  const login = async () => {
-    try {
-      const response = await signIn();
-      // 발급받은 토큰은 보통 3599초(약 1시간) 동안 유효함
-      const expiresIn = response.expires_in * 1000;
-
-      localStorage.setItem('gagaebu_token', response.access_token);
-      // 안전하게 만료 1분 전에 만료되었다고 간주하도록 설정
-      localStorage.setItem('gagaebu_token_expiry', Date.now() + expiresIn - 60000);
-
-      setIsSignedIn(true);
-    } catch (error) {
-      console.error('Login failed:', error);
-    }
+  const login = () => {
+    googleLogin();
   };
 
   const logout = async () => {
@@ -68,6 +68,16 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{ isInitialized, isSignedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
+  );
+};
+
+export const AuthProvider = ({ children }) => {
+  return (
+    <GoogleOAuthProvider clientId={GOOGLE_AUTH.CLIENT_ID}>
+      <AuthInternalProvider>
+        {children}
+      </AuthInternalProvider>
+    </GoogleOAuthProvider>
   );
 };
 
