@@ -20,27 +20,34 @@ export default function Calendar() {
   const events = [];
 
   useEffect(() => {
-    if (fcRef.current) {
+    if (fcRef.current && selectedDate) {
       const calendarApi = fcRef.current.getApi();
-      calendarApi.gotoDate(selectedDate);
+      // flushSync 에러 방지를 위해 비동기 처리 (타스크 큐로 위임)
+      setTimeout(() => {
+        calendarApi.gotoDate(selectedDate);
+      }, 0);
     }
   }, [selectedDate]);
 
-  // 월 변경
+  // 월 변경 (화살표 클릭 등)
   const handleMonthChange = (e) => {
-    console.log(e);
+    if (!e.year || !e.month) return;
     const newDate = new Date(e.year, e.month - 1, 1);
     setSelectedDate(newDate);
   }
 
-  // yearNavigator monthNavigator에 의한 월 변경
+  // yearNavigator, monthNavigator에 의한 월/연도 변경
   const handleViewDateChange = (e) => {
-    setSelectedDate(e.value);
+    if (e.value instanceof Date) {
+      setSelectedDate(e.value);
+    }
   }
 
-  // yearData에서 현재 선택된 달의 데이터만 필터링
-  const currentMonthNum = selectedDate.getMonth() + 1;
-  const monthData = yearData.filter(item => {
+  // yearData에서 현재 선택된 달의 데이터만 필터링 (방어 코드 포함)
+  const currentMonthNum = selectedDate ? selectedDate.getMonth() + 1 : dayjs().month() + 1;
+  const monthData = (yearData || []).filter(item => {
+    if (!item?.gDate || typeof item.gDate !== 'string') return false;
+
     const dateParts = item.gDate.split(/[-./\s]+/);
     if (dateParts.length >= 2) {
       const rowMonthNum = parseInt(dateParts[1], 10);

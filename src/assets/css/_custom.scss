@@ -4,6 +4,10 @@
   color: var(--primary-color) !important;
 }
 
+.p-dropdown-items-wrapper {
+  max-height: 391px !important;
+}
+
 /* 일요일 (첫 번째 열) 색상 설정 */
 .p-datepicker {
   background: transparent !important;
@@ -58,5 +62,19 @@
 
   .p-treenode-children {
     padding: 0 0 0 2.5rem;
+  }
+}
+
+// Scrollbar styling
+.p-dropdown-items-wrapper,
+.p-treeselect-items-wrapper {
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: var(--gray-300);
   }
 }
