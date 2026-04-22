@@ -1,5 +1,0 @@
-@mixin dark-mode {
-    :root.dark-mode & {
-        @content;
-    }
-}
