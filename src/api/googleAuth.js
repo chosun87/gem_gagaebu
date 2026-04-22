@@ -33,6 +33,7 @@ export const initGoogleAuth = () => {
         client_id: GOOGLE_AUTH.CLIENT_ID,
         scope: GOOGLE_AUTH.SCOPES,
         callback: '', // signIn() 에서 동적으로 덮어씀
+        redirect_uri: GOOGLE_AUTH.REDIRECT_URI
       });
       resolve();
     };

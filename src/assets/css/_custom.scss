@@ -52,3 +52,11 @@
 .p-datepicker .p-datepicker-header .p-datepicker-title .p-inputtext-sm {
     line-height: normal;
 }
+
+.p-tree {
+    padding: 0;
+
+    .p-treenode-children {
+        padding: 0 0 0 2.5rem;
+    }
+}

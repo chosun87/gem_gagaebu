@@ -6,6 +6,9 @@ import path from "path";
 export default defineConfig({
   plugins: [react()],
 
+  //GitHub Pages는 저장소 이름과 동일한 경로 필요
+  base: '/gem_gagaebu/',
+
   server: {
     port: 3000, // 원하는 포트 번호
     open: true  // 서버 실행 시 브라우저 자동 열기 (선택 사항)

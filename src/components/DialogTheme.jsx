@@ -1,13 +1,14 @@
+import { useState } from 'react';
 import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, TreeSelect } from '@/components/PrimeReact';
 import { useTheme } from '@/context/ThemeContext';
 import { THEME_NODES, INPUT_STYLE_OPTIONS, SCALES } from '@/assets/js/constants_theme';
 
 export default function DialogTheme({ visible, onHide }) {
   const {
-    theme, changeTheme,
     scale, set_scale,
-    ripple, set_ripple,
     inputStyle, set_inputStyle,
+    ripple, set_ripple,
+    theme, changeTheme,
     condensed, set_condensed
   } = useTheme();
 
@@ -57,11 +58,10 @@ export default function DialogTheme({ visible, onHide }) {
   const templateTreeSelectNode = (node) => {
     if (node.children) {
       return (
-        <div className="flex align-items-center gap-2 py-1">
-          <img
+        <div className="theme-group">
+          <img className="icon"
             src={node.iconUrl}
             alt={node.label}
-            style={{ width: '20px', height: '20px', objectFit: 'contain' }}
           />
           <span className="font-bold">{node.label}</span>
         </div>
@@ -69,7 +69,7 @@ export default function DialogTheme({ visible, onHide }) {
     }
 
     return (
-      <div className="flex align-items-center gap-2 py-1">
+      <div className="theme-item">
         <div
           className="colorChip shadow-1"
           style={{ backgroundColor: node.color }}
@@ -156,6 +156,8 @@ export default function DialogTheme({ visible, onHide }) {
               valueTemplate={() => templateSelectedTheme(theme)}
               onChange={(e) => changeTheme(e.value)}
             />
+            {/* expandedKeys={expandedKeysTheme}
+              onToggle={(e) => setExpandedKeysTheme(e.value)} */}
           </div>
 
           <div className={!isMaterialTheme ? 'hidden' : ''}>
