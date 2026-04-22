@@ -35,7 +35,7 @@ export default function Repeat() {
         className={`list-item ${rpTypeClass} ${rpCompleteClass} col-12`}
         onClick={() => fnOpenDialogRepeat(item)}
       >
-        <InputSwitch checked={item.rpComplete}
+        <InputSwitch checked={item.rpComplete} trueValue={false} falseValue={true}
           tooltip="완료"
           tooltipOptions={{ position: 'top' }}
           onChange={(e) => handleChange_rpComplete(item, e.target.value)}

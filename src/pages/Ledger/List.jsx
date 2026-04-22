@@ -104,7 +104,7 @@ export default function List() {
           {item.gAmount.toLocaleString()}<span className="unit text-sm">원</span>
         </div>
 
-        <InputSwitch checked={item.gExecuted}
+        <InputSwitch checked={item.gExecuted} trueValue={false} falseValue={true}
           tooltip="집행"
           tooltipOptions={{ position: 'top' }}
           onChange={(e) => handleChange_gExecute(item, e.target.value)}
