@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
 import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
@@ -17,7 +17,26 @@ locale('ko');
 export default function Calendar() {
   const { yearData, loading, selectedDate, setSelectedDate } = useData();
   const fcRef = useRef(null);
-  const events = [];
+
+  // 일일 합계 데이터 가공
+  const dailySummary = useMemo(() => {
+    const summary = {};
+    (yearData || []).forEach(item => {
+      if (item.gDeleted) return;
+
+      // 날짜 포맷 표준화 (YYYY-MM-DD)
+      const dateStr = dayjs(item.gDate).format('YYYY-MM-DD');
+      if (!summary[dateStr]) {
+        summary[dateStr] = { income: 0, expense: 0, transfer: 0 };
+      }
+
+      const amount = Number(item.gAmount) || 0;
+      if (item.gType === '수입') summary[dateStr].income += amount;
+      else if (item.gType === '지출') summary[dateStr].expense += amount;
+      else if (item.gType === '이체') summary[dateStr].transfer += amount;
+    });
+    return summary;
+  }, [yearData]);
 
   useEffect(() => {
     if (fcRef.current && selectedDate) {
@@ -60,10 +79,6 @@ export default function Calendar() {
     console.log('Date clicked:', info.dateStr);
   };
 
-  const handleEventClick = (info) => {
-    console.log('Event clicked:', info.event.title);
-  };
-
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿
   const templateMonthNavigator = (e) => {
@@ -91,15 +106,17 @@ export default function Calendar() {
   const templateDayCell = (arg) => {
     const day = arg.date.getDate();
 
-    // 예산 데이터가 있는 경우 해당 날짜에 표시
-    const eventData = events.find(e => e.date === arg.dateStr);
+    const argDate = dayjs(arg.date).format('YYYY-MM-DD');
+    const data = dailySummary[argDate];
 
     return (
       <div className="custom-day-content">
         <div className="day-number">{day}</div>
-        {eventData && (
-          <div className="event-dot" />
-        )}
+        <div className="daily-totals text-xs monospace">
+          {data?.income > 0 && <div className="total-income">{data.income.toLocaleString()}</div>}
+          {data?.expense > 0 && <div className="total-expense">{data.expense.toLocaleString()}</div>}
+          {data?.transfer > 0 && <div className="total-transfer">{data.transfer.toLocaleString()}</div>}
+        </div>
       </div>
     );
   };

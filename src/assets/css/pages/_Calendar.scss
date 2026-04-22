@@ -66,7 +66,17 @@
           cursor: pointer;
 
           .fc-daygrid-day-top {
-            flex-direction: unset;
+            flex-direction: column;
+            width: 100%;
+
+            .fc-daygrid-day-number {
+              padding: 4px 0;
+
+              .custom-day-content {
+                padding-left: 4px;
+                align-items: flex-start;
+              }
+            }
           }
         }
       }
@@ -85,6 +95,50 @@
       .fc-col-header-cell-cushion,
       .day-number {
         color: var(--blue-500);
+      }
+    }
+
+    .custom-day-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      width: 100%;
+      height: 100%;
+      padding: 2px;
+
+      .day-number {
+        font-weight: bold;
+      }
+
+      .daily-totals {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.25rem;
+        margin-top: 0.25rem;
+        overflow: hidden;
+
+        div {
+          line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
+          text-align: right;
+        }
+
+        .total-income {
+          color: var(--blue-500);
+        }
+
+        .total-expense {
+          color: var(--pink-500);
+        }
+
+        .total-transfer {
+          color: var(--green-500);
+        }
       }
     }
   }

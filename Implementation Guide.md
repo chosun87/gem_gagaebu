@@ -236,3 +236,6 @@ import Footer from './components/Footer';
   - 삭제 버튼을 클릭하면, ConfirmDialog를 띄워서 '삭제하시겠습니까?' 확인 후 삭제.
   - 확인 시에, 해당 행을 삭제 마킹(gDeleted=Date.now() 또는 rpDeleted=Date.now()) 후, google sheet에 저장.
   - 삭제 마킹된 행은 화면에 표시하지 않음.
+
+* FullCalendar 적용
+  - Calendar의 각 날짜 칸에 해당 일자의 총수입, 총지출, 총이체를 계산해서 templateDayCell()를 이용해서 출력
