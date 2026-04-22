@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useData } from '@/context/DataContext';
 import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
@@ -47,6 +47,31 @@ export default function List() {
   const fnHideDialogLedger = () => {
     setShowDialogLedger(false);
   }
+
+  // 스와이프 핸들러 추가
+  const touchStart = useRef(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    touchStart.current = e.targetTouches[0].clientX;
+  };
+
+  const onTouchEnd = (e) => {
+    if (!touchStart.current) return;
+    const touchEnd = e.changedTouches[0].clientX;
+    const distance = touchStart.current - touchEnd;
+
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // 왼쪽으로 스와이프 -> 다음 달
+        setSelectedDate(dayjs(selectedDate).add(1, 'month').toDate());
+      } else {
+        // 오른쪽으로 스와이프 -> 이전 달
+        setSelectedDate(dayjs(selectedDate).subtract(1, 'month').toDate());
+      }
+    }
+    touchStart.current = null;
+  };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿
@@ -126,22 +151,24 @@ export default function List() {
         onViewDateChange={handleViewDateChange}
       />
 
-      {loading ? (
-        <div className="flex align-items-center justify-content-center h-full p-5">
-          <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
-          <p>데이터를 불러오는 중입니다...</p>
-        </div>
-      ) : monthData.length === 0 ? (
-        <div className="flex align-items-center justify-content-center h-full text-500 p-5">
-          <Message severity="warn" text="이번 달 내역이 없습니다." />
-        </div>
-      ) : (
-        <DataView
-          className="list-dataview flex-grow-1 w-full padding-bottom-20"
-          value={monthData}
-          itemTemplate={templateDateViewItem}
-        />
-      )}
+      <div className="list-swipe-wrapper flex flex-column flex-grow-1 overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        {loading ? (
+          <div className="flex align-items-center justify-content-center h-full p-5">
+            <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
+            <p>데이터를 불러오는 중입니다...</p>
+          </div>
+        ) : monthData.length === 0 ? (
+          <div className="flex align-items-center justify-content-center h-full text-500 p-5">
+            <Message severity="warn" text="이번 달 내역이 없습니다." />
+          </div>
+        ) : (
+          <DataView
+            className="list-dataview flex-grow-1 w-full padding-bottom-20"
+            value={monthData}
+            itemTemplate={templateDateViewItem}
+          />
+        )}
+      </div>
 
       {/* Floating Action Button */}
       <Button
