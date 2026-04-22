@@ -103,7 +103,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const footerTemplate = (options) => {
+  const templateFooter = (options) => {
     return (
       <div className={options.className}>
         <Button
@@ -138,7 +138,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
       onHide={onHide}
     >
       <Panel
-        footerTemplate={footerTemplate}
+        footerTemplate={templateFooter}
       >
         <div className="formWrap">
           <div className="inputWrap">
@@ -162,33 +162,33 @@ export default function DialogLedger({ ledger, visible, onHide }) {
           <div className="inputWrap">
             <label htmlFor="gAcc1" className="required">{gAcc1Label}</label>
             <TreeSelect id="gAcc1"
-              value={gAcc1}
-              options={assetNodes}
-              onChange={(e) => set_gAcc1(e.value)}
-              placeholder="자산 선택"
               className={classNames('w-full', { 'p-invalid': submitted && !gAcc1 })}
+              placeholder="자산 선택"
+              options={assetNodes}
+              value={gAcc1}
+              onChange={(e) => set_gAcc1(e.value)}
             />
           </div>
 
           <div className={`inputWrap ${gType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="gAcc2" className="required">{gAcc2Label}</label>
             <TreeSelect id="gAcc2"
-              value={gAcc2}
-              options={assetNodes}
-              onChange={(e) => set_gAcc2(e.value)}
-              placeholder="자산 선택"
               className={classNames('w-full', { 'p-invalid': submitted && gType === '이체' && !gAcc2 })}
+              placeholder="자산 선택"
+              options={assetNodes}
+              value={gAcc2}
+              onChange={(e) => set_gAcc2(e.value)}
             />
           </div>
 
           <div className="inputWrap">
             <label htmlFor="gCategory" className="required">분류</label>
             <TreeSelect id="gCategory"
-              value={gCategory}
-              options={categoryNodes.filter(node => node.key === gType)}
-              onChange={(e) => set_gCategory(e.value)}
-              placeholder="분류 선택"
               className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
+              placeholder="분류 선택"
+              options={categoryNodes.filter(node => node.key === gType)}
+              value={gCategory}
+              onChange={(e) => set_gCategory(e.value)}
             />
           </div>
 

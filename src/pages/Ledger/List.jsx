@@ -51,7 +51,7 @@ export default function List() {
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿
-  const monthNavigatorTemplate = (e) => {
+  const templateMonthNavigator = (e) => {
     return (
       <Dropdown
         className="month-dropdown"
@@ -62,7 +62,7 @@ export default function List() {
     );
   };
   // Calendar 연도 선택 템플릿
-  const yearNavigatorTemplate = (e) => {
+  const templateYearNavigator = (e) => {
     return (
       <Dropdown
         className="year-dropdown"
@@ -73,7 +73,7 @@ export default function List() {
     );
   };
 
-  const itemTemplate = (item) => {
+  const templateDateViewItem = (item) => {
     const gTypeClass = `gType-${item.gType}`;
     const gExecutedClass = `gExecuted-${(item.gExecuted) ? 'Y' : 'N'}`;
 
@@ -120,8 +120,8 @@ export default function List() {
       <Calendar className="month-calendar padding-bottom-20"
         inline
         locale="ko"
-        yearNavigator yearNavigatorTemplate={yearNavigatorTemplate}
-        monthNavigator monthNavigatorTemplate={monthNavigatorTemplate}
+        yearNavigator yearNavigatorTemplate={templateYearNavigator}
+        monthNavigator monthNavigatorTemplate={templateMonthNavigator}
         value={selectedDate}
         onMonthChange={handleMonthChange}
         onViewDateChange={handleViewDateChange}
@@ -140,7 +140,7 @@ export default function List() {
         <DataView
           className="list-dataview flex-grow-1 w-full padding-bottom-20"
           value={monthData}
-          itemTemplate={itemTemplate}
+          itemTemplate={templateDateViewItem}
         />
       )}
 

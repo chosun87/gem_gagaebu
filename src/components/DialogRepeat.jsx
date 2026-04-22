@@ -116,7 +116,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const footerTemplate = (options) => {
+  const templateFooter = (options) => {
     return (
       <div className={options.className}>
         <Button
@@ -151,7 +151,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       onHide={onHide}
     >
       <Panel
-        footerTemplate={footerTemplate}
+        footerTemplate={templateFooter}
       >
         <div className="formWrap">
           <div className="inputWrap">

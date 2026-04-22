@@ -2,52 +2,6 @@ import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, TreeS
 import { useTheme } from '@/context/ThemeContext';
 import { THEME_NODES, INPUT_STYLE_OPTIONS, SCALES } from '@/assets/js/constants_theme';
 
-const selectedThemeTemplate = (themeKey) => {
-  if (!themeKey) return null;
-
-  const allThemes = THEME_NODES.flatMap(group => group.children || []);
-  const selectedTheme = allThemes.find(t => t.key === themeKey);
-
-  if (selectedTheme) {
-    return (
-      <div className="flex align-items-center gap-2">
-        <div
-          className="colorChip shadow-1"
-          style={{ backgroundColor: selectedTheme.color }}
-        ></div>
-        <span>{selectedTheme.label}</span>
-      </div>
-    );
-  }
-
-  return <span>{themeKey}</span>;
-};
-
-const nodeTemplate = (node) => {
-  if (node.children) {
-    return (
-      <div className="flex align-items-center gap-2 py-1">
-        <img
-          src={node.iconUrl}
-          alt={node.label}
-          style={{ width: '20px', height: '20px', objectFit: 'contain' }}
-        />
-        <span className="font-bold">{node.label}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex align-items-center gap-2 py-1">
-      <div
-        className="colorChip shadow-1"
-        style={{ backgroundColor: node.color }}
-      ></div>
-      <span>{node.label}</span>
-    </div>
-  );
-};
-
 export default function DialogTheme({ visible, onHide }) {
   const {
     theme, changeTheme,
@@ -76,6 +30,53 @@ export default function DialogTheme({ visible, onHide }) {
       newTheme = theme.replace('dark', 'light');
     }
     changeTheme(newTheme);
+  };
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const templateSelectedTheme = (themeKey) => {
+    if (!themeKey) return null;
+
+    const allThemes = THEME_NODES.flatMap(group => group.children || []);
+    const selectedTheme = allThemes.find(t => t.key === themeKey);
+
+    if (selectedTheme) {
+      return (
+        <div className="flex align-items-center gap-2">
+          <div
+            className="colorChip shadow-1"
+            style={{ backgroundColor: selectedTheme.color }}
+          ></div>
+          <span>{selectedTheme.label}</span>
+        </div>
+      );
+    }
+
+    return <span>{themeKey}</span>;
+  };
+
+  const templateTreeSelectNode = (node) => {
+    if (node.children) {
+      return (
+        <div className="flex align-items-center gap-2 py-1">
+          <img
+            src={node.iconUrl}
+            alt={node.label}
+            style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+          />
+          <span className="font-bold">{node.label}</span>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex align-items-center gap-2 py-1">
+        <div
+          className="colorChip shadow-1"
+          style={{ backgroundColor: node.color }}
+        ></div>
+        <span>{node.label}</span>
+      </div>
+    );
   };
 
   return (
@@ -146,14 +147,14 @@ export default function DialogTheme({ visible, onHide }) {
             <label htmlFor="theme" className="text-lg mb-2">테마</label>
             <TreeSelect id="theme"
               className="themeSelector w-full"
-              value={theme}
-              options={THEME_NODES}
-              onChange={(e) => changeTheme(e.value)}
               placeholder="테마를 선택하세요"
-              valueTemplate={() => selectedThemeTemplate(theme)}
-              nodeTemplate={nodeTemplate}
               display="comma"
               selectionMode="single"
+              options={THEME_NODES}
+              value={theme}
+              nodeTemplate={templateTreeSelectNode}
+              valueTemplate={() => templateSelectedTheme(theme)}
+              onChange={(e) => changeTheme(e.value)}
             />
           </div>
 

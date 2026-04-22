@@ -21,7 +21,7 @@ export default function Repeat() {
   }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const itemTemplate = (item) => {
+  const templateDateViewItem = (item) => {
     const rpTypeClass = `rpType-${item.rpType}`;
     const rpCompleteClass = `rpComplete-${(item.rpComplete) ? 'Y' : 'N'}`;
     let n회차 = 0
@@ -86,7 +86,7 @@ export default function Repeat() {
         <DataView
           className="list-dataview flex-grow-1 w-full"
           value={data}
-          itemTemplate={itemTemplate}
+          itemTemplate={templateDateViewItem}
         />
       )}
 
