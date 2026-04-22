@@ -186,7 +186,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
             <TreeSelect id="gCategory"
               className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
               placeholder="분류 선택"
-              options={categoryNodes.filter(node => node.key === gType)}
+              options={categoryNodes.find(node => node.key === gType)?.children || []}
               value={gCategory}
               onChange={(e) => set_gCategory(e.value)}
             />

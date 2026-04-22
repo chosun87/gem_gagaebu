@@ -241,3 +241,8 @@ import Footer from './components/Footer';
 * FullCalendar 적용
   - Calendar의 각 날짜 칸에 해당 일자의 총수입, 총지출, 총이체를 계산해서 templateDayCell()를 이용해서 출력
   - FullCalendar에 swipe로 전달, 다음달로 이동 기능 적용.
+
+  * 코드 시트
+  - cdGroup='지출' : gType='지출', rpType='지출'일떄 gCategory, rpCategory의 Dropdown option으로 사용  
+  - cdGroup='이체' : gType='이체', rpType='이체'일떄 gCategory, rpCategory의 Dropdown option으로 사용  
+  - cdGroup='수입' : gType='수입', rpType='수입'일떄 gCategory, rpCategory의 Dropdown option으로 사용  

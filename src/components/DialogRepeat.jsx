@@ -242,7 +242,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <TreeSelect id="rpCategory"
               className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
               placeholder="분류 선택"
-              options={categoryNodes.filter(node => node.key === rpType)}
+              options={categoryNodes.find(node => node.key === rpType)?.children || []}
               value={rpCategory}
               onChange={(e) => set_rpCategory(e.value)}
             />

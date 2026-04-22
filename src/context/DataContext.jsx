@@ -49,16 +49,17 @@ export const DataProvider = ({ children }) => {
             label: row[SHEET_COL_INDEX.CODE.cdLabel],
             value: row[SHEET_COL_INDEX.CODE.cd]
           });
-        } else if (group.includes('분류')) {
-          if (!categoryMap[group]) {
-            categoryMap[group] = {
-              key: group.replace('분류', ''),
+        } else if (['지출', '이체', '수입'].includes(group) || group.includes('분류')) {
+          const categoryKey = group.replace('분류', '');
+          if (!categoryMap[categoryKey]) {
+            categoryMap[categoryKey] = {
+              key: categoryKey,
               label: group,
               selectable: false,
               children: []
             };
           }
-          categoryMap[group].children.push({
+          categoryMap[categoryKey].children.push({
             key: row[SHEET_COL_INDEX.CODE.cd],
             label: row[SHEET_COL_INDEX.CODE.cdLabel],
             data: row[SHEET_COL_INDEX.CODE.cd],
