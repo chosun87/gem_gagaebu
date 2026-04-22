@@ -1,47 +1,47 @@
 /* Redefining styles for imported packages like primereact */
 
 .text-primary {
-    color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
 }
 
 /* 일요일 (첫 번째 열) 색상 설정 */
 .p-datepicker {
+  background: transparent !important;
+
+  .p-datepicker-header {
     background: transparent !important;
+  }
 
-    .p-datepicker-header {
-        background: transparent !important;
+  table {
+
+    /* 헤더(요일) */
+    th:nth-child(1)>span {
+      color: var(--red-500);
+      /* 빨간색 계열 */
     }
 
-    table {
-
-        /* 헤더(요일) */
-        th:nth-child(1)>span {
-            color: var(--red-500);
-            /* 빨간색 계열 */
-        }
-
-        /* 날짜 */
-        td:nth-child(1):not(.p-datepicker-other-month)>span {
-            color: var(--red-500);
-        }
+    /* 날짜 */
+    td:nth-child(1):not(.p-datepicker-other-month)>span {
+      color: var(--red-500);
     }
+  }
 }
 
 /* 토요일 (일곱 번째 열) 색상 설정 */
 .p-datepicker {
-    table {
+  table {
 
-        /* 헤더(요일) */
-        th:nth-child(7)>span {
-            color: var(--blue-500);
-            /* 파란색 계열 */
-        }
-
-        /* 날짜 */
-        td:nth-child(7):not(.p-datepicker-other-month)>span {
-            color: var(--blue-500);
-        }
+    /* 헤더(요일) */
+    th:nth-child(7)>span {
+      color: var(--blue-500);
+      /* 파란색 계열 */
     }
+
+    /* 날짜 */
+    td:nth-child(7):not(.p-datepicker-other-month)>span {
+      color: var(--blue-500);
+    }
+  }
 }
 
 /* 선택된 날짜나 오늘 날짜의 텍스트 색상이 묻히지 않도록 조정 (필요시) */
@@ -50,13 +50,13 @@
 // }
 
 .p-datepicker .p-datepicker-header .p-datepicker-title .p-inputtext-sm {
-    line-height: normal;
+  line-height: normal;
 }
 
 .p-tree {
-    padding: 0;
+  padding: 0;
 
-    .p-treenode-children {
-        padding: 0 0 0 2.5rem;
-    }
+  .p-treenode-children {
+    padding: 0 0 0 2.5rem;
+  }
 }

@@ -1,3 +1,91 @@
 .calendar-page {
-  
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+
+  .month-calendar {
+    .p-datepicker {
+      padding: 0;
+      border: 0;
+
+      .p-datepicker-header {
+        padding: 0.25rem;
+        border: 0;
+
+        .p-datepicker-title {
+          display: flex;
+          gap: 0.5rem;
+          line-height: normal;
+
+          .month-dropdown,
+          .year-dropdown {
+            width: 8rem;
+
+            .p-dropdown-label {
+              font-size: 1.125rem;
+              font-weight: bold;
+            }
+          }
+        }
+
+        .p-datepicker-month,
+        .p-datepicker-year {
+          // font-size: 1.125rem;
+          padding: 0 0.25rem;
+        }
+
+        .p-datepicker-next,
+        .p-datepicker-prev {
+          background-color: var(--bluegray-100);
+        }
+      }
+
+      .p-datepicker-calendar-container {
+        display: none;
+      }
+    }
+  }
+
+  .fc {
+    flex: 1 1 auto;
+
+    .fc-header-toolbar {
+      display: none;
+    }
+
+    .fc-daygrid-body {
+      height: 100%;
+
+      .fc-scrollgrid-sync-table {
+        height: 100% !important;
+
+        .fc-daygrid-day-frame {
+          cursor: pointer;
+
+          .fc-daygrid-day-top {
+            flex-direction: unset;
+          }
+        }
+      }
+    }
+
+    .fc-day-sun {
+
+      .fc-col-header-cell-cushion,
+      .day-number {
+        color: var(--red-500);
+      }
+    }
+
+    .fc-day-sat {
+
+      .fc-col-header-cell-cushion,
+      .day-number {
+        color: var(--blue-500);
+      }
+    }
+  }
 }

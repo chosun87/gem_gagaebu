@@ -1,47 +1,47 @@
 .theme-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.25rem;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.25rem;
+  cursor: pointer;
 
-    img.icon {
-        width: 1.25rem;
-        height: 1.25rem;
-        object-fit: contain;
-    }
+  img.icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    object-fit: contain;
+  }
 }
 
 .theme-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    width: 100%;
-    padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.25rem;
 }
 
 .dialog-theme {
-    .colorChip {
-        width: 4.5rem;
-        height: 1.5rem;
-        border-radius: 1.5rem;
-    }
+  .colorChip {
+    width: 4.5rem;
+    height: 1.5rem;
+    border-radius: 1.5rem;
+  }
 }
 
 .p-treeselect-panel {
 
-    .p-treenode-leaf {
-        .p-tree-toggler {
-            display: none;
-        }
+  .p-treenode-leaf {
+    .p-tree-toggler {
+      display: none;
     }
+  }
 
-    .p-treenode-children {
-        .colorChip {
-            width: 3.5rem;
-            height: 1.5rem;
-            border-radius: 1.5rem;
-        }
+  .p-treenode-children {
+    .colorChip {
+      width: 3.5rem;
+      height: 1.5rem;
+      border-radius: 1.5rem;
     }
+  }
 }
