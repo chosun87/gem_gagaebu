@@ -6,7 +6,6 @@ import vivaIcon from '@/assets/images/themes/viva.svg';
 import fluentIcon from '@/assets/images/themes/fluent.png';
 import miraIcon from '@/assets/images/themes/mira.jpg';
 import nanoIcon from '@/assets/images/themes/nano.jpg';
-import tailwindIcon from '@/assets/images/themes/nano.jpg';
 
 export const THEME_NODES = [
   {
@@ -93,7 +92,7 @@ export const THEME_NODES = [
   {
     key: 'saga',
     label: 'Saga',
-    iconUrl: tailwindIcon,
+    iconUrl: null,
     selectable: false,
     children: [
       { key: 'saga-blue', label: 'Saga 블루', color: '#2196f3', darkMode: false },
