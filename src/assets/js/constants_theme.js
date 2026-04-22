@@ -6,6 +6,7 @@ import vivaIcon from '@/assets/images/themes/viva.svg';
 import fluentIcon from '@/assets/images/themes/fluent.png';
 import miraIcon from '@/assets/images/themes/mira.jpg';
 import nanoIcon from '@/assets/images/themes/nano.jpg';
+import tailwindIcon from '@/assets/images/themes/nano.jpg';
 
 export const THEME_NODES = [
   {
@@ -68,7 +69,7 @@ export const THEME_NODES = [
     iconUrl: fluentIcon,
     selectable: false,
     children: [
-      { key: 'fluent-{MODE}', label: '플루언트', color: '#0078d4' },
+      { key: 'fluent-light', label: '플루언트', color: '#0078d4', darkMode: false },
     ]
   },
   {
@@ -88,7 +89,43 @@ export const THEME_NODES = [
     children: [
       { key: 'nano', label: '나노 (Nano)', color: '#1174c0', darkMode: false },
     ]
-  }
+  },
+  {
+    key: 'saga',
+    label: 'Saga',
+    iconUrl: tailwindIcon,
+    selectable: false,
+    children: [
+      { key: 'saga-blue', label: 'Saga 블루', color: '#2196f3', darkMode: false },
+      { key: 'saga-green', label: 'Saga 그린', color: '#4caf50', darkMode: false },
+      { key: 'saga-orange', label: 'Saga 오렌지', color: '#ffc107', darkMode: false },
+      { key: 'saga-purple', label: 'Saga 퍼플', color: '#9c27b0', darkMode: false },
+    ]
+  },
+  {
+    key: 'vela',
+    label: 'Vela',
+    iconUrl: null,
+    selectable: false,
+    children: [
+      { key: 'vela-blue', label: 'Vela 블루', color: '#64b5f6', darkMode: false },
+      { key: 'vela-green', label: 'Vela 그린', color: '#81c784', darkMode: false },
+      { key: 'vela-orange', label: 'Vela 오렌지', color: '#ffd54f', darkMode: false },
+      { key: 'vela-purple', label: 'Vela 퍼플', color: '#ba68c8', darkMode: false },
+    ]
+  },
+  {
+    key: 'arya',
+    label: 'Arya',
+    iconUrl: null,
+    selectable: false,
+    children: [
+      { key: 'arya-blue', label: 'Arya 블루', color: '#64b5f6', darkMode: false },
+      { key: 'arya-green', label: 'Arya 그린', color: '#81c784', darkMode: false },
+      { key: 'arya-orange', label: 'Arya 오렌지', color: '#ffd54f', darkMode: false },
+      { key: 'arya-purple', label: 'Arya 퍼플', color: '#ba68c8', darkMode: false },
+    ]
+  },
 ];
 
 export const INPUT_STYLE_OPTIONS = [
