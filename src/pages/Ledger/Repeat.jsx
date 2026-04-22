@@ -52,7 +52,9 @@ export default function Repeat() {
             <div className="rpDate">{item.rpDateS} ~ {item.rpDateE}</div>
           </div>
           <div className="flex align-items-center gap-2">
-            <span className="rpDay font-semibold">매월 {item.rpDay}일</span>
+            <span className="rpDay font-semibold">
+              {item.rpPeriod === 'W' ? `매주 ${item.rpDay}요일` : `매월 ${item.rpDay}일`}
+            </span>
             <span className="rpAcc">{item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}</span>
           </div>
           <div className="flex align-items-center gap-1">

@@ -231,6 +231,7 @@ import Footer from './components/Footer';
   - Label에 필수일떄 class="required"로 표시. css로 .required:after { content: "*"; color: red; }
   - 필수 입력항목이 입력되지 않았을때, 저장 버튼을 클릭하면, 해당 입력항목에 빨간색 테두리 표시.
   - 필수 입력항목이 모두 입력되었을때, 저장 버튼을 클릭하면, google sheet에 저장.
+  - 반복주기가 매월일때는 반복일을 1~31로 제한. Dropdown으로 구현. 반복주기가 매주일때는 반복일을 월~일로 제한. Dropdown으로 구현.
 
 * 삭제 (DialogLedger.jsx, DialogRepeat.jsx)
   - 삭제 버튼을 클릭하면, ConfirmDialog를 띄워서 '삭제하시겠습니까?' 확인 후 삭제.

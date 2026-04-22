@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog } from '@/components/PrimeReact';
-import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
@@ -16,7 +15,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   const [rpDateS, set_rpDateS] = useState(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
   const [rpDateE, set_rpDateE] = useState(repeat?.rpDateE ? dayjs(repeat.rpDateE).toDate() : new Date());
   const [rpPeriod, set_rpPeriod] = useState(repeat?.rpPeriod || 'M');
-  const [rpDay, set_rpDay] = useState(repeat?.rpDay || 1);
+  const [rpDay, set_rpDay] = useState(repeat?.rpDay ? String(repeat.rpDay) : '1');
   const [rpAcc1, set_rpAcc1] = useState(repeat?.rpAcc1 || '');
   const [rpAcc2, set_rpAcc2] = useState(repeat?.rpAcc2 || '');
   const [rpCategory, set_rpCategory] = useState(repeat?.rpCategory || '');
@@ -28,13 +27,25 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   const [rpAcc2Label, set_rpAcc2Label] = useState('자산2');
   const [submitted, set_submitted] = useState(false);
 
+  // 반복일 옵션 정의
+  const monthDays = Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}일`, value: String(i + 1) }));
+  const weekDays = [
+    { label: '월요일', value: '월' },
+    { label: '화요일', value: '화' },
+    { label: '수요일', value: '수' },
+    { label: '목요일', value: '목' },
+    { label: '금요일', value: '금' },
+    { label: '토요일', value: '토' },
+    { label: '일요일', value: '일' }
+  ];
+
   useEffect(() => {
     if (visible) {
       set_rpType(repeat?.rpType || '지출');
       set_rpDateS(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
       set_rpDateE(repeat?.rpDateE ? dayjs(repeat.rpDateE).toDate() : dayjs().add(1, 'year').toDate());
       set_rpPeriod(repeat?.rpPeriod || 'M');
-      set_rpDay(repeat?.rpDay || 1);
+      set_rpDay(repeat?.rpDay ? String(repeat.rpDay) : '1');
       set_rpAcc1(repeat?.rpAcc1 || defaultAssetCode || '');
       set_rpAcc2(repeat?.rpAcc2 || '');
       set_rpCategory(repeat?.rpCategory || '');
@@ -68,7 +79,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     set_submitted(true);
 
     // 필수 항목 검증
-    const isInvalid = !rpDateS || !rpPeriod || (rpDay === null) || !rpType || (rpAmount === 0 || rpAmount === null) || !rpCategory || !rpAcc1 || (rpType === '이체' && !rpAcc2);
+    const isInvalid = !rpDateS || !rpPeriod || !rpDay || !rpType || (rpAmount === 0 || rpAmount === null) || !rpCategory || !rpAcc1 || (rpType === '이체' && !rpAcc2);
     if (isInvalid) {
       return;
     }
@@ -188,20 +199,20 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
               className={classNames('w-full', { 'p-invalid': submitted && !rpPeriod })}
               options={periodOptions}
               value={rpPeriod}
-              onChange={(e) => set_rpPeriod(e.value)}
+              onChange={(e) => {
+                set_rpPeriod(e.value);
+                // 주기가 변경되면 반복일 초기화 (센스있게 1일 또는 월요일로)
+                if (e.value === 'M') set_rpDay('1');
+                else if (e.value === 'W') set_rpDay('월');
+              }}
             />
-          </div>
-
-          <div className="inputWrap">
-            <label htmlFor="rpDay" className="required">반복일</label>
-            <div className="flex align-items-center gap-2">
-              <InputNumber id="rpDay"
-                className={classNames('w-full', { 'p-invalid': submitted && (rpDay === null) })}
-                min={1} max={31}
-                value={rpDay} onValueChange={(e) => set_rpDay(e.value)}
-                prefix="매월 " suffix=" 일"
-              />
-            </div>
+            <Dropdown id="rpDay"
+              className={classNames('ml-3 w-5', { 'p-invalid': submitted && (rpDay === null || rpDay === '') })}
+              options={rpPeriod === 'W' ? weekDays : monthDays}
+              value={rpDay}
+              onChange={(e) => set_rpDay(e.value)}
+              placeholder={rpPeriod === 'W' ? "요일 선택" : "날짜 선택"}
+            />
           </div>
 
           <div className="inputWrap">

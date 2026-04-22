@@ -67,10 +67,10 @@ export default function DialogTheme({ visible, onHide }) {
     if (node.children) {
       return (
         <div className="theme-group">
-          <img className="icon"
+          {node.iconUrl && <img className="icon"
             src={node.iconUrl}
             alt={node.label}
-          />
+          />}
           <span className="font-bold">{node.label}</span>
         </div>
       );
