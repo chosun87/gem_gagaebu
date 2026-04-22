@@ -88,6 +88,33 @@
           }
         }
       }
+
+      // Table을 Grid로 변경
+      .fc-scrollgrid-sync-table tbody {
+        display: grid;
+        grid-template-rows: repeat(6, 1fr);
+
+        height: 100%;
+
+        tr {
+          display: grid;
+          grid-template-columns: repeat(7, 1fr);
+
+          td {
+            border-width: 0 1px 1px 0;
+
+            &:last-child {
+              border-right: 0;
+            }
+          }
+
+          &:last-child {
+            td {
+              border-bottom: 0;
+            }
+          }
+        }
+      }
     }
 
     .fc-day-sun {
