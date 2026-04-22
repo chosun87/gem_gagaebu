@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Card, Message, Tag } from '@/components/PrimeReact';
-import { Calendar, Checkbox, Dropdown, InputNumber, InputSwitch, InputText, SelectButton } from '@/components/PrimeReact';
+import { Calendar as PrimeCalendar, Checkbox, Dropdown, InputNumber, InputSwitch, InputText, SelectButton } from '@/components/PrimeReact';
 
 export default function Statistics() {
   const [inputText, setInputText] = useState('');
@@ -41,7 +41,7 @@ export default function Statistics() {
 
           <div className="inputWrap">
             <label htmlFor="gDate">gDate</label>
-            <Calendar id="gDate"
+            <PrimeCalendar id="gDate"
               locale="ko" dateFormat="yy-mm-dd (D)"
               value={gDate} onChange={(e) => set_gDate(e.target.value)} />
           </div>

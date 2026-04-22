@@ -120,10 +120,8 @@ export default function Calendar() {
         }}
         dayCellContent={templateDayCell}
         locale="ko"
-        events={events}
-        dateClick={handleDateClick}
-        eventClick={handleEventClick}
         initialDate={selectedDate}
+        dateClick={handleDateClick}
       />
     </div>
   );

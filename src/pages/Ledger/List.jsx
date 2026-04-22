@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, Calendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/components/PrimeReact';
+import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
@@ -116,7 +116,7 @@ export default function List() {
 
   return (
     <div className="panel-inner list-page">
-      <Calendar className="month-calendar padding-bottom-20"
+      <PrimeCalendar className="month-calendar padding-bottom-20"
         inline
         locale="ko"
         yearNavigator yearNavigatorTemplate={templateYearNavigator}

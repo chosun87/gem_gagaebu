@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
 import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog } from '@/components/PrimeReact';
-import { Calendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
+import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
@@ -151,7 +151,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
 
           <div className="inputWrap">
             <label htmlFor="gDate" className="required">날짜</label>
-            <Calendar id="gDate"
+            <PrimeCalendar id="gDate"
               locale="ko" dateFormat="yy-mm-dd (D)"
               value={gDate}
               onChange={(e) => set_gDate(e.target.value)}

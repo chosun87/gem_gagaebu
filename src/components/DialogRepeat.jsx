@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
 import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog } from '@/components/PrimeReact';
-import { Calendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
+import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
@@ -166,14 +166,14 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           <div className="inputWrap">
             <label htmlFor="rpDateS" className="required">시작일</label>
             <div className="flex align-items-center gap-2">
-              <Calendar id="rpDateS"
+              <PrimeCalendar id="rpDateS"
                 className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
                 locale="ko" dateFormat="yy-mm-dd"
                 value={rpDateS}
                 onChange={(e) => set_rpDateS(e.target.value)}
               />
               <span>~</span>
-              <Calendar id="rpDateE"
+              <PrimeCalendar id="rpDateE"
                 className="flex-grow-1"
                 locale="ko" dateFormat="yy-mm-dd"
                 value={rpDateE}
