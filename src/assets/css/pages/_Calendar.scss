@@ -64,6 +64,10 @@
       display: none;
     }
 
+    .fc-col-header-cell-cushion {
+      padding: 8px 4px;
+    }
+
     .fc-daygrid-body {
       height: 100%;
 
@@ -87,49 +91,6 @@
             }
           }
         }
-      }
-
-      // Table을 Grid로 변경
-      .fc-scrollgrid-sync-table tbody {
-        display: grid;
-        grid-template-rows: repeat(6, 1fr);
-
-        height: 100%;
-
-        tr {
-          display: grid;
-          grid-template-columns: repeat(7, 1fr);
-
-          td {
-            border-width: 0 1px 1px 0;
-
-            &:last-child {
-              border-right: 0;
-            }
-          }
-
-          &:last-child {
-            td {
-              border-bottom: 0;
-            }
-          }
-        }
-      }
-    }
-
-    .fc-day-sun {
-
-      .fc-col-header-cell-cushion,
-      .day-number {
-        color: var(--red-500);
-      }
-    }
-
-    .fc-day-sat {
-
-      .fc-col-header-cell-cushion,
-      .day-number {
-        color: var(--blue-500);
       }
     }
 
@@ -174,6 +135,66 @@
         .total-transfer {
           color: var(--green-500);
         }
+      }
+    }
+
+    .fc-day-sun {
+
+      .fc-col-header-cell-cushion,
+      .day-number {
+        color: var(--red-600);
+      }
+    }
+
+    .fc-day-sat {
+
+      .fc-col-header-cell-cushion,
+      .day-number {
+        color: var(--blue-600);
+      }
+    }
+
+    //--v Table을 Grid로 변경
+    .fc-scrollgrid-sync-table tbody {
+      display: grid;
+      grid-template-rows: repeat(6, 1fr);
+
+      height: 100%;
+
+      tr {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+
+        td {
+          border-width: 0 0 1px 1px;
+
+          &:last-child {
+            border-right-width: 1px;
+          }
+        }
+
+        &:last-child {
+          td {
+            border-bottom-width: 1px;
+          }
+        }
+      }
+    }
+
+    .fc-scrollgrid-section-header>th,
+    .fc-scrollgrid,
+    .fc-scrollgrid-section-body>td {
+      border: 0;
+    }
+
+    //--^ Table을 Grid로 변경
+
+    .fc-col-header {
+      background-color: var(--primary-color);
+      color: var(--primary-color-text);
+
+      th {
+        border-color: var(--primary-300);
       }
     }
   }

@@ -53,8 +53,15 @@
 //     color: #ffffff !important;
 // }
 
-.p-datepicker .p-datepicker-header .p-datepicker-title .p-inputtext-sm {
-  line-height: normal;
+.p-datepicker .p-datepicker-header {
+  .p-datepicker-title .p-inputtext-sm {
+    line-height: normal;
+  }
+
+  .p-datepicker-prev-icon,
+  .p-datepicker-next-icon {
+    color: var(--primary-color-text);
+  }
 }
 
 .p-tree {
