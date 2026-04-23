@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Dropdown } from '@/components/PrimeReact';
 import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
@@ -103,6 +103,27 @@ export default function DialogLedger({ ledger, visible, onHide }) {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const categoryItemTemplate = (option) => {
+    return (
+      <div className="flex align-items-center">
+        <i className={classNames(option.icon, 'mr-2')} />
+        <span>{option.label}</span>
+      </div>
+    );
+  };
+
+  const categoryValueTemplate = (option, props) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <i className={classNames(option.icon, 'mr-2')} />
+          <span>{option.label}</span>
+        </div>
+      );
+    }
+    return <span>{props.placeholder}</span>;
+  };
+
   const templateFooter = (options) => {
     return (
       <div className={options.className}>
@@ -183,12 +204,16 @@ export default function DialogLedger({ ledger, visible, onHide }) {
 
           <div className="inputWrap">
             <label htmlFor="gCategory" className="required">분류</label>
-            <TreeSelect id="gCategory"
+            <Dropdown id="gCategory"
               className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
               placeholder="분류 선택"
               options={categoryNodes.find(node => node.key === gType)?.children || []}
+              optionLabel="label"
+              optionValue="key"
               value={gCategory}
               onChange={(e) => set_gCategory(e.value)}
+              itemTemplate={categoryItemTemplate}
+              valueTemplate={categoryValueTemplate}
             />
           </div>
 

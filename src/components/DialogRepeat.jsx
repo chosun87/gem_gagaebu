@@ -127,6 +127,27 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const categoryItemTemplate = (option) => {
+    return (
+      <div className="flex align-items-center">
+        <i className={classNames(option.icon, 'mr-2')} />
+        <span>{option.label}</span>
+      </div>
+    );
+  };
+
+  const categoryValueTemplate = (option, props) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <i className={classNames(option.icon, 'mr-2')} />
+          <span>{option.label}</span>
+        </div>
+      );
+    }
+    return <span>{props.placeholder}</span>;
+  };
+
   const templateFooter = (options) => {
     return (
       <div className={options.className}>
@@ -239,12 +260,16 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="inputWrap">
             <label htmlFor="rpCategory" className="required">분류</label>
-            <TreeSelect id="rpCategory"
+            <Dropdown id="rpCategory"
               className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
               placeholder="분류 선택"
               options={categoryNodes.find(node => node.key === rpType)?.children || []}
+              optionLabel="label"
+              optionValue="key"
               value={rpCategory}
               onChange={(e) => set_rpCategory(e.value)}
+              itemTemplate={categoryItemTemplate}
+              valueTemplate={categoryValueTemplate}
             />
           </div>
 
