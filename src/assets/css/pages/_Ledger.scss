@@ -20,22 +20,21 @@
 
     .p-tabview-panels {
       flex: 1 1 auto;
-      scrollbar-gutter: stable both-edges;
-      padding-left: 5px;
-      padding-right: 5px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-
       padding: 0;
+      overflow: hidden; // 패널 내부에서 스크롤 관리하도록 변경
 
       .p-tabview-panel {
+        position: relative;
         height: 100%;
+        width: 100%;
 
         .panel-inner {
-          // .p-tabview-panels에 scrollbar-gutter를 적용하면..
-          padding: var(--base-padding) 5px;
-          // 안하면..
-          // padding: var(--base-padding);
+          height: 100%;
+          padding: var(--base-padding);
+
+          display: flex;
+          flex-direction: column;
+          gap: var(--base-padding);
         }
       }
     }

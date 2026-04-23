@@ -16,13 +16,14 @@
 }
 
 .btn-floating-action {
-  position: sticky;
+  position: absolute;
+  right: var(--base-padding);
   bottom: var(--base-padding);
-  left: 100%;
   z-index: 1000;
 
   width: 3.5rem;
-  min-height: 3.5rem;
+  height: 3.5rem;
+  // border-radius: 50%;
 }
 
 label.required {

@@ -7,3 +7,15 @@ body {
   margin: 0;
   padding: 0;
 }
+
+:root {
+  *::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: var(--gray-300);
+  }
+}

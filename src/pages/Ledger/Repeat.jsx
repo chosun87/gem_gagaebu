@@ -74,23 +74,25 @@ export default function Repeat() {
   };
 
   return (
-    <div className="panel-inner list-page repeat-page">
-      {loading && data.length === 0 ? (
-        <div className="flex align-items-center justify-content-center h-full p-5">
-          <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
-          <p>데이터를 불러오는 중입니다...</p>
-        </div>
-      ) : data.length === 0 ? (
-        <div className="flex align-items-center justify-content-center h-full text-500 p-5">
-          <Message severity="warn" text="반복 내역이 없습니다." />
-        </div>
-      ) : (
-        <DataView
-          className="list-dataview flex-grow-1 w-full"
-          value={data}
-          itemTemplate={templateDateViewItem}
-        />
-      )}
+    <>
+      <div className="panel-inner list-page repeat-page">
+        {loading && data.length === 0 ? (
+          <div className="flex align-items-center justify-content-center h-full p-5">
+            <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
+            <p>데이터를 불러오는 중입니다...</p>
+          </div>
+        ) : data.length === 0 ? (
+          <div className="flex align-items-center justify-content-center h-full text-500 p-5">
+            <Message severity="warn" text="반복 내역이 없습니다." />
+          </div>
+        ) : (
+          <DataView
+            className="list-dataview flex-grow-1"
+            value={data}
+            itemTemplate={templateDateViewItem}
+          />
+        )}
+      </div>
 
       {/* Floating Action Button */}
       <Button
@@ -108,6 +110,6 @@ export default function Repeat() {
         visible={showDialogRepeat}
         onHide={() => fnHideDialogRepeat()}
       />
-    </div>
+    </>
   );
 }

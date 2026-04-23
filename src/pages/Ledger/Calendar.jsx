@@ -148,7 +148,7 @@ export default function Calendar() {
 
   return (
     <div className="panel-inner calendar-page">
-      <PrimeCalendar className="month-calendar padding-bottom-20"
+      <PrimeCalendar className="month-calendar"
         inline
         locale="ko"
         yearNavigator yearNavigatorTemplate={templateYearNavigator}
