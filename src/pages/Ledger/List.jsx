@@ -151,7 +151,7 @@ export default function List() {
         onViewDateChange={handleViewDateChange}
       />
 
-      <div className="list-swipe-wrapper flex flex-column flex-grow-1 overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className="list-swipe-wrapper flex flex-column flex-grow-1" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         {loading ? (
           <div className="flex align-items-center justify-content-center h-full p-5">
             <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
