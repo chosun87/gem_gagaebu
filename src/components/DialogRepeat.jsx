@@ -9,7 +9,7 @@ import { RP_TYPE } from '@/assets/js/constants';
 
 export default function DialogRepeat({ repeat, visible, onHide }) {
 
-  const { saveRepeatEntry, deleteRepeatEntry, loading: dataLoading, assetNodes, categoryNodes, defaultAssetCode, periodOptions } = useData();
+  const { saveRepeatEntry, deleteRepeatEntry, loading: dataLoading, assetNodes, categoryOptions, defaultAssetCode, periodOptions } = useData();
 
   const [rpType, set_rpType] = useState(repeat?.rpType || '');
   const [rpDateS, set_rpDateS] = useState(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
@@ -130,8 +130,8 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   const categoryItemTemplate = (option) => {
     return (
       <div className="flex align-items-center">
-        <i className={classNames(option.icon, 'mr-2')} />
-        <span>{option.label}</span>
+        <i className={classNames(option.cdIcon, 'mr-2')} />
+        <span>{option.cdLabel}</span>
       </div>
     );
   };
@@ -140,8 +140,29 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     if (option) {
       return (
         <div className="flex align-items-center">
-          <i className={classNames(option.icon, 'mr-2')} />
-          <span>{option.label}</span>
+          <i className={classNames(option.cdIcon, 'mr-2')} />
+          <span>{option.cdLabel}</span>
+        </div>
+      );
+    }
+    return <span>{props.placeholder}</span>;
+  };
+
+  const assetItemTemplate = (option) => {
+    return (
+      <div className="flex align-items-center">
+        <i className={classNames(option.accIcon, 'mr-2')} />
+        <span>{option.accLabel}</span>
+      </div>
+    );
+  };
+
+  const assetValueTemplate = (option, props) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <i className={classNames(option.accIcon, 'mr-2')} />
+          <span>{option.accLabel}</span>
         </div>
       );
     }
@@ -219,6 +240,8 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <SelectButton id="rpPeriod"
               className={classNames('w-full', { 'p-invalid': submitted && !rpPeriod })}
               options={periodOptions}
+              optionLabel="cdLabel"
+              optionValue="cd"
               value={rpPeriod}
               onChange={(e) => {
                 set_rpPeriod(e.value);
@@ -238,23 +261,35 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="inputWrap">
             <label htmlFor="rpAcc1" className="required">{rpAcc1Label}</label>
-            <TreeSelect id="rpAcc1"
+            <Dropdown id="rpAcc1"
               className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
               placeholder="자산 선택"
               options={assetNodes}
+              optionLabel="accLabel"
+              optionValue="accCode"
+              optionGroupLabel="accType"
+              optionGroupChildren="children"
               value={rpAcc1}
               onChange={(e) => set_rpAcc1(e.value)}
+              itemTemplate={assetItemTemplate}
+              valueTemplate={assetValueTemplate}
             />
           </div>
 
           <div className={`inputWrap ${rpType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="rpAcc2" className="required">{rpAcc2Label}</label>
-            <TreeSelect id="rpAcc2"
+            <Dropdown id="rpAcc2"
               className={classNames('w-full', { 'p-invalid': submitted && rpType === '이체' && !rpAcc2 })}
               placeholder="자산 선택"
               options={assetNodes}
+              optionLabel="accLabel"
+              optionValue="accCode"
+              optionGroupLabel="accType"
+              optionGroupChildren="children"
               value={rpAcc2}
               onChange={(e) => set_rpAcc2(e.value)}
+              itemTemplate={assetItemTemplate}
+              valueTemplate={assetValueTemplate}
             />
           </div>
 
@@ -263,9 +298,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <Dropdown id="rpCategory"
               className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
               placeholder="분류 선택"
-              options={categoryNodes.find(node => node.key === rpType)?.children || []}
-              optionLabel="label"
-              optionValue="key"
+              options={categoryOptions.find(node => node.key === rpType)?.children || []}
+              optionLabel="cdLabel"
+              optionValue="cd"
               value={rpCategory}
               onChange={(e) => set_rpCategory(e.value)}
               itemTemplate={categoryItemTemplate}

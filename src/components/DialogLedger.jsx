@@ -10,7 +10,7 @@ import { G_TYPE } from '@/assets/js/constants';
 
 export default function DialogLedger({ ledger, visible, onHide }) {
 
-  const { saveLedgerEntry, deleteLedgerEntry, loading: dataLoading, assetNodes, categoryNodes, defaultAssetCode } = useData();
+  const { saveLedgerEntry, deleteLedgerEntry, loading: dataLoading, assetNodes, categoryOptions, defaultAssetCode } = useData();
 
   const [gDate, set_gDate] = useState(ledger?.gDate ? dayjs(ledger.gDate).toDate() : new Date());
   const [gType, set_gType] = useState(ledger?.gType || '');
@@ -106,8 +106,8 @@ export default function DialogLedger({ ledger, visible, onHide }) {
   const categoryItemTemplate = (option) => {
     return (
       <div className="flex align-items-center">
-        <i className={classNames(option.icon, 'mr-2')} />
-        <span>{option.label}</span>
+        <i className={classNames(option.cdIcon, 'mr-2')} />
+        <span>{option.cdLabel}</span>
       </div>
     );
   };
@@ -116,8 +116,29 @@ export default function DialogLedger({ ledger, visible, onHide }) {
     if (option) {
       return (
         <div className="flex align-items-center">
-          <i className={classNames(option.icon, 'mr-2')} />
-          <span>{option.label}</span>
+          <i className={classNames(option.cdIcon, 'mr-2')} />
+          <span>{option.cdLabel}</span>
+        </div>
+      );
+    }
+    return <span>{props.placeholder}</span>;
+  };
+
+  const assetItemTemplate = (option) => {
+    return (
+      <div className="flex align-items-center">
+        <i className={classNames(option.accIcon, 'mr-2')} />
+        <span>{option.accLabel}</span>
+      </div>
+    );
+  };
+
+  const assetValueTemplate = (option, props) => {
+    if (option) {
+      return (
+        <div className="flex align-items-center">
+          <i className={classNames(option.accIcon, 'mr-2')} />
+          <span>{option.accLabel}</span>
         </div>
       );
     }
@@ -182,23 +203,35 @@ export default function DialogLedger({ ledger, visible, onHide }) {
 
           <div className="inputWrap">
             <label htmlFor="gAcc1" className="required">{gAcc1Label}</label>
-            <TreeSelect id="gAcc1"
+            <Dropdown id="gAcc1"
               className={classNames('w-full', { 'p-invalid': submitted && !gAcc1 })}
               placeholder="자산 선택"
               options={assetNodes}
+              optionLabel="accLabel"
+              optionValue="accCode"
+              optionGroupLabel="accType"
+              optionGroupChildren="children"
               value={gAcc1}
               onChange={(e) => set_gAcc1(e.value)}
+              itemTemplate={assetItemTemplate}
+              valueTemplate={assetValueTemplate}
             />
           </div>
 
           <div className={`inputWrap ${gType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="gAcc2" className="required">{gAcc2Label}</label>
-            <TreeSelect id="gAcc2"
+            <Dropdown id="gAcc2"
               className={classNames('w-full', { 'p-invalid': submitted && gType === '이체' && !gAcc2 })}
               placeholder="자산 선택"
               options={assetNodes}
+              optionLabel="accLabel"
+              optionValue="accCode"
+              optionGroupLabel="accType"
+              optionGroupChildren="children"
               value={gAcc2}
               onChange={(e) => set_gAcc2(e.value)}
+              itemTemplate={assetItemTemplate}
+              valueTemplate={assetValueTemplate}
             />
           </div>
 
@@ -207,9 +240,9 @@ export default function DialogLedger({ ledger, visible, onHide }) {
             <Dropdown id="gCategory"
               className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
               placeholder="분류 선택"
-              options={categoryNodes.find(node => node.key === gType)?.children || []}
-              optionLabel="label"
-              optionValue="key"
+              options={categoryOptions.find(node => node.key === gType)?.children || []}
+              optionLabel="cdLabel"
+              optionValue="cd"
               value={gCategory}
               onChange={(e) => set_gCategory(e.value)}
               itemTemplate={categoryItemTemplate}
