@@ -8,10 +8,11 @@ export default function Header({ onThemeClick }) {
 
   return (
     <header className="app-header shadow-2">
-      <h1 className="app-header-title">
+      <h1 className="app-header-title text-4xl">
         <img className="app-header-logo" src={`${import.meta.env.BASE_URL}favicon.svg`} alt="Logo" />
         가계부
       </h1>
+
       <div className="app-header-buttons">
         <Button className="fullscreen text-base" severity="info" rounded text raised size="small"
           icon={isFullscreen ? "fa-solid fa-compress" : "fa-solid fa-expand"}

@@ -198,7 +198,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   return (
     <Sidebar
       className="dialog-repeat"
-      header={<h3 className="text-2xl">반복 내역 설정</h3>}
+      header={<h3 className="dialog-title text-2xl">반복 내역 설정</h3>}
       position="bottom"
       visible={visible}
       onHide={onHide}

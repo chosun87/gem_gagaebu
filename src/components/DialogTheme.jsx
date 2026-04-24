@@ -90,7 +90,7 @@ export default function DialogTheme({ visible, onHide }) {
   return (
     <Sidebar
       className="dialog-theme w-25rem"
-      header={<h3 className="text-2xl">테마 설정</h3>}
+      header={<h3 className="dialog-title text-2xl">테마 설정</h3>}
       position="right"
       visible={visible}
       onHide={onHide}

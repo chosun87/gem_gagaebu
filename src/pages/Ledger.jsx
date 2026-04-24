@@ -9,13 +9,13 @@ export default function Ledger() {
   return (
     <div className="app-page ledger-page">
       <TabView className="ledger-tabview">
-        <TabPanel header="달력" leftIcon="pi pi-calendar mr-2">
+        <TabPanel header={<span className="text-lg">달력</span>} leftIcon="pi pi-calendar mr-2">
           <Calendar />
         </TabPanel>
-        <TabPanel header="목록" leftIcon="pi pi-list-check mr-2" className="px-0">
+        <TabPanel header={<span className="text-lg">목록</span>} leftIcon="pi pi-list-check mr-2" className="px-0">
           <List />
         </TabPanel>
-        <TabPanel header="반복" leftIcon="pi pi-clone mr-2" className="px-0">
+        <TabPanel header={<span className="text-lg">반복</span>} leftIcon="pi pi-clone mr-2" className="px-0">
           <Repeat />
         </TabPanel>
       </TabView>

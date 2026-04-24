@@ -11,7 +11,7 @@ export default function Footer({ activeIndex, onMenuChange }) {
         style={{ cursor: 'pointer' }}
       >
         <div className="p-menuitem-icon"><i className={item.icon} /></div>
-        <div className="p-menuitem-text">{item.label}</div>
+        <div className="p-menuitem-text text-lg">{item.label}</div>
       </a>
     );
   }

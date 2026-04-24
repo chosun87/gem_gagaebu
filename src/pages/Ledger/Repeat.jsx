@@ -60,14 +60,14 @@ export default function Repeat() {
           <div className="flex align-items-center gap-1">
             <Tag
               className="rpCategory" rounded
-              value={item.rpCategory || '내용 없음'}
+              value={item.rpCategory || '(내용 없음)'}
             />
-            <span className="rpMemo font-semibold">{item.rpMemo || '내용 없음'}</span>
+            <span className="rpMemo font-semibold">{item.rpMemo || '(내용 없음)'}</span>
           </div>
         </div>
 
         <div className="rpAmount monospace text-right font-bold text-lg">
-          {item.rpAmount.toLocaleString()}<span className="unit text-sm">원</span>
+          {item.rpAmount.toLocaleString()}<span className="unit text-sx">원</span>
         </div>
       </div>
     );

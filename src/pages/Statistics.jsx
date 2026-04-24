@@ -17,7 +17,7 @@ export default function Statistics() {
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <div className="app-page statistics-page">
-      <h2>통계</h2>
+      <h2 className="app-page-title text-3xl">통계</h2>
       <p>통계 화면입니다.</p>
 
       <Card title="Form">

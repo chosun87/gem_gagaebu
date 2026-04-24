@@ -74,6 +74,15 @@ export { InputText } from 'primereact/inputtext';
 export { Calendar } from 'primereact/calendar';
 ...
 ```
+  * Font Size
+    - PrimeFlex > Typography > Font Size 참고해서,
+    - text-xs : 0.75rem
+    - text-base : 1rem
+    - text-lg : 1.25rem
+    - text-xl : 1.5rem
+    - text-2xl : 2rem : h3.dialog-title
+    - text-3xl : 3rem : h2.app-page-title
+    - text-4xl : 4rem : h1.app-header-title
 
 ### 3. 개발할 내용 - 1단계 : 화면 구성
 1) 공통
@@ -246,3 +255,4 @@ import Footer from './components/Footer';
   - cdGroup='지출' : gType='지출', rpType='지출'일떄 gCategory, rpCategory의 Dropdown option으로 사용  
   - cdGroup='이체' : gType='이체', rpType='이체'일떄 gCategory, rpCategory의 Dropdown option으로 사용  
   - cdGroup='수입' : gType='수입', rpType='수입'일떄 gCategory, rpCategory의 Dropdown option으로 사용  
+

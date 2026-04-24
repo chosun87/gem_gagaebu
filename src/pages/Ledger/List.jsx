@@ -119,14 +119,14 @@ export default function List() {
           <div className="flex align-items-center gap-1">
             <Tag
               className="gCategory" rounded
-              value={item.gCategory || '내용 없음'}
+              value={item.gCategory || '(내용 없음)'}
             />
-            <span className="gMemo font-semibold">{item.gMemo || '내용 없음'}</span>
+            <span className="gMemo font-semibold">{item.gMemo || '(내용 없음)'}</span>
           </div>
         </div>
 
         <div className="gAmount monospace text-right font-bold text-lg">
-          {item.gAmount.toLocaleString()}<span className="unit text-sm">원</span>
+          {item.gAmount.toLocaleString()}<span className="unit text-xs">원</span>
         </div>
 
         <InputSwitch checked={item.gExecuted} trueValue={false} falseValue={true}
