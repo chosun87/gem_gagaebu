@@ -66,14 +66,7 @@
   }
 
   .p-badge {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    padding: 0;
     border: solid 1px transparent;
-    border-radius: 50%;
     background-color: transparent;
 
     &.gType-수입 {

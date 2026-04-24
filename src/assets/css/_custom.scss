@@ -12,6 +12,10 @@
   max-height: 391px !important;
 }
 
+.p-inputswitch {
+  min-width: 3rem;
+}
+
 /* 일요일 (첫 번째 열) 색상 설정 */
 .p-datepicker {
   table {
@@ -65,6 +69,62 @@
   .p-datepicker-prev-icon,
   .p-datepicker-next-icon {
     color: var(--primary-color-text);
+  }
+}
+
+.month-calendar {
+  .p-datepicker {
+    padding: 0;
+    border: 0;
+
+    .p-datepicker-header {
+      gap: 0.5rem;
+      padding: 0.25rem;
+      border: 0;
+
+      .p-datepicker-title {
+        display: flex;
+        gap: 0.5rem;
+        line-height: normal;
+
+        .month-dropdown,
+        .year-dropdown {
+          width: 8rem;
+          height: 3rem;
+          max-height: 3rem;
+
+          .p-dropdown-label {
+            padding: 0.75rem;
+            line-height: 1;
+            font-size: 1.25rem;
+            font-weight: bold;
+          }
+        }
+      }
+
+      .p-datepicker-month,
+      .p-datepicker-year {
+        // font-size: 1.125rem;
+        padding: 0 0.25rem;
+      }
+
+      .p-datepicker-next,
+      .p-datepicker-prev {
+        width: 3rem;
+        height: 3rem;
+        background-color: var(--bluegray-100);
+      }
+
+      .p-datepicker-next-icon,
+      .p-datepicker-prev-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
+
+    .p-datepicker-calendar-container {
+      display: none;
+    }
   }
 }
 

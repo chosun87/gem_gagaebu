@@ -35,39 +35,36 @@ export default function Repeat() {
         className={`list-item ${rpTypeClass} ${rpCompleteClass} col-12`}
         onClick={() => fnOpenDialogRepeat(item)}
       >
-        <InputSwitch checked={item.rpComplete} trueValue={false} falseValue={true}
-          tooltip="완료"
-          tooltipOptions={{ position: 'top' }}
-          onChange={(e) => handleChange_rpComplete(item, e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-
-        <Badge size="large"
+        <Badge
           className={`gType-${item.rpType} text-base`}
-          value={item.rpType}
+          value={item.rpCategory}
         />
 
         <div className="flex-grow-1 flex flex-column gap-1">
-          <div className="flex align-items-center gap-2">
-            <div className="rpDate">{item.rpDateS} ~ {item.rpDateE}</div>
-          </div>
-          <div className="flex align-items-center gap-2">
-            <span className="rpDay font-semibold">
-              {item.rpPeriod === 'W' ? `매주 ${item.rpDay}요일` : `매월 ${item.rpDay}일`}
-            </span>
-            <span className="rpAcc">{item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}</span>
-          </div>
           <div className="flex align-items-center gap-1">
-            <Tag
-              className="rpCategory" rounded
-              value={item.rpCategory || '(내용 없음)'}
-            />
-            <span className="rpMemo font-semibold">{item.rpMemo || '(내용 없음)'}</span>
+            <div className="rpDate monospace">{item.rpDateS} ~ {item.rpDateE}</div>
+          </div>
+          <div className="flex align-items-center gap-2 flex-wrap">
+            <span className="rpDay text-lg font-semibold text-nowrap">
+              {item.rpPeriod === 'W' ? `매주 (${item.rpDay})` : `매월 ${item.rpDay}일`}
+            </span>
+            <span className="rpMemo">{item.rpMemo}</span>
+          </div>
+          <div className="flex align-items-center gap-2">
+            <span className="rpAcc">{item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}</span>
           </div>
         </div>
 
-        <div className="rpAmount monospace text-right font-bold text-lg">
-          {item.rpAmount.toLocaleString()}<span className="unit text-sx">원</span>
+        <div className="h-full flex flex-column align-items-end justify-content-between">
+          <div className="rpAmount monospace text-right font-bold text-lg">
+            {item.rpAmount.toLocaleString()}<span className="unit text-xs ">원</span>
+          </div>
+          <InputSwitch checked={item.rpComplete} trueValue={false} falseValue={true}
+            tooltip="완료"
+            tooltipOptions={{ position: 'top' }}
+            onChange={(e) => handleChange_rpComplete(item, e.target.value)}
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       </div>
     );

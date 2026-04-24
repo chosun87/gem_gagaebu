@@ -78,7 +78,7 @@ export { Calendar } from 'primereact/calendar';
     - PrimeFlex > Typography > Font Size 참고해서,
     - text-xs : 0.75rem
     - text-base : 1rem
-    - text-lg : 1.25rem
+    - text-lg : 1.25rem : Calendar header, List Day header
     - text-xl : 1.5rem
     - text-2xl : 2rem : h3.dialog-title
     - text-3xl : 3rem : h2.app-page-title

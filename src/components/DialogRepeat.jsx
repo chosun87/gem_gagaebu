@@ -221,14 +221,14 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <div className="flex align-items-center gap-2">
               <PrimeCalendar id="rpDateS"
                 className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
-                locale="ko" dateFormat="yy-mm-dd"
+                locale="ko" dateFormat="yy-mm-dd (D)"
                 value={rpDateS}
                 onChange={(e) => set_rpDateS(e.target.value)}
               />
               <span>~</span>
               <PrimeCalendar id="rpDateE"
                 className="flex-grow-1"
-                locale="ko" dateFormat="yy-mm-dd"
+                locale="ko" dateFormat="yy-mm-dd (D)"
                 value={rpDateE}
                 onChange={(e) => set_rpDateE(e.target.value)}
               />

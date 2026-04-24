@@ -108,20 +108,16 @@ export default function List() {
       >
         <Badge
           className={`gType-${item.gType} text-base`}
-          value={item.gType}
+          value={item.gCategory}
         />
 
         <div className="flex-grow-1 flex flex-column gap-1">
           <div className="flex align-items-center gap-2">
-            <span className="gDate font-semibold">{dayjs(item.gDate).format('DD일')}</span>
-            <span className="gAcc">{item.gAcc2 ? `${item.gAcc1} → ${item.gAcc2}` : item.gAcc1}</span>
+            <span className="gDate text-lg font-semibold">{dayjs(item.gDate).format('DD일')}</span>
+            <span className="gMemo">{item.gMemo}</span>
           </div>
           <div className="flex align-items-center gap-1">
-            <Tag
-              className="gCategory" rounded
-              value={item.gCategory || '(내용 없음)'}
-            />
-            <span className="gMemo font-semibold">{item.gMemo || '(내용 없음)'}</span>
+            <span className="gAcc">{item.gAcc2 ? `${item.gAcc1} → ${item.gAcc2}` : item.gAcc1}</span>
           </div>
         </div>
 

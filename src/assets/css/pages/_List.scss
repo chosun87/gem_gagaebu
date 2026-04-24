@@ -6,49 +6,6 @@
 
   position: relative;
 
-  .month-calendar {
-    .p-datepicker {
-      padding: 0;
-      border: 0;
-
-      .p-datepicker-header {
-        padding: 0.25rem;
-        border: 0;
-
-        .p-datepicker-title {
-          display: flex;
-          gap: 0.5rem;
-          line-height: normal;
-
-          .month-dropdown,
-          .year-dropdown {
-            width: 8rem;
-
-            .p-dropdown-label {
-              font-size: 1.125rem;
-              font-weight: bold;
-            }
-          }
-        }
-
-        .p-datepicker-month,
-        .p-datepicker-year {
-          // font-size: 1.125rem;
-          padding: 0 0.25rem;
-        }
-
-        .p-datepicker-next,
-        .p-datepicker-prev {
-          background-color: var(--bluegray-100);
-        }
-      }
-
-      .p-datepicker-calendar-container {
-        display: none;
-      }
-    }
-  }
-
   .list-dataview {
     width: calc(100% + var(--base-padding) * 2);
     margin: 0 calc(var(--base-padding) * -1);
@@ -74,9 +31,33 @@
     padding: 10px;
     border-radius: 0.5rem;
 
+    .rpCategory {
+      width: 3rem;
+      min-width: 3rem;
+    }
+
+    .p-badge {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 2.5rem;
+      height: 2.5rem;
+      min-width: 2.5rem;
+      padding: 0;
+      border-radius: 50%;
+    }
+
     &.gExecuted-Y,
     &.rpComplete-Y {
       opacity: 0.6;
+    }
+
+    .gAmount,
+    .rpAmount {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
     }
   }
 }
