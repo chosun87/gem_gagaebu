@@ -49,7 +49,8 @@ export const CodeProvider = ({ children }) => {
           categoryCds[categoryKey].children.push({
             cd: row[SHEET_COL_INDEX.CODE.cd],
             cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
-            cdIcon: row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag'
+            cdIcon: row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag',
+            cdDefaultAcc1: row[SHEET_COL_INDEX.CODE.cdDefaultAcc1] || ''
           });
         }
       }

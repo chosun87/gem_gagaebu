@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Dropdown } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Dropdown, InputSwitch } from '@/components/PrimeReact';
 import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
@@ -19,6 +19,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
   const [gCategory, set_gCategory] = useState(ledger?.gCategory || '');
   const [gAmount, set_gAmount] = useState(ledger?.gAmount || 0);
   const [gMemo, set_gMemo] = useState(ledger?.gMemo || '');
+  const [gExecuted, set_gExecuted] = useState(ledger?.gExecuted || false);
   const [gAcc1Label, set_gAcc1Label] = useState('자산1');
   const [gAcc2Label, set_gAcc2Label] = useState('자산2');
   const [submitted, set_submitted] = useState(false);
@@ -32,6 +33,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
       set_gCategory(ledger?.gCategory || '');
       set_gAmount(ledger?.gAmount || 0);
       set_gMemo(ledger?.gMemo || '');
+      set_gExecuted(ledger?.gExecuted || false);
       set_submitted(false);
 
       const [acc1Label, acc2Label] = _getAccLabels(ledger?.gType || '지출');
@@ -45,6 +47,15 @@ export default function DialogLedger({ ledger, visible, onHide }) {
     set_gAcc1Label(acc1Label);
     set_gAcc2Label(acc2Label);
   }, [gType]);
+
+  // 신규 입력일 때 날짜에 따라 집행 여부 자동 설정
+  useEffect(() => {
+    if (!ledger && gDate) {
+      const today = dayjs().startOf('day');
+      const selectedDate = dayjs(gDate).startOf('day');
+      set_gExecuted(!selectedDate.isAfter(today));
+    }
+  }, [gDate, ledger]);
 
   const _getAccLabels = (type) => {
     switch (type) {
@@ -73,6 +84,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
       gCategory,
       gAmount,
       gMemo,
+      gExecuted,
     };
 
     try {
@@ -194,11 +206,17 @@ export default function DialogLedger({ ledger, visible, onHide }) {
           <div className="inputWrap">
             <label htmlFor="gDate" className="required">날짜</label>
             <PrimeCalendar id="gDate"
+              className={classNames({ 'p-invalid': submitted && !gDate })}
               locale="ko" dateFormat="yy-mm-dd (D)"
               value={gDate}
               onChange={(e) => set_gDate(e.target.value)}
-              className={classNames({ 'p-invalid': submitted && !gDate })}
             />
+
+            <label htmlFor="gExecuted" className="ml-auto">집행 전</label>
+            <InputSwitch id="gExecuted"
+              checked={gExecuted} trueValue={false} falseValue={true}
+              onChange={(e) => set_gExecuted(e.value)}
+            />{gExecuted ? 'Y' : 'N'}
           </div>
 
           <div className="inputWrap">
@@ -210,7 +228,13 @@ export default function DialogLedger({ ledger, visible, onHide }) {
               optionLabel="cdLabel"
               optionValue="cd"
               value={gCategory}
-              onChange={(e) => set_gCategory(e.value)}
+              onChange={(e) => {
+                set_gCategory(e.value);
+                const selectedCategory = categoryOptions.find(node => node.key === gType)?.children.find(c => c.cd === e.value);
+                if (selectedCategory?.cdDefaultAcc1) {
+                  set_gAcc1(selectedCategory.cdDefaultAcc1);
+                }
+              }}
               itemTemplate={categoryItemTemplate}
               valueTemplate={categoryValueTemplate}
             />

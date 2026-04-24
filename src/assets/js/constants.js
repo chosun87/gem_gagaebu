@@ -12,7 +12,7 @@ export const GOOGLE_SHEET = {
 }
 
 export const SHEET_NAME_RANGE = {
-  CODE: '코드!A1:G',
+  CODE: '코드!A1:H',
   ASSET: '자산!A1:H',
   REPEAT: '반복!A1:M',
   YEAR: 'YYYY!A1:J'
@@ -40,7 +40,8 @@ export const SHEET_COL_INDEX = {
     cdIcon: 3,
     cdOrder: 4,
     cdMemo: 5,
-    cdDeleted: 6,
+    cdDefaultAcc1: 6,
+    cdDeleted: 7,
   },
 
   // 자산 시트 컬럼 인덱스

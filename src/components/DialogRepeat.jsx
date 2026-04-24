@@ -268,7 +268,13 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
               optionLabel="cdLabel"
               optionValue="cd"
               value={rpCategory}
-              onChange={(e) => set_rpCategory(e.value)}
+              onChange={(e) => {
+                set_rpCategory(e.value);
+                const selectedCategory = categoryOptions.find(node => node.key === rpType)?.children.find(c => c.cd === e.value);
+                if (selectedCategory?.cdDefaultAcc1) {
+                  set_rpAcc1(selectedCategory.cdDefaultAcc1);
+                }
+              }}
               itemTemplate={categoryItemTemplate}
               valueTemplate={categoryValueTemplate}
             />
