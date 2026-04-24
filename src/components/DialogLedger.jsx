@@ -202,6 +202,29 @@ export default function DialogLedger({ ledger, visible, onHide }) {
           </div>
 
           <div className="inputWrap">
+            <label htmlFor="gCategory" className="required">분류</label>
+            <Dropdown id="gCategory"
+              className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
+              placeholder="분류 선택"
+              options={categoryOptions.find(node => node.key === gType)?.children || []}
+              optionLabel="cdLabel"
+              optionValue="cd"
+              value={gCategory}
+              onChange={(e) => set_gCategory(e.value)}
+              itemTemplate={categoryItemTemplate}
+              valueTemplate={categoryValueTemplate}
+            />
+          </div>
+
+          <div className="inputWrap">
+            <label htmlFor="gMemo">내용</label>
+            <InputText id="gMemo"
+              value={gMemo}
+              onChange={(e) => set_gMemo(e.target.value)}
+            />
+          </div>
+
+          <div className="inputWrap">
             <label htmlFor="gAcc1" className="required">{gAcc1Label}</label>
             <Dropdown id="gAcc1"
               className={classNames('w-full', { 'p-invalid': submitted && !gAcc1 })}
@@ -232,29 +255,6 @@ export default function DialogLedger({ ledger, visible, onHide }) {
               onChange={(e) => set_gAcc2(e.value)}
               itemTemplate={assetItemTemplate}
               valueTemplate={assetValueTemplate}
-            />
-          </div>
-
-          <div className="inputWrap">
-            <label htmlFor="gCategory" className="required">분류</label>
-            <Dropdown id="gCategory"
-              className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
-              placeholder="분류 선택"
-              options={categoryOptions.find(node => node.key === gType)?.children || []}
-              optionLabel="cdLabel"
-              optionValue="cd"
-              value={gCategory}
-              onChange={(e) => set_gCategory(e.value)}
-              itemTemplate={categoryItemTemplate}
-              valueTemplate={categoryValueTemplate}
-            />
-          </div>
-
-          <div className="inputWrap">
-            <label htmlFor="gMemo">내용</label>
-            <InputText id="gMemo"
-              value={gMemo}
-              onChange={(e) => set_gMemo(e.target.value)}
             />
           </div>
 

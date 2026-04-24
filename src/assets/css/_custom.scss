@@ -4,18 +4,16 @@
   color: var(--primary-color) !important;
 }
 
+.p-button.p-button-sm .p-button-icon {
+  font-size: unset;
+}
+
 .p-dropdown-items-wrapper {
   max-height: 391px !important;
 }
 
 /* 일요일 (첫 번째 열) 색상 설정 */
 .p-datepicker {
-  background: transparent !important;
-
-  .p-datepicker-header {
-    background: transparent !important;
-  }
-
   table {
 
     /* 헤더(요일) */
@@ -54,8 +52,14 @@
 // }
 
 .p-datepicker .p-datepicker-header {
+
   .p-datepicker-title .p-inputtext-sm {
     line-height: normal;
+  }
+
+  .p-datepicker-next,
+  .p-datepicker-prev {
+    background-color: var(--bluegray-100);
   }
 
   .p-datepicker-prev-icon,

@@ -1,70 +1,46 @@
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/PrimeReact';
 import { useAuth } from '@/context/AuthContext';
+import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
 
 export default function Header({ onThemeClick }) {
   const { isInitialized, isSignedIn, login, logout } = useAuth();
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // 전체화면 상태 변화 감지
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
-    };
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {
-        /* iOS 등 미지원 환경 대비 */
-      });
-    } else {
-      document.exitFullscreen().catch(() => {
-        /* iOS 등 미지원 환경 대비 */
-      });
-    }
-  };
+  const isFullscreen = useFullscreenStatus();
 
   return (
     <header className="app-header shadow-2">
-      <h1 className="app-header-title">가계부</h1>
+      <h1 className="app-header-title">
+        <img className="app-header-logo" src={`${import.meta.env.BASE_URL}favicon.svg`} alt="Logo" />
+        가계부
+      </h1>
       <div className="app-header-buttons">
-        <Button className="fullscreen" severity="secondary" rounded text raised size="small"
+        <Button className="fullscreen text-base" severity="info" rounded text raised size="small"
           icon={isFullscreen ? "fa-solid fa-compress" : "fa-solid fa-expand"}
           tooltip={isFullscreen ? "화면 축소" : "전체화면"}
           tooltipOptions={{ position: 'left' }}
           onClick={toggleFullscreen}
-        >
-        </Button>
-        <Button className="theme" icon="pi pi-palette" severity="secondary" rounded text raised size="small"
+        />
+        <Button className="theme text-base" severity="info" rounded text raised size="small"
+          icon="pi pi-palette"
           tooltip="테마"
           tooltipOptions={{ position: 'left' }}
           onClick={onThemeClick}
         />
-        <Button className="refresh" icon="pi pi-refresh" severity="primary" rounded text raised size="small"
+        <Button className="refresh text-base" severity="info" rounded text raised size="small"
+          icon="pi pi-refresh"
           tooltip="새로고침"
           tooltipOptions={{ position: 'left' }}
         />
         {isSignedIn ? (
-          <Button className="login" icon="pi pi-sign-out" severity="primary" rounded text raised size="small"
+          <Button className="login text-base" severity="primary" rounded text raised size="small"
+            icon="pi pi-sign-out"
             tooltip="로그아웃"
             tooltipOptions={{ position: 'left' }}
             onClick={logout}
             disabled={!isInitialized}
           />
         ) : (
-          <Button className="login" icon="pi pi-user" severity="primary" rounded text raised size="small"
+          <Button className="login text-base" severity="primary" rounded text raised size="small"
+            icon="pi pi-user"
             tooltip="로그인"
             tooltipOptions={{ position: 'left' }}
             onClick={login}

@@ -3,6 +3,9 @@
 
 // @use "@/assets/css/_preset_uiframework.scss";
 
+@use "/node_modules/pretendard/dist/web/variable/pretendardvariable.css";
+@use "/node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+
 // PrimeReact Styles
 @use "primereact/resources/primereact.min.css";
 @use "primeicons/primeicons.css";

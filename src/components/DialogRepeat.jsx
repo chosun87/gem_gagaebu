@@ -260,6 +260,29 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="inputWrap">
+            <label htmlFor="rpCategory" className="required">분류</label>
+            <Dropdown id="rpCategory"
+              className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
+              placeholder="분류 선택"
+              options={categoryOptions.find(node => node.key === rpType)?.children || []}
+              optionLabel="cdLabel"
+              optionValue="cd"
+              value={rpCategory}
+              onChange={(e) => set_rpCategory(e.value)}
+              itemTemplate={categoryItemTemplate}
+              valueTemplate={categoryValueTemplate}
+            />
+          </div>
+
+          <div className="inputWrap">
+            <label htmlFor="rpMemo">내용</label>
+            <InputText id="rpMemo"
+              value={rpMemo}
+              onChange={(e) => set_rpMemo(e.target.value)}
+            />
+          </div>
+
+          <div className="inputWrap">
             <label htmlFor="rpAcc1" className="required">{rpAcc1Label}</label>
             <Dropdown id="rpAcc1"
               className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
@@ -290,29 +313,6 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
               onChange={(e) => set_rpAcc2(e.value)}
               itemTemplate={assetItemTemplate}
               valueTemplate={assetValueTemplate}
-            />
-          </div>
-
-          <div className="inputWrap">
-            <label htmlFor="rpCategory" className="required">분류</label>
-            <Dropdown id="rpCategory"
-              className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
-              placeholder="분류 선택"
-              options={categoryOptions.find(node => node.key === rpType)?.children || []}
-              optionLabel="cdLabel"
-              optionValue="cd"
-              value={rpCategory}
-              onChange={(e) => set_rpCategory(e.value)}
-              itemTemplate={categoryItemTemplate}
-              valueTemplate={categoryValueTemplate}
-            />
-          </div>
-
-          <div className="inputWrap">
-            <label htmlFor="rpMemo">내용</label>
-            <InputText id="rpMemo"
-              value={rpMemo}
-              onChange={(e) => set_rpMemo(e.target.value)}
             />
           </div>
 
