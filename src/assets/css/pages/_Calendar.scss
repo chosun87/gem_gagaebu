@@ -60,7 +60,14 @@
       padding: 2px;
 
       .day-number {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
         font-weight: bold;
+
+        &.not-executed {
+          background-color: var(--primary-color-text);
+        }
       }
 
       .daily-totals {
@@ -93,6 +100,10 @@
           color: var(--green-500);
         }
       }
+    }
+
+    .fc-daygrid-day-events {
+      display: none;
     }
 
     .fc-day-sun {

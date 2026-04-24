@@ -27,13 +27,22 @@ export default function Calendar() {
       // 날짜 포맷 표준화 (YYYY-MM-DD)
       const dateStr = dayjs(item.gDate).format('YYYY-MM-DD');
       if (!summary[dateStr]) {
-        summary[dateStr] = { income: 0, expense: 0, transfer: 0 };
+        summary[dateStr] = {
+          income0: 0, expense0: 0, transfer0: 0,
+          income1: 0, expense1: 0, transfer1: 0,
+        };
       }
 
       const amount = Number(item.gAmount) || 0;
-      if (item.gType === '수입') summary[dateStr].income += amount;
-      else if (item.gType === '지출') summary[dateStr].expense += amount;
-      else if (item.gType === '이체') summary[dateStr].transfer += amount;
+      if (!item.gExecuted) {
+        if (item.gType === '수입') summary[dateStr].income0 += amount;
+        else if (item.gType === '지출') summary[dateStr].expense0 += amount;
+        else if (item.gType === '이체') summary[dateStr].transfer0 += amount;
+      } else {
+        if (item.gType === '수입') summary[dateStr].income1 += amount;
+        else if (item.gType === '지출') summary[dateStr].expense1 += amount;
+        else if (item.gType === '이체') summary[dateStr].transfer1 += amount;
+      }
     });
     return summary;
   }, [yearData]);
@@ -136,11 +145,18 @@ export default function Calendar() {
 
     return (
       <div className="custom-day-content">
-        <div className="day-number">{day}</div>
-        <div className="daily-totals text-xs monospace">
-          {data?.income > 0 && <div className="total-income">{data.income.toLocaleString()}</div>}
-          {data?.expense > 0 && <div className="total-expense">{data.expense.toLocaleString()}</div>}
-          {data?.transfer > 0 && <div className="total-transfer">{data.transfer.toLocaleString()}</div>}
+        <div className="day-number">
+          {day}
+          {(data?.income0 || data?.expense0 || data?.transfer0) ? <i class="fa-solid fa-star"></i> : ''}
+        </div>
+        <div className="daily-totals monospace text-xs">
+          {(data?.income1 > 0 || data?.expense1 > 0 || data?.transfer1 > 0) &&
+            <>
+              <div className="total-income">{data.income1.toLocaleString()}</div>
+              <div className="total-expense">{data.expense1.toLocaleString()}</div>
+              <div className="total-transfer">{data.transfer1.toLocaleString()}</div>
+            </>
+          }
         </div>
       </div>
     );
