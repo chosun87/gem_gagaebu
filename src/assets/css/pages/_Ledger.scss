@@ -43,15 +43,29 @@
 
 .fc {
   .gType-수입 {
-    color: color-mix(in srgb, var(--color-수입), transparent 70%)
+    color: color-mix(in srgb, var(--color-수입), transparent 67%)
   }
 
   .gType-지출 {
-    color: color-mix(in srgb, var(--color-지출), transparent 70%)
+    color: color-mix(in srgb, var(--color-지출), transparent 67%)
   }
 
   .gType-이체 {
-    color: color-mix(in srgb, var(--color-이체), transparent 70%)
+    color: color-mix(in srgb, var(--color-이체), transparent 67%)
+  }
+
+  .custom-day-content {
+    .total-income {
+      color: var(--color-수입);
+    }
+
+    .total-expense {
+      color: var(--color-지출);
+    }
+
+    .total-transfer {
+      color: var(--color-이체);
+    }
   }
 }
 
@@ -60,17 +74,35 @@
 
   &.gType-수입,
   &.rpType-수입 {
-    background-color: var(--bg-수입);
+    background-color: var(--bg-수입-100);
+
+    &.gExecuted-Y,
+    &.rpExecuted-Y {
+      color: var(--text-color-secondary);
+      background-color: var(--bg-수입);
+    }
   }
 
   &.gType-지출,
   &.rpType-지출 {
-    background-color: var(--bg-지출);
+    background-color: var(--bg-지출-100);
+
+    &.gExecuted-Y,
+    &.rpExecuted-Y {
+      color: var(--text-color-secondary);
+      background-color: var(--bg-지출);
+    }
   }
 
   &.gType-이체,
   &.rpType-이체 {
-    background-color: var(--bg-이체);
+    background-color: var(--bg-이체-100);
+
+    &.gExecuted-Y,
+    &.rpExecuted-Y {
+      color: var(--text-color-secondary);
+      background-color: var(--bg-이체);
+    }
   }
 
   .p-tag.gCategory,
