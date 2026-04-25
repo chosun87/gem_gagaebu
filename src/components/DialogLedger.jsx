@@ -185,7 +185,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
 
   return (
     <Sidebar
-      className="dialog-ledger"
+      className="dialog-ledger shadow-7"
       header={<h3 className="dialog-title text-2xl">가계부 입력</h3>}
       position="bottom"
       visible={visible}

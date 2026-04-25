@@ -116,7 +116,7 @@
 
 .p-sidebar-bottom {
   .p-sidebar {
-    width: var(--screen-md);
+    width: calc(var(--screen-md) - var(--base-padding) * 2);
     height: auto;
     max-height: 80vh;
     min-height: 30vh;
@@ -209,7 +209,7 @@
 
 
 /* 모바일 환경 툴팁 숨김 */
-@media (max-width: 767px) {
+@media (max-width: 375px) {
   .p-tooltip {
     display: none !important;
   }
