@@ -1,4 +1,4 @@
-import { GOOGLE_AUTH } from '@/assets/js/constants';
+import { GOOGLE_AUTH } from '@/assets/js/google_api';
 
 // GAPI 클라이언트만 초기화 (auth2 제외)
 export const initGoogleApi = () => {

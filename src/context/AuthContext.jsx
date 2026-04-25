@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { initGoogleApi, signOut, setToken } from '@/api/googleAuth';
-import { GOOGLE_AUTH } from '@/assets/js/constants';
+import { GOOGLE_AUTH } from '@/assets/js/google_api';
 
 const AuthContext = createContext(null);
 

@@ -10,15 +10,26 @@ import { PrimeReactProvider } from 'primereact/api';
 import PrimeReact from 'primereact/api';
 
 import { HashRouter } from 'react-router-dom';
+import { AuthProvider } from '@/context/AuthContext';
+import { DataProvider } from '@/context/DataContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 PrimeReact.ripple = true;
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <PrimeReactProvider>
-      <HashRouter>
-        <App />
-      </HashRouter>
+      <ThemeProvider>
+        <AuthProvider>
+          <DataProvider>
+            <HashRouter>
+
+              <App />
+
+            </HashRouter>
+          </DataProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </PrimeReactProvider>
   </StrictMode>,
 );

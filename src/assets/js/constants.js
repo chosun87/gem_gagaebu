@@ -1,16 +1,9 @@
-
-export const GOOGLE_AUTH = {
-  SRC: 'https://accounts.google.com/gsi/client',
-  CLIENT_ID: '660525556283-dtpdooehas3u161nsstn2l4hufvndhpr.apps.googleusercontent.com',
-  SCOPES: 'https://www.googleapis.com/auth/spreadsheets',
-  DISCOVERY_DOCS: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-  REDIRECT_URI: "https://chosun87.github.io/gem_gagaebu",
-}
-
+// Google Sheets 관련
 export const GOOGLE_SHEET = {
   SPREADSHEET_ID: '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE'
 }
 
+// Google Sheets 시트 이름과 범위
 export const SHEET_NAME_RANGE = {
   CODE: '코드!A1:H',
   ASSET: '자산!A1:H',
@@ -18,19 +11,7 @@ export const SHEET_NAME_RANGE = {
   YEAR: 'YYYY!A1:J'
 }
 
-
-export const G_TYPE = {
-  수입: { label: '수입', value: '수입' },
-  지출: { label: '지출', value: '지출' },
-  이체: { label: '이체', value: '이체' }
-}
-
-export const RP_TYPE = {
-  수입: { label: '수입', value: '수입' },
-  지출: { label: '지출', value: '지출' },
-  이체: { label: '이체', value: '이체' }
-}
-
+// Google Sheets 시트 컬럼 인덱스
 export const SHEET_COL_INDEX = {
   // 코드 시트 컬럼 인덱스
   CODE: {
@@ -86,4 +67,18 @@ export const SHEET_COL_INDEX = {
     g_rpID: 8,
     gDeleted: 9,
   }
+}
+
+// 거래 유형
+export const G_TYPE = {
+  수입: { label: '수입', value: '수입' },
+  지출: { label: '지출', value: '지출' },
+  이체: { label: '이체', value: '이체' }
+}
+
+// 반복 거래 유형
+export const RP_TYPE = {
+  수입: { label: '수입', value: '수입' },
+  지출: { label: '지출', value: '지출' },
+  이체: { label: '이체', value: '이체' }
 }

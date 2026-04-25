@@ -1,5 +1,5 @@
-import { Button } from '@/components/PrimeReact';
 import { useAuth } from '@/context/AuthContext';
+import { Button } from '@/components/PrimeReact';
 import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
 
 export default function Header({ onThemeClick }) {
@@ -31,6 +31,7 @@ export default function Header({ onThemeClick }) {
           tooltip="새로고침"
           tooltipOptions={{ position: 'left' }}
         />
+
         {isSignedIn ? (
           <Button className="login text-base" severity="primary" rounded text raised size="small"
             icon="pi pi-sign-out"
