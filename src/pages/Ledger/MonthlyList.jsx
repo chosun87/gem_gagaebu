@@ -11,7 +11,7 @@ import { PrimeReact_locale } from '@/components/PrimeReact';
 addLocale('ko', PrimeReact_locale.ko.Calendar);
 locale('ko');
 
-export default function List() {
+export default function MonthlyList() {
   const { yearData, loading, selectedDate, setSelectedDate, handleChange_gExecute } = useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);

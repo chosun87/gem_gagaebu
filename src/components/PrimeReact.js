@@ -24,6 +24,7 @@ export { TabView, TabPanel } from 'primereact/tabview';
 export { Tag } from 'primereact/tag';
 export { TreeSelect } from 'primereact/treeselect';
 export { ToggleButton } from 'primereact/togglebutton';
+export { Chart } from 'primereact/chart';
 // 필요 시 PrimeReact의 다른 컴포넌트들을 여기에 추가하세요.
 
 export const PrimeReact_locale = {

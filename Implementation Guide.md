@@ -301,3 +301,18 @@ import Footer from './components/Footer';
 모바일 환경일때,
 1) 로그인 후 자동 전체화면 / 로그아웃 후 전체화면 해제
 2) tooltip 안보이게
+
+
+* DialogList.jsx 추가
+  - DialogLedger.jsx처럼 Sidebar position="bottom"으로 구현.
+  - 조회 조건에 날짜 등 파라미터로 넘겨 받는 조건 조회 가능. 파라미터는 객체 구조로 넘길 것. ex {date: '2026-04-26', type: '수입', accCode: 'A001', category: '식비'}
+  - Sidebar header에 조회 조건 값 출력.
+  - FullCalendar에서 날짜 셀을 클릭하면 이 창이 해당일자 조회 조건으로 열림.
+  - 목록은 MonthlyList.jsx의 목록 기능을 그대로 사용.
+
+* MonthlySummary.jsx 추가
+  - 월간 수입, 지출, 이체의 총계(미집행건도 포함)를 보여주는 화면.
+  - 화면 상단에 바 차트. (chartjs)
+    - 최근 3개월간 수입, 지출, 이체 비교 차트
+  - 화면 하단에 3개월간 수입, 지출, 이체 합계액
+  

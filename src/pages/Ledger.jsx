@@ -1,6 +1,7 @@
 import { TabView, TabPanel } from '@/components/PrimeReact';
 import Calendar from '@/pages/Ledger/Calendar';
-import List from '@/pages/Ledger/List';
+import MonthlyList from '@/pages/Ledger/MonthlyList';
+import MonthlySummary from '@/pages/Ledger/MonthlySummary';
 import Repeat from '@/pages/Ledger/Repeat';
 
 export default function Ledger() {
@@ -13,7 +14,10 @@ export default function Ledger() {
           <Calendar />
         </TabPanel>
         <TabPanel header={<span className="text-lg">목록</span>} leftIcon="pi pi-list-check mr-2" className="px-0">
-          <List />
+          <MonthlyList />
+        </TabPanel>
+        <TabPanel header={<span className="text-lg">그래프</span>} leftIcon="pi pi-chart-bar mr-2">
+          <MonthlySummary />
         </TabPanel>
         <TabPanel header={<span className="text-lg">반복</span>} leftIcon="pi pi-clone mr-2" className="px-0">
           <Repeat />

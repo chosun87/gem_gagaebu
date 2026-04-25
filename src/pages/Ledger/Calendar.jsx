@@ -8,6 +8,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import DialogList from '@/components/DialogList';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 import { PrimeReact_locale } from '@/components/PrimeReact';
@@ -17,6 +18,9 @@ locale('ko');
 export default function Calendar() {
   const { yearData, loading, selectedDate, setSelectedDate } = useData();
   const fcRef = useRef(null);
+
+  const [showDialogList, setShowDialogList] = useState(false);
+  const [dialogParams, setDialogParams] = useState({});
 
   // 일일 합계 데이터 가공
   const dailySummary = useMemo(() => {
@@ -85,7 +89,8 @@ export default function Calendar() {
   });
 
   const handleDateClick = (info) => {
-    console.log('Date clicked:', info.dateStr);
+    setDialogParams({ date: info.dateStr });
+    setShowDialogList(true);
   };
 
   // 스와이프 핸들러 추가
@@ -205,6 +210,12 @@ export default function Calendar() {
           dateClick={handleDateClick}
         />
       </div>
+
+      <DialogList
+        visible={showDialogList}
+        onHide={() => setShowDialogList(false)}
+        params={dialogParams}
+      />
     </div>
   );
 }
