@@ -59,6 +59,7 @@ export const useData = () => {
     loadSheet연도Data: yyyy.loadSheet연도Data,
     handleChange_gExecute: yyyy.handleChange_gExecute,
     saveLedgerEntry: yyyy.saveLedgerEntry,
+    generateLedgerFromRepeat: yyyy.generateLedgerFromRepeat,
     deleteLedgerEntry: yyyy.deleteLedgerEntry,
 
     // 로딩 상태 통합

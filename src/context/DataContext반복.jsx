@@ -105,7 +105,7 @@ export const RepeatProvider = ({ children }) => {
       }
 
       await loadSheet반복Data();
-      return true;
+      return rpID;
     } catch (error) {
       console.error('Error saving repeat entry:', error);
       throw error;
