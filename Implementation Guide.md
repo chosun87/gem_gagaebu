@@ -257,3 +257,6 @@ import Footer from './components/Footer';
   - cdGroup='이체' : gType='이체', rpType='이체'일떄 gCategory, rpCategory의 Dropdown option으로 사용  
   - cdGroup='수입' : gType='수입', rpType='수입'일떄 gCategory, rpCategory의 Dropdown option으로 사용  
 
+모바일 환경일때,
+1) 로그인 후 자동 전체화면 / 로그아웃 후 전체화면 해제
+2) tooltip 안보이게

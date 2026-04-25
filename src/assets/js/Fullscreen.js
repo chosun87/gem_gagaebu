@@ -31,14 +31,20 @@ export const useFullscreenStatus = () => {
  */
 export const toggleFullscreen = () => {
   if (!document.fullscreenElement) {
-    document.documentElement.requestFullscreen().catch(() => {
-      /* iOS 등 미지원 환경 대비 */
-    });
+    requestFullscreen();
   } else {
-    if (document.exitFullscreen) {
-      document.exitFullscreen().catch(() => {
-        /* iOS 등 미지원 환경 대비 */
-      });
-    }
+    exitFullscreen()
   }
 };
+
+export const requestFullscreen = () => {
+  document.documentElement.requestFullscreen().catch(() => {
+    console.warn('전체화면 전환 실패: 브라우저 보안 정책상 사용자 제스처가 필요합니다.');
+  });
+}
+
+export const exitFullscreen = () => {
+  document.exitFullscreen().catch(() => {
+    console.warn('전체화면 해제 실패: 브라우저 보안 정책상 사용자 제스처가 필요합니다.');
+  });
+}

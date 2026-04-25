@@ -206,3 +206,11 @@
     }
   }
 }
+
+
+/* 모바일 환경 툴팁 숨김 */
+@media (max-width: 767px) {
+  .p-tooltip {
+    display: none !important;
+  }
+}

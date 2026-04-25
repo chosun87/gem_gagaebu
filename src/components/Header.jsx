@@ -26,27 +26,30 @@ export default function Header({ onThemeClick }) {
           tooltipOptions={{ position: 'left' }}
           onClick={onThemeClick}
         />
-        <Button className="refresh text-base" severity="info" rounded text raised size="small"
-          icon="pi pi-refresh"
-          tooltip="새로고침"
-          tooltipOptions={{ position: 'left' }}
-        />
 
         {isSignedIn ? (
-          <Button className="login text-base" severity="primary" rounded text raised size="small"
-            icon="pi pi-sign-out"
-            tooltip="로그아웃"
-            tooltipOptions={{ position: 'left' }}
-            onClick={logout}
-            disabled={!isInitialized}
-          />
+          <>
+            <Button className="refresh text-base" severity="info" rounded text raised size="small"
+              icon="pi pi-refresh"
+              disabled={!isInitialized}
+              tooltip="새로고침"
+              tooltipOptions={{ position: 'left' }}
+            />
+            <Button className="login text-base" severity="primary" rounded text raised size="small"
+              icon="pi pi-sign-out"
+              disabled={!isInitialized}
+              tooltip="로그아웃"
+              tooltipOptions={{ position: 'left' }}
+              onClick={logout}
+            />
+          </>
         ) : (
           <Button className="login text-base" severity="primary" rounded text raised size="small"
             icon="pi pi-user"
+            disabled={!isInitialized}
             tooltip="로그인"
             tooltipOptions={{ position: 'left' }}
             onClick={login}
-            disabled={!isInitialized}
           />
         )}
       </div>
