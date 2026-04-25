@@ -1,5 +1,3 @@
-@use "../_mixins.scss" as *;
-
 .ledger-page {
   .p-tabview.ledger-tabview {
     height: 100%;
@@ -128,50 +126,6 @@
     &.gType-이체 {
       color: var(--color-이체);
       border-color: var(--color-이체);
-    }
-  }
-}
-
-
-.list-item {
-  @include dark-mode {
-
-    &.gType-수입,
-    &.rpType-수입 {
-      background-color: var(--blue-800);
-    }
-
-    &.gType-지출,
-    &.rpType-지출 {
-      background-color: var(--pink-800);
-    }
-
-    &.gType-이체,
-    &.rpType-이체 {
-      background-color: var(--green-800);
-    }
-
-    .p-tag.gCategory,
-    .p-tag.rpCategory {
-      color: var(--text-color);
-      background-color: var(--bluegray-900);
-    }
-
-    .p-badge {
-      &.gType-수입 {
-        color: var(--color-수입);
-        border-color: var(--color-수입);
-      }
-
-      &.gType-지출 {
-        color: var(--color-지출);
-        border-color: var(--color-지출);
-      }
-
-      &.gType-이체 {
-        color: var(--color-이체);
-        border-color: var(--color-이체);
-      }
     }
   }
 }

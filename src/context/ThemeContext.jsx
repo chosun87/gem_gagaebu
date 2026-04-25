@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import PrimeReact from 'primereact/api';
+import { THEME_NODES } from '@/assets/js/constants_theme';
 
 const ThemeContext = createContext();
 
@@ -19,8 +20,19 @@ export const ThemeProvider = ({ children }) => {
       themeLink.href = `https://unpkg.com/primereact/resources/themes/${finalTheme}/theme.css`;
     }
 
-    // 다크 모드 클래스 적용
-    if (theme.includes('dark')) {
+    // 다크 모드 판별 (singleMode 고려)
+    const allThemes = THEME_NODES.flatMap(group => group.children || []);
+    const currentThemeNode = allThemes.find(t => {
+      const pattern = t.key.replace('{MODE}', '(light|dark)');
+      const regex = new RegExp(`^${pattern}$`);
+      return regex.test(theme);
+    });
+
+    const isDarkMode = currentThemeNode?.singleMode
+      ? currentThemeNode.singleMode === 'dark'
+      : theme.includes('dark');
+
+    if (isDarkMode) {
       document.documentElement.classList.add('dark-mode');
     } else {
       document.documentElement.classList.remove('dark-mode');

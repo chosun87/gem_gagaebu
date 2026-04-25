@@ -1,5 +1,7 @@
 // 변수 정의
 
+@use "./_mixins.scss" as *;
+
 :root {
   // 폰트
   --font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
@@ -41,6 +43,18 @@
 
   // 기타
   --base-padding: 20px;
+}
+
+@include dark-mode {
+  --color-수입: var(--blue-500);
+  --color-지출: var(--pink-500);
+  --color-이체: var(--green-500);
+  --bg-수입: var(--blue-800);
+  --bg-지출: var(--pink-800);
+  --bg-이체: var(--green-800);
+  --bg-수입-100: var(--blue-700);
+  --bg-지출-100: var(--pink-700);
+  --bg-이체-100: var(--green-700);
 }
 
 // 색상

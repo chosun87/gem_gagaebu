@@ -19,9 +19,12 @@ export default function DialogTheme({ visible, onHide }) {
     return regex.test(theme);
   });
 
-  const isDarkMode = theme.includes('dark');
-  const isMaterialTheme = theme.startsWith('md-');
-  const supportsDarkMode = currentThemeNode?.darkMode !== false;
+  const isDarkMode = currentThemeNode?.singleMode
+    ? currentThemeNode.singleMode === 'dark'
+    : theme.includes('dark');
+
+  const isMaterialTheme = theme.startsWith('md-') || theme.startsWith('mdc-');
+  const supportsDarkMode = !currentThemeNode?.singleMode;
 
   const onScaleChange = (type) => {
     if (type === 'plus') {
@@ -32,6 +35,8 @@ export default function DialogTheme({ visible, onHide }) {
   };
 
   const onDarkModeToggle = (e) => {
+    if (!supportsDarkMode) return;
+
     let newTheme = '';
     if (e.value) {
       newTheme = theme.replace('light', 'dark');

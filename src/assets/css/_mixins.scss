@@ -1,5 +1,11 @@
 @mixin dark-mode {
-  :root.dark-mode & {
-    @content;
+  @if & {
+    .dark-mode & {
+      @content;
+    }
+  } @else {
+    .dark-mode {
+      @content;
+    }
   }
 }
