@@ -20,6 +20,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   const [rpAcc2, set_rpAcc2] = useState(repeat?.rpAcc2 || '');
   const [rpCategory, set_rpCategory] = useState(repeat?.rpCategory || '');
   const [rpAmount, set_rpAmount] = useState(repeat?.rpAmount || 0);
+  const [rpTotalAmount, set_rpTotalAmount] = useState(repeat?.rpTotalAmount || 0);
   const [rpMemo, set_rpMemo] = useState(repeat?.rpMemo || '');
   const [rpComplete, set_rpComplete] = useState(repeat?.rpComplete || false);
 
@@ -50,6 +51,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       set_rpAcc2(repeat?.rpAcc2 || '');
       set_rpCategory(repeat?.rpCategory || '');
       set_rpAmount(repeat?.rpAmount || 0);
+      set_rpTotalAmount(repeat?.rpTotalAmount || 0);
       set_rpMemo(repeat?.rpMemo || '');
       set_rpComplete(repeat?.rpComplete || false);
       set_submitted(false);
@@ -75,6 +77,39 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     }
   }
 
+  const calculateTotalAmount = () => {
+    if (!rpDateS || !rpDateE || !rpAmount || !rpPeriod || !rpDay) return;
+
+    let count = 0;
+    const start = dayjs(rpDateS);
+    const end = dayjs(rpDateE);
+
+    if (rpPeriod === 'M') {
+      const day = parseInt(rpDay);
+      // 시작 월부터 종료 월까지 루프
+      let temp = start.date(day);
+      if (temp.isBefore(start, 'day')) temp = temp.add(1, 'month');
+
+      while (temp.isBefore(end) || temp.isSame(end, 'day')) {
+        count++;
+        temp = temp.add(1, 'month');
+      }
+    } else if (rpPeriod === 'W') {
+      const dayOfWeekMap = { '일': 0, '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6 };
+      const dayOfWeek = dayOfWeekMap[rpDay];
+
+      let temp = start.day(dayOfWeek);
+      if (temp.isBefore(start, 'day')) temp = temp.add(1, 'week');
+
+      while (temp.isBefore(end) || temp.isSame(end, 'day')) {
+        count++;
+        temp = temp.add(1, 'week');
+      }
+    }
+
+    set_rpTotalAmount(count * rpAmount);
+  };
+
   const onSave = async () => {
     set_submitted(true);
 
@@ -95,6 +130,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       rpAcc2: rpType === '이체' ? rpAcc2 : '',
       rpCategory,
       rpAmount,
+      rpTotalAmount,
       rpMemo,
       rpComplete
     };
@@ -197,7 +233,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
   return (
     <Sidebar
-      className="dialog-repeat"
+      className="dialog-repeat shadow-7"
       header={<h3 className="dialog-title text-2xl">반복 내역 설정</h3>}
       position="bottom"
       visible={visible}
@@ -217,7 +253,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpDateS" className="required">시작일</label>
+            <label htmlFor="rpDateS" className="required">기간</label>
             <div className="flex align-items-center gap-2">
               <PrimeCalendar id="rpDateS"
                 className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
@@ -323,13 +359,31 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="inputWrap">
-            <label htmlFor="rpAmount" className="required">금액</label>
+            <label htmlFor="rpAmount" className="required">회당 금액</label>
             <InputNumber id="rpAmount"
               className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
               mode="currency" currency="KRW" locale="ko-KR"
               value={rpAmount}
               onValueChange={(e) => set_rpAmount(e.target.value)}
             />
+          </div>
+          <div className="inputWrap">
+            <label htmlFor="rpTotalAmount">총 금액</label>
+            <div className="flex align-items-center gap-2 w-full">
+              <InputNumber id="rpTotalAmount"
+                className="flex-grow-1"
+                mode="currency" currency="KRW" locale="ko-KR"
+                placeholder="전체 계약 금액 또는 목표 금액"
+                value={rpTotalAmount}
+                onValueChange={(e) => set_rpTotalAmount(e.target.value)}
+              />
+              <Button severity="info" outlined
+                icon="pi pi-calculator" label="계산"
+                tooltip="기간/주기 기반 자동 계산"
+                tooltipOptions={{ position: 'left' }}
+                onClick={calculateTotalAmount}
+              />
+            </div>
           </div>
         </div>
       </Panel>

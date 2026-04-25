@@ -43,6 +43,7 @@ export const RepeatProvider = ({ children }) => {
           rpAcc2: row[SHEET_COL_INDEX.REPEAT.rpAcc2] || '',
           rpCategory: row[SHEET_COL_INDEX.REPEAT.rpCategory] || '',
           rpAmount: Number(String(row[SHEET_COL_INDEX.REPEAT.rpAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
+          rpTotalAmount: Number(String(row[SHEET_COL_INDEX.REPEAT.rpTotalAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
           rpMemo: row[SHEET_COL_INDEX.REPEAT.rpMemo] || '',
           rpDeleted: (String(row[SHEET_COL_INDEX.REPEAT.rpDeleted]).toUpperCase() === 'TRUE')
         });
@@ -93,6 +94,7 @@ export const RepeatProvider = ({ children }) => {
       rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2] = formData.rpAcc2 || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpCategory] = formData.rpCategory || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpAmount] = formData.rpAmount || 0;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount] = formData.rpTotalAmount || 0;
       rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = formData.rpMemo || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = ''; 
 

@@ -59,6 +59,11 @@ export default function Repeat() {
           <div className="rpAmount monospace text-right font-bold text-lg">
             {item.rpAmount.toLocaleString()}<span className="unit text-xs ">원</span>
           </div>
+          {item.rpTotalAmount > 0 && (
+            <div className="rpTotalAmount monospace text-right text-xs opacity-70 mt-1">
+              총 {item.rpTotalAmount.toLocaleString()}원
+            </div>
+          )}
           <InputSwitch checked={item.rpComplete} trueValue={false} falseValue={true}
             tooltip="완료"
             tooltipOptions={{ position: 'top' }}

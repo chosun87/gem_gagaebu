@@ -7,7 +7,7 @@ export const GOOGLE_SHEET = {
 export const SHEET_NAME_RANGE = {
   CODE: '코드!A1:H',
   ASSET: '자산!A1:H',
-  REPEAT: '반복!A1:M',
+  REPEAT: '반복!A1:N',
   YEAR: 'YYYY!A1:J'
 }
 
@@ -50,8 +50,9 @@ export const SHEET_COL_INDEX = {
     rpAcc2: 8,
     rpCategory: 9,
     rpAmount: 10,
-    rpMemo: 11,
-    rpDeleted: 12,
+    rpTotalAmount: 11,
+    rpMemo: 12,
+    rpDeleted: 13,
   },
 
   // 연도 시트 컬럼 인덱스
