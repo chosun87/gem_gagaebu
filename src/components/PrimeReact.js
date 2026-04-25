@@ -6,6 +6,8 @@ export { Card } from 'primereact/card';
 export { Checkbox } from 'primereact/checkbox';
 export { Chips } from 'primereact/chips';
 export { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
+export { DataTable } from 'primereact/datatable';
+export { Column } from 'primereact/column';
 export { DataView } from 'primereact/dataview';
 export { Divider } from 'primereact/divider';
 export { Dialog } from 'primereact/dialog';

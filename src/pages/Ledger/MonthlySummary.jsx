@@ -1,7 +1,9 @@
-import 'chart.js/auto';
+import { Chart as ChartJS, registerables } from 'chart.js';
+ChartJS.register(...registerables);
+
 import { useState, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
-import { Chart, Dropdown, Calendar as PrimeCalendar } from '@/components/PrimeReact';
+import { Chart, Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/components/PrimeReact';
 import dayjs from 'dayjs';
 
 export default function MonthlySummary() {
@@ -27,7 +29,7 @@ export default function MonthlySummary() {
 
     const dataMap = {};
     months.forEach(m => {
-      dataMap[m] = { 수입: 0, 지출: 0, 이체: 0 };
+      dataMap[m] = { month: m, 수입: 0, 지출: 0, 이체: 0 };
     });
 
     (yearData || []).forEach(item => {
@@ -38,36 +40,28 @@ export default function MonthlySummary() {
       }
     });
 
-    const labels = months.map(m => dayjs(m).format('M월'));
-    const incomeData = months.map(m => dataMap[m]['수입']);
-    const expenseData = months.map(m => dataMap[m]['지출']);
-    const transferData = months.map(m => dataMap[m]['이체']);
-
-    // CSS 변수에서 색상 가져오기 (없으면 기본값)
+    const labels = ['수입', '지출', '이체'];
     const rootStyle = getComputedStyle(document.documentElement);
-    const colorIncome = rootStyle.getPropertyValue('--color-수입').trim() || '#22C55E';
-    const colorExpense = rootStyle.getPropertyValue('--color-지출').trim() || '#EF4444';
-    const colorTransfer = rootStyle.getPropertyValue('--color-이체').trim() || '#3B82F6';
+
+    // DataTable용 리스트 (최신순)
+    const tableData = [...months].reverse().map(m => ({
+      monthLabel: dayjs(m).format('YYYY년 MM월'),
+      ...dataMap[m]
+    }));
 
     const chartData = {
       labels: labels,
-      datasets: [
-        {
-          label: '수입',
-          backgroundColor: colorIncome,
-          data: incomeData
-        },
-        {
-          label: '지출',
-          backgroundColor: colorExpense,
-          data: expenseData
-        },
-        {
-          label: '이체',
-          backgroundColor: colorTransfer,
-          data: transferData
-        }
-      ]
+      datasets: months.map((m, idx) => {
+        // 월별 색상 (투명도 조절로 구분)
+        const alpha = 1 - (idx * 0.3);
+        const colorBase = rootStyle.getPropertyValue('--primary-color').trim() || '#3B82F6';
+
+        return {
+          label: dayjs(m).format('M월'),
+          backgroundColor: idx === 2 ? '#3B82F6' : idx === 1 ? '#60A5FA' : '#93C5FD', // 파란색 계열로 구분
+          data: [dataMap[m]['수입'], dataMap[m]['지출'], dataMap[m]['이체']]
+        };
+      })
     };
 
     const chartOptions = {
@@ -96,7 +90,7 @@ export default function MonthlySummary() {
         y: {
           ticks: {
             color: rootStyle.getPropertyValue('--text-color-secondary') || '#6c757d',
-            callback: function(value) {
+            callback: function (value) {
               return (value / 10000).toLocaleString() + '만';
             }
           },
@@ -108,10 +102,17 @@ export default function MonthlySummary() {
       }
     };
 
-    return { months, dataMap, chartData, chartOptions };
+    return { tableData, chartData, chartOptions };
   }, [yearData, selectedDate]);
 
-  // Calendar 월 선택 템플릿 (UI 일관성)
+  // 금액 포맷팅 템플릿
+  const amountBodyTemplate = (rowData, field) => {
+    const amount = rowData[field] || 0;
+    const colorClass = `gType-${field}`;
+    return <span className={`${colorClass} font-bold monospace`}>{amount.toLocaleString()}</span>;
+  };
+
+  // Calendar 월 선택 템플릿
   const templateMonthNavigator = (e) => (
     <Dropdown className="month-dropdown" value={e.value} options={e.options} onChange={(event) => e.onChange(event.originalEvent, event.value)} />
   );
@@ -131,34 +132,19 @@ export default function MonthlySummary() {
         onViewDateChange={handleViewDateChange}
       />
 
-      <div className="summary-chart-container flex-grow-1" style={{ minHeight: '250px' }}>
+      <div className="summary-chart-container">
         <h3 className="text-center mb-3">최근 3개월 비교</h3>
         <Chart type="bar" data={summaryData.chartData} options={summaryData.chartOptions} />
       </div>
 
       <div className="summary-table-container pb-4">
-        <h3 className="text-center mb-3">3개월 합계</h3>
-        <div className="flex flex-column gap-2">
-          {summaryData.months.map(m => (
-            <div key={m} className="summary-row card p-3 shadow-1 border-round flex flex-column gap-2">
-              <div className="font-bold text-lg border-bottom-1 surface-border pb-1">
-                {dayjs(m).format('YYYY년 M월')}
-              </div>
-              <div className="flex justify-content-between align-items-center">
-                <span className="text-sm opacity-70">수입</span>
-                <span className="gType-수입 font-bold">{summaryData.dataMap[m]['수입'].toLocaleString()}원</span>
-              </div>
-              <div className="flex justify-content-between align-items-center">
-                <span className="text-sm opacity-70">지출</span>
-                <span className="gType-지출 font-bold">{summaryData.dataMap[m]['지출'].toLocaleString()}원</span>
-              </div>
-              <div className="flex justify-content-between align-items-center">
-                <span className="text-sm opacity-70">이체</span>
-                <span className="gType-이체 font-bold">{summaryData.dataMap[m]['이체'].toLocaleString()}원</span>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* <h3 className="text-center mb-3">최근 3개월 합계</h3> */}
+        <DataTable value={summaryData.tableData} className="text-sm shadow-1 border-round overflow-hidden" responsiveLayout="scroll">
+          <Column field="monthLabel" header="연월" className="font-bold"></Column>
+          <Column field="수입" header="수입" body={(data) => amountBodyTemplate(data, '수입')} alignHeader="center" align="right"></Column>
+          <Column field="지출" header="지출" body={(data) => amountBodyTemplate(data, '지출')} alignHeader="center" align="right"></Column>
+          <Column field="이체" header="이체" body={(data) => amountBodyTemplate(data, '이체')} alignHeader="center" align="right"></Column>
+        </DataTable>
       </div>
     </div>
   );

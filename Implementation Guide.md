@@ -315,4 +315,4 @@ import Footer from './components/Footer';
   - 화면 상단에 바 차트. (chartjs)
     - 최근 3개월간 수입, 지출, 이체 비교 차트
   - 화면 하단에 3개월간 수입, 지출, 이체 합계액
-  
+    - DataTable 컬럼에 수입, 지출, 이체 컬럼을 표시, 행은 연월
