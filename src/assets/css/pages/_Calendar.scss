@@ -60,13 +60,15 @@
       padding: 2px;
 
       .day-number {
-        display: flex;
-        align-items: center;
-        gap: 0.25rem;
+        width: 100%;
         font-weight: bold;
 
-        &.not-executed {
-          background-color: var(--primary-color-text);
+        position: relative;
+
+        i.fa-star {
+          position: absolute;
+          top: 0;
+          right: 0;
         }
       }
 

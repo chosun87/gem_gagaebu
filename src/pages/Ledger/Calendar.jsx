@@ -113,6 +113,15 @@ export default function Calendar() {
     touchStart.current = null;
   };
 
+  // 별표 색상 가져오기
+  const _getStarClass = (data) => {
+    let result = ""
+    if (data?.income0) result = "gType-수입 "
+    if (data?.expense0) result += "gType-지출 "
+    if (data?.transfer0) result += "gType-이체 "
+    return result;
+  }
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿
   const templateMonthNavigator = (e) => {
@@ -143,11 +152,15 @@ export default function Calendar() {
     const argDate = dayjs(arg.date).format('YYYY-MM-DD');
     const data = dailySummary[argDate];
 
+    const starClass = _getStarClass(data)
+
     return (
       <div className="custom-day-content">
         <div className="day-number">
           {day}
-          {(data?.income0 || data?.expense0 || data?.transfer0) ? <i class="fa-solid fa-star"></i> : ''}
+          {data?.income0 > 0 && <i className={`fa-solid fa-star gType-수입`}></i>}
+          {data?.expense0 > 0 && <i className={`fa-solid fa-star gType-지출`}></i>}
+          {data?.transfer0 > 0 && <i className={`fa-solid fa-star gType-이체`}></i>}
         </div>
         <div className="daily-totals monospace text-xs">
           {(data?.income1 > 0 || data?.expense1 > 0 || data?.transfer1 > 0) &&
@@ -158,7 +171,7 @@ export default function Calendar() {
             </>
           }
         </div>
-      </div>
+      </div >
     );
   };
 
