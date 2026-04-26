@@ -173,6 +173,8 @@
     &>tr {
       &>th {
         background: var(--highlight-bg);
+        color: var(--highlight-text-color);
+        font-weight: bold;
       }
     }
   }

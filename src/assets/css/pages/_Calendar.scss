@@ -14,6 +14,54 @@
     flex-direction: column;
   }
 
+  .monthly-summary {
+    background-color: var(--surface-card);
+    border-radius: var(--border-radius);
+    padding: calc(var(--padding-base) / 2);
+    border: 1px solid var(--surface-border);
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th,
+      td {
+        padding: 0.25rem calc(var(--padding-base) / 2);
+      }
+
+      thead th {
+        color: var(--highlight-text-color);
+        background-color: var(--highlight-bg);
+      }
+
+      tr {
+        td {
+          &:first-child {
+            font-weight: bold;
+            width: 4rem;
+          }
+
+          &:last-child {
+            text-align: right;
+            font-weight: 500;
+          }
+        }
+
+        &:nth-child(1) td:last-child {
+          color: var(--color-수입);
+        }
+
+        &:nth-child(2) td:last-child {
+          color: var(--color-지출);
+        }
+
+        &:nth-child(3) td:last-child {
+          color: var(--color-이체);
+        }
+      }
+    }
+  }
+
   .fc {
     flex: 1 1 auto;
 
@@ -69,6 +117,13 @@
           position: absolute;
           top: 0;
           right: 0;
+          font-size: 1.25rem;
+        }
+
+        .실행전 {
+          position: absolute;
+          top: 0.125rem;
+          right: 0.55rem;
         }
       }
 
