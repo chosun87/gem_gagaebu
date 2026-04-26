@@ -7,16 +7,16 @@
   position: relative;
 
   .list-dataview {
-    width: calc(100% + var(--base-padding) * 2);
-    margin: 0 calc(var(--base-padding) * -1);
-    padding-left: 15px;
-    padding-right: 15px;
+    width: calc(100% + var(--padding-base) * 2);
+    margin: 0 calc(var(--padding-base) * -1);
+    padding-left: calc(var(--padding-base) - 0.5rem);
+    padding-right: calc(var(--padding-base) - 0.5rem);
     scrollbar-gutter: stable both-edges;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 
     .p-dataview-content {
-      // padding: var(--base-padding) 0;
+      // padding: var(--padding-base) 0;
 
       .p-grid {
         gap: 10px;

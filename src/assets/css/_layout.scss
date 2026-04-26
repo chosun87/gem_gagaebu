@@ -116,7 +116,7 @@
 
 .p-sidebar-bottom {
   .p-sidebar {
-    width: calc(var(--screen-md) - var(--base-padding) * 2);
+    width: calc(var(--screen-md) - var(--padding-base) * 2);
     height: auto;
     max-height: 80vh;
     // min-height: 30vh;
@@ -126,11 +126,10 @@
 
 .p-sidebar {
   .p-sidebar-header {
-    padding-bottom: 0.25rem;
+    padding: var(--padding-base);
   }
 
   .p-sidebar-content {
-    overflow-x: hidden;
     padding: 0;
   }
 
@@ -146,18 +145,18 @@
     }
 
     .p-panel-content {
+      padding-top: 0;
       border: none;
     }
 
     .p-panel-footer {
+      padding-bottom: calc(var(--padding-base) + 0.5rem);
       border: 0;
       border-top: 1px solid var(--surface-border);
 
       position: sticky;
       bottom: 0;
-    }
 
-    .p-panel-footer {
       display: flex;
       justify-content: flex-end;
       gap: 0.5rem;

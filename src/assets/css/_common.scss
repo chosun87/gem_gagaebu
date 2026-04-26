@@ -12,13 +12,13 @@
 }
 
 .padding-bottom-20 {
-  padding-bottom: var(--base-padding);
+  padding-bottom: var(--padding-base);
 }
 
 .btn-floating-action {
   position: absolute;
-  right: var(--base-padding);
-  bottom: var(--base-padding);
+  right: var(--padding-base);
+  bottom: var(--padding-base);
   z-index: 1000;
 
   width: 3.5rem;

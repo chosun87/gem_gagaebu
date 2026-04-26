@@ -28,11 +28,11 @@
 
         .panel-inner {
           height: 100%;
-          padding: var(--base-padding);
+          padding: var(--padding-base);
 
           display: flex;
           flex-direction: column;
-          gap: var(--base-padding);
+          gap: var(--padding-base);
         }
       }
     }

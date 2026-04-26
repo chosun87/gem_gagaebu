@@ -10,12 +10,12 @@ body {
 
 :root {
   *::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 0.5rem;
+    height: 0.5rem;
   }
 
   *::-webkit-scrollbar-thumb {
-    border-radius: 5px;
+    border-radius: 0.5rem;
     background-color: var(--gray-300);
   }
 }

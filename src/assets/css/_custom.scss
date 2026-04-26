@@ -149,3 +149,13 @@
     background-color: var(--gray-300);
   }
 }
+
+.p-panel {
+  .p-panel-content {
+    padding: var(--padding-base);
+  }
+
+  .p-panel-footer {
+    padding: var(--padding-base);
+  }
+}
