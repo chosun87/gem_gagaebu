@@ -3,7 +3,7 @@ import { Button } from '@/components/PrimeReact';
 import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
 
 export default function Header({ onThemeClick }) {
-  const { isInitialized, isSignedIn, login, logout } = useAuth();
+  const { isInitialized, isSignedIn, login, logout, authRemainingTime } = useAuth();
   const isFullscreen = useFullscreenStatus();
 
   return (
@@ -32,12 +32,24 @@ export default function Header({ onThemeClick }) {
               disabled={!isInitialized}
               tooltip="새로고침" tooltipOptions={{ position: 'left' }}
             />
-            <Button className="login text-base" severity="primary" rounded text raised size="small"
-              icon="pi pi-sign-out"
-              disabled={!isInitialized}
-              tooltip="로그아웃" tooltipOptions={{ position: 'left' }}
-              onClick={logout}
-            />
+            <div className="flex flex-column align-items-center" style={{ position: 'relative' }}>
+              <span style={{
+                position: 'absolute',
+                top: '-14px',
+                fontSize: '10px',
+                color: 'var(--text-color-secondary)',
+                fontWeight: 'bold',
+                fontFamily: 'monospace'
+              }}>
+                {authRemainingTime}
+              </span>
+              <Button className="login text-base" severity="primary" rounded text raised size="small"
+                icon="pi pi-sign-out"
+                disabled={!isInitialized}
+                tooltip="로그아웃" tooltipOptions={{ position: 'left' }}
+                onClick={logout}
+              />
+            </div>
           </>
         ) : (
           <Button className="login text-base" severity="primary" rounded text raised size="small"

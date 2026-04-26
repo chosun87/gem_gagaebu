@@ -53,6 +53,8 @@ const AuthInternalProvider = ({ children }) => {
     googleLogin();
   };
 
+  const [authRemainingTime, setAuthRemainingTime] = useState(0);
+
   const logout = async () => {
     try {
       await signOut();
@@ -64,8 +66,52 @@ const AuthInternalProvider = ({ children }) => {
     }
   };
 
+  // 인증 만료 시 자동 로그아웃 처리 및 남은 시간 업데이트
+  useEffect(() => {
+    let timerId;
+    let intervalId;
+
+    if (isSignedIn) {
+      const updateRemainingTime = () => {
+        const tokenExpiry = localStorage.getItem('gagaebu_token_expiry');
+        if (tokenExpiry) {
+          const remaining = Math.max(0, Math.floor((Number(tokenExpiry) - Date.now()) / 1000));
+          setAuthRemainingTime(remaining);
+
+          if (remaining <= 0) {
+            alert('인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.\n다시 로그인해 주세요.');
+            logout();
+          }
+        }
+      };
+
+      updateRemainingTime();
+      intervalId = setInterval(updateRemainingTime, 1000);
+    } else {
+      setAuthRemainingTime(0);
+    }
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isSignedIn]);
+
+  // 초 단위를 MM:SS 형식으로 변환
+  const formatRemainingTime = (seconds) => {
+    if (seconds <= 0) return '00:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
   return (
-    <AuthContext.Provider value={{ isInitialized, isSignedIn, login, logout }}>
+    <AuthContext.Provider value={{
+      isInitialized,
+      isSignedIn,
+      login,
+      logout,
+      authRemainingTime: formatRemainingTime(authRemainingTime)
+    }}>
       {children}
     </AuthContext.Provider>
   );
