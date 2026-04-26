@@ -49,6 +49,12 @@
       background: white;
     }
   }
+
+  .auth-remaining-time {
+    position: absolute;
+    top: -14px;
+    color: var(--primary-color-text);
+  }
 }
 
 .app-content {

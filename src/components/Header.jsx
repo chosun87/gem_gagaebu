@@ -32,17 +32,9 @@ export default function Header({ onThemeClick }) {
               disabled={!isInitialized}
               tooltip="새로고침" tooltipOptions={{ position: 'left' }}
             />
-            <div className="flex flex-column align-items-center" style={{ position: 'relative' }}>
-              <span style={{
-                position: 'absolute',
-                top: '-14px',
-                fontSize: '10px',
-                color: 'var(--text-color-secondary)',
-                fontWeight: 'bold',
-                fontFamily: 'monospace'
-              }}>
-                {authRemainingTime}
-              </span>
+            <div className="flex flex-column align-items-center relative">
+              <span className="auth-remaining-time text-xs monospace">{authRemainingTime}</span>
+
               <Button className="login text-base" severity="primary" rounded text raised size="small"
                 icon="pi pi-sign-out"
                 disabled={!isInitialized}
