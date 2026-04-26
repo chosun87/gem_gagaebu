@@ -33,8 +33,10 @@ export default function Header({ onThemeClick }) {
               tooltip="새로고침" tooltipOptions={{ position: 'left' }}
             />
             <div className="flex flex-column align-items-center relative">
+              {/* 인증만료까지 남은 시간 표시 */}
               <span className="auth-remaining-time text-xs monospace">{authRemainingTime}</span>
 
+              {/* 로그아웃 버튼 */}
               <Button className="login text-base" severity="primary" rounded text raised size="small"
                 icon="pi pi-sign-out"
                 disabled={!isInitialized}
