@@ -1,15 +1,35 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, InputSwitch, DataView, Message, Tag } from '@/components/PrimeReact';
+import { Badge, Button, InputSwitch, DataView, Message, Tag, Menu } from '@/components/PrimeReact';
+import dayjs from 'dayjs';
 
 import DialogRepeat from '@/components/DialogRepeat';
+import DialogList from '@/components/DialogList';
 
 export default function Repeat() {
   const { sheet반복Data, sheetYYYYData, loading, handleChange_rpComplete } = useData();
   const [repeat, setRepeat] = useState(null);
   const [showDialogRepeat, setShowDialogRepeat] = useState(false);
 
+  const menuLeft = useRef(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showDialogList, setShowDialogList] = useState(false);
+  const [dialogListParams, setDialogListParams] = useState({});
+
   const data = sheet반복Data || [];
+
+  const menuItems = [
+    {
+      label: '편집',
+      icon: 'pi pi-pencil',
+      command: () => fnOpenDialogRepeat(selectedItem)
+    },
+    {
+      label: '목록',
+      icon: 'pi pi-list',
+      command: () => fnOpenDialogList(selectedItem)
+    }
+  ];
 
   const fnOpenDialogRepeat = (repeat) => {
     setRepeat(repeat);
@@ -20,20 +40,32 @@ export default function Repeat() {
     setShowDialogRepeat(false);
   }
 
+  const fnOpenDialogList = () => {
+    setDialogListParams({
+      rpID: selectedItem.rpID,
+      header: `${selectedItem.rpCategory}-${selectedItem.rpMemo}`,
+      startYear: dayjs(selectedItem.rpDateS).year(),
+      endYear: dayjs(selectedItem.rpDateE).year()
+    });
+    setShowDialogList(true);
+  }
+
+  const fnHideDialogList = () => {
+    setShowDialogList(false);
+  }
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDateViewItem = (item) => {
     const rpTypeClass = `rpType-${item.rpType}`;
     const rpCompleteClass = `rpComplete-${(item.rpComplete) ? 'Y' : 'N'}`;
-    let n회차 = 0
-    console.log(sheetYYYYData)
-    // sheetYYYYData.forEach(yearData => {
-    // n회차 += yearData.filter((row) => row.g_rpID === item.rpID && row.gExecuted).length;
-    // });
 
     return (
       <div
         className={`list-item ${rpTypeClass} ${rpCompleteClass} col-12`}
-        onClick={() => fnOpenDialogRepeat(item)}
+        onClick={(e) => {
+          setSelectedItem(item);
+          menuLeft.current.toggle(e);
+        }}
       >
         <Badge
           className={`gType-${item.rpType} text-base`}
@@ -95,6 +127,10 @@ export default function Repeat() {
         )}
       </div>
 
+      <Menu model={menuItems} ref={menuLeft}
+        popup popupAlignment="right"
+      />
+
       {/* Floating Action Button */}
       <Button
         className="btn-floating-action btn-add-repeat shadow-7"
@@ -109,6 +145,13 @@ export default function Repeat() {
         repeat={repeat}
         visible={showDialogRepeat}
         onHide={() => fnHideDialogRepeat()}
+      />
+
+      {/* 연관 내역 조회 다이얼로그 */}
+      <DialogList
+        visible={showDialogList}
+        onHide={() => fnHideDialogList()}
+        params={dialogListParams}
       />
     </>
   );

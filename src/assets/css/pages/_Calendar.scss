@@ -72,6 +72,13 @@
   .fc {
     flex: 1 1 auto;
 
+    .fc-scroller {
+      &::-webkit-scrollbar {
+        width: 2px;
+        height: 2px;
+      }
+    }
+
     .fc-header-toolbar {
       display: none;
     }

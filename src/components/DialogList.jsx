@@ -1,20 +1,37 @@
-import { useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message } from '@/components/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import DialogLedger from '@/components/DialogLedger';
 
 export default function DialogList({ visible, onHide, params }) {
-  const { yearData, handleChange_gExecute } = useData();
+  const { yearData, sheetYYYYData, loadSheet연도Data, loadedSheetYYYY, handleChange_gExecute } = useData();
   const { loading: dataLoading } = useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
+
+  // 반복 내역 전체 조회를 위한 연도별 데이터 로드
+  useEffect(() => {
+    if (visible && params?.startYear && params?.endYear && params?.startYear !== params?.endYear) {
+      for (let y = params.startYear; y <= params.endYear; y++) {
+        const yearStr = y.toString();
+        if (!loadedSheetYYYY[yearStr]) {
+          loadSheet연도Data(yearStr);
+        }
+      }
+    }
+  }, [visible, params?.startYear, params?.endYear, loadedSheetYYYY, loadSheet연도Data]);
 
   // 파라미터 기반 필터링 로직
   const filteredData = useMemo(() => {
     if (!params) return [];
 
-    return yearData.filter(item => {
+    const baseData = params.rpID ? Object.values(sheetYYYYData || {}).flat() : yearData;
+
+    return baseData.filter(item => {
+      // 반복 ID 조건 (rpID)
+      if (params.rpID && item.g_rpID !== params.rpID) return false;
+
       // 날짜 조건 (date)
       if (params.date && item.gDate !== params.date) return false;
 
@@ -28,17 +45,18 @@ export default function DialogList({ visible, onHide, params }) {
       if (params.category && item.gCategory !== params.category) return false;
 
       return true;
-    });
-  }, [yearData, params]);
+    }).sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix());
+  }, [yearData, sheetYYYYData, params]);
 
   // 헤더에 출력할 조건 텍스트 생성
   const headerText = useMemo(() => {
     if (!params) return '조회 내역';
     const parts = [];
+    if (params.rpID) parts.push(params.header);
     if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'));
     if (params.type) parts.push(`[${params.type}]`);
     if (params.category) parts.push(`[${params.category}]`);
-    return parts.length === 1 ? parts[0] : '조회 내역';
+    return parts.length === 1 ? parts[0] : (params.rpID ? params.header : '조회 내역');
   }, [params]);
 
   const fnOpenDialogLedger = (ledger) => {
@@ -86,7 +104,7 @@ export default function DialogList({ visible, onHide, params }) {
 
         <div className="flex-grow-1 flex flex-column gap-1">
           <div className="flex align-items-center gap-2">
-            <span className="gDate text-lg font-semibold">{dayjs(item.gDate).format('DD일')}</span>
+            {!params.date && <span className="gDate text-lg font-semibold">{dayjs(item.gDate).format('YY-MM-DD')}</span>}
             <span className="gMemo">{item.gMemo}</span>
           </div>
           <div className="flex align-items-center gap-1">

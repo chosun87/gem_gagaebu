@@ -27,6 +27,7 @@ export { Tag } from 'primereact/tag';
 export { TreeSelect } from 'primereact/treeselect';
 export { ToggleButton } from 'primereact/togglebutton';
 export { Chart } from 'primereact/chart';
+export { Menu } from 'primereact/menu';
 // 필요 시 PrimeReact의 다른 컴포넌트들을 여기에 추가하세요.
 
 export const PrimeReact_locale = {
