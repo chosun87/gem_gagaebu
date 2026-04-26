@@ -112,6 +112,13 @@ export default function DialogList({ visible, onHide, params }) {
           onClick={() => fnOpenDialogLedger(null)}
           disabled={dataLoading}
         />
+        <Button
+          severity="secondary" size="large" label="AI로 입력"
+          className='icon-gemini'
+          icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-plus"}
+          onClick={() => alert('AI 입력 기능은 준비 중입니다.')}
+          disabled={dataLoading}
+        />
       </div>
     );
   };

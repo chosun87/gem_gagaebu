@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/assets/js/PrimeReact';
+import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag, SpeedDial, Tooltip } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
@@ -8,6 +8,7 @@ import DialogLedger from '@/components/DialogLedger';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 import { PrimeReact_locale } from '@/assets/js/PrimeReact';
+
 addLocale('ko', PrimeReact_locale.ko.Calendar);
 locale('ko');
 
@@ -15,6 +16,24 @@ export default function MonthlyList() {
   const { yearData, loading, selectedDate, setSelectedDate, handleChange_gExecute } = useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
+
+  const speedDialItems = [
+    {
+      label: 'AI로 입력',
+      icon: 'pi pi-plus',
+      className: 'icon-gemini',
+      tooltip: 'AI로 입력', tooltipOptions: { position: 'left' },
+      command: () => {
+        alert('AI 입력 기능은 준비 중입니다.');
+      }
+    },
+    {
+      label: '입력 폼으로 추가',
+      icon: 'pi pi-pencil',
+      tooltip: '입력 폼으로 추가', tooltipOptions: { position: 'left' },
+      command: () => fnOpenDialogLedger(null)
+    }
+  ];
 
   // yearData에서 현재 선택된 달의 데이터만 필터링
   const currentMonthNum = selectedDate.getMonth() + 1;
@@ -172,14 +191,15 @@ export default function MonthlyList() {
         {/* </div> */}
       </div>
 
-      {/* Floating Action Button */}
-      < Button
-        className="btn-floating-action btn-add-item shadow-7"
-        severity="secondary" size="large" rounded
-        icon="pi pi-plus"
-        onClick={() => fnOpenDialogLedger(null)
-        }
-        tooltip="목록 추가" tooltipOptions={{ position: 'top' }}
+      {/* Floating Action Button -> SpeedDial */}
+      <Tooltip target=".p-speeddial-action" position="left" />
+      <SpeedDial
+        direction="up"
+        className="btn-floating-action"
+        buttonClassName="p-button-secondary shadow-7"
+        showIcon="pi pi-plus"
+        hideIcon="pi pi-times"
+        model={speedDialItems}
       />
 
       {/* 가계부 입력 폼 다이얼로그 */}

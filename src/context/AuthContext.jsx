@@ -80,7 +80,7 @@ const AuthInternalProvider = ({ children }) => {
       };
 
       updateRemainingTime();
-      intervalId = setInterval(updateRemainingTime, 1000);
+      // intervalId = setInterval(updateRemainingTime, 1000);
     } else {
       setAuthRemainingTime(0);
       setExtensionPromptShown(false);

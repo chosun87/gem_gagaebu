@@ -207,3 +207,19 @@
     font-size: 1.25rem;
   }
 }
+
+// 제미나이 아이콘 적용
+.icon-gemini {
+
+  .p-speeddial-action-icon::before,
+  .p-button-icon::before {
+    content: "";
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-image: url("@/assets/images/Google_Gemini_icon_2025.svg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}

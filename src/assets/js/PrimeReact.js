@@ -3,6 +3,7 @@ export { Badge } from 'primereact/badge';
 export { Button } from 'primereact/button';
 export { Calendar } from 'primereact/calendar';
 export { Card } from 'primereact/card';
+export { Chart } from 'primereact/chart';
 export { Checkbox } from 'primereact/checkbox';
 export { Chips } from 'primereact/chips';
 export { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
@@ -16,18 +17,19 @@ export { FloatLabel } from 'primereact/floatlabel';
 export { InputNumber } from 'primereact/inputnumber';
 export { InputSwitch } from 'primereact/inputswitch';
 export { InputText } from 'primereact/inputtext';
+export { Menu } from 'primereact/menu';
 export { Message } from 'primereact/message';
 export { Panel } from 'primereact/panel';
 export { Ripple } from 'primereact/ripple';
 export { SelectButton } from 'primereact/selectbutton';
 export { Sidebar } from 'primereact/sidebar';
+export { SpeedDial } from 'primereact/speeddial';
 export { TabMenu } from 'primereact/tabmenu';
 export { TabView, TabPanel } from 'primereact/tabview';
 export { Tag } from 'primereact/tag';
 export { TreeSelect } from 'primereact/treeselect';
 export { ToggleButton } from 'primereact/togglebutton';
-export { Chart } from 'primereact/chart';
-export { Menu } from 'primereact/menu';
+export { Tooltip } from 'primereact/tooltip';
 // 필요 시 PrimeReact의 다른 컴포넌트들을 여기에 추가하세요.
 
 export const PrimeReact_locale = {
