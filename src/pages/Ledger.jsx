@@ -17,7 +17,7 @@ export default function Ledger() {
           <MonthlyList />
         </TabPanel>
         <TabPanel header={<span className="text-lg">그래프</span>} leftIcon="pi pi-chart-bar mr-2">
-          <MonthlySummary />
+          <MonthlySummary monthLength={4} />
         </TabPanel>
         <TabPanel header={<span className="text-lg">반복</span>} leftIcon="pi pi-clone mr-2" className="px-0">
           <Repeat />

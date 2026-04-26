@@ -3,95 +3,44 @@ ChartJS.register(...registerables);
 
 import { useState, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
-import { Chart, Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/assets/js/PrimeReact';
+import { Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
+import MonthlySummaryChart from '@/components/MonthlySummaryChart';
 
-export default function MonthlySummary() {
-  const { yearData, loading, selectedDate, setSelectedDate } = useData();
+const MONTH_LENGTH = 3;
 
-  // 최근 3개월 데이터 계산 및 차트 데이터 가공
+export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
+  const { yearData } = useData();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // 데이터 가공 ---------------------------------------------------------------------------------------
   const summaryData = useMemo(() => {
     const months = [];
-    for (let i = 2; i >= 0; i--) {
+    // 선택된 달을 포함한 최근 3개월 계산
+    for (let i = monthLength - 1; i >= 0; i--) {
       months.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
     }
 
-    const dataMap = {};
+    const rawData = {};
     months.forEach(m => {
-      dataMap[m] = { month: m, 수입: 0, 지출: 0, 이체: 0 };
+      rawData[m] = { month: m, 수입: 0, 지출: 0, 이체: 0 };
     });
 
     (yearData || []).forEach(item => {
       if (item.gDeleted) return;
       const m = dayjs(item.gDate).format('YYYY-MM');
-      if (dataMap[m]) {
-        dataMap[m][item.gType] += item.gAmount;
+      if (rawData[m]) {
+        rawData[m][item.gType] += item.gAmount;
       }
     });
-
-    const labels = ['수입', '지출', '이체'];
-    const rootStyle = getComputedStyle(document.documentElement);
 
     // DataTable용 리스트 (최신순)
     const tableData = [...months].reverse().map(m => ({
       monthLabel: dayjs(m).format('YYYY-MM'),
-      ...dataMap[m]
+      ...rawData[m]
     }));
 
-    const chartData = {
-      labels: labels,
-      datasets: months.map((m, idx) => {
-        // 월별 색상 (투명도 조절로 구분)
-        const alpha = 1 - (idx * 0.3);
-        const colorBase = rootStyle.getPropertyValue('--primary-color').trim() || '#3B82F6';
-
-        return {
-          label: dayjs(m).format('M월'),
-          backgroundColor: idx === 2 ? '#3B82F6' : idx === 1 ? '#60A5FA' : '#93C5FD', // 파란색 계열로 구분
-          data: [dataMap[m]['수입'], dataMap[m]['지출'], dataMap[m]['이체']]
-        };
-      })
-    };
-
-    const chartOptions = {
-      maintainAspectRatio: false,
-      aspectRatio: 0.8,
-      plugins: {
-        legend: {
-          labels: {
-            color: rootStyle.getPropertyValue('--text-color') || '#495057'
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: rootStyle.getPropertyValue('--text-color-secondary') || '#6c757d',
-            font: {
-              weight: 500
-            }
-          },
-          grid: {
-            display: false,
-            drawBorder: false
-          }
-        },
-        y: {
-          ticks: {
-            color: rootStyle.getPropertyValue('--text-color-secondary') || '#6c757d',
-            callback: function (value) {
-              return (value / 10000).toLocaleString() + '만';
-            }
-          },
-          grid: {
-            color: rootStyle.getPropertyValue('--surface-border') || '#dfe7ef',
-            drawBorder: false
-          }
-        }
-      }
-    };
-
-    return { tableData, chartData, chartOptions };
+    return { months, tableData, rawData };
   }, [yearData, selectedDate]);
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
@@ -133,41 +82,45 @@ export default function MonthlySummary() {
         onViewDateChange={handleViewDateChange}
       />
 
-      <div className="summary-chart-container hidden">
-        <h3 className="text-center mb-3">최근 3개월 비교</h3>
-        <Chart type="bar" data={summaryData.chartData} options={summaryData.chartOptions} />
-      </div>
+      <section className="panel-body">
+        <h3 className="text-center">최근 3개월 비교</h3>
 
-      <div className="summary-table-container">
-        {/* <h3 className="text-center mb-3">최근 3개월 합계</h3> */}
-        <DataTable
-          stripedRows responsiveLayout="scroll"
-          value={summaryData.tableData}
-        >
-          <Column field="monthLabel" header="연월"
-            bodyClassName="px-0 font-bold"
-            style={{ width: '10%', minWidth: '5rem' }}
-          />
-          <Column field="수입" header="수입"
-            alignHeader="center" align="right"
-            bodyClassName="px-0 monospace gType-수입"
-            body={(data) => amountBodyTemplate(data, '수입')}
-            style={{ width: '30%' }}
-          />
-          <Column field="지출" header="지출"
-            alignHeader="center" align="right"
-            bodyClassName="px-0 monospace gType-지출"
-            body={(data) => amountBodyTemplate(data, '지출')}
-            style={{ width: '30%' }}
-          />
-          <Column field="이체" header="이체"
-            alignHeader="center" align="right"
-            bodyClassName="px-0 monospace gType-이체"
-            body={(data) => amountBodyTemplate(data, '이체')}
-            style={{ width: '30%' }}
-          />
-        </DataTable>
-      </div>
+        <MonthlySummaryChart
+          months={summaryData.months}
+          rawData={summaryData.rawData}
+        />
+
+        <div className="summary-table-container">
+          {/* <h3 className="text-center mb-3">최근 3개월 합계</h3> */}
+          <DataTable
+            stripedRows responsiveLayout="scroll"
+            value={summaryData.tableData}
+          >
+            <Column field="monthLabel" header="연월"
+              bodyClassName="px-0 font-bold"
+              style={{ width: '10%', minWidth: '5rem' }}
+            />
+            <Column field="수입" header="수입"
+              alignHeader="center" align="right"
+              bodyClassName="px-0 monospace gType-수입"
+              body={(data) => amountBodyTemplate(data, '수입')}
+              style={{ width: '30%' }}
+            />
+            <Column field="지출" header="지출"
+              alignHeader="center" align="right"
+              bodyClassName="px-0 monospace gType-지출"
+              body={(data) => amountBodyTemplate(data, '지출')}
+              style={{ width: '30%' }}
+            />
+            <Column field="이체" header="이체"
+              alignHeader="center" align="right"
+              bodyClassName="px-0 monospace gType-이체"
+              body={(data) => amountBodyTemplate(data, '이체')}
+              style={{ width: '30%' }}
+            />
+          </DataTable>
+        </div>
+      </section>
     </div>
   );
 }

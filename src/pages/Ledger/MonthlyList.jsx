@@ -151,8 +151,8 @@ export default function MonthlyList() {
         />
 
         {/* <div className="list-swipe-wrapper flex flex-column flex-grow-1 overflow-hidden"
-          onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
-        > */}
+            onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+          > */}
         {loading ? (
           <div className="flex align-items-center justify-content-center h-full p-5">
             <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
@@ -169,8 +169,8 @@ export default function MonthlyList() {
             itemTemplate={templateDateViewItem}
           />
         )}
+        {/* </div> */}
       </div>
-      {/* </div> */}
 
       {/* Floating Action Button */}
       < Button

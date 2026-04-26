@@ -33,6 +33,22 @@
           display: flex;
           flex-direction: column;
           gap: calc(var(--padding-base) / 2);
+
+          section.panel-body {
+            flex: 1 1 auto;
+
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--padding-base) / 2);
+
+            width: calc(100% + var(--padding-base) * 2);
+            margin: 0 calc(var(--padding-base) * -1);
+            padding-left: calc(var(--padding-base) - 0.5rem);
+            padding-right: calc(var(--padding-base) - 0.5rem);
+            scrollbar-gutter: stable both-edges;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+          }
         }
       }
     }

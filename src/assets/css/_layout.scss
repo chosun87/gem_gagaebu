@@ -218,6 +218,15 @@
   }
 }
 
+.summary-chart-container {
+  // height: 25vh;
+  min-height: 30vh;
+  position: relative; // Chart.js responsiveness requirement
+
+  .p-chart {
+    height: 100%;
+  }
+}
 
 /* 모바일 환경 툴팁 숨김 */
 @media (max-width: 375px) {
