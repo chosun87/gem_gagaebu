@@ -248,7 +248,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
         <div className="formWrap">
           <div className="inputWrap">
             <SelectButton id="rpType" size="large"
-              className={classNames({ 'p-invalid': submitted && !rpType })}
+              className={"gType" + classNames({ 'p-invalid': submitted && !rpType })}
               options={Object.values(RP_TYPE)}
               value={rpType}
               onChange={(e) => set_rpType(e.target.value)}

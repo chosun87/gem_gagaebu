@@ -197,9 +197,9 @@ export default function DialogLedger({ ledger, visible, onHide }) {
         <div className="formWrap">
           <div className="inputWrap">
             <SelectButton id="gType"
+              className={"gType" + classNames({ 'p-invalid': submitted && !gType })}
               options={Object.values(G_TYPE)}
               value={gType} onChange={(e) => set_gType(e.target.value)}
-              className={"text-lg" + classNames({ 'p-invalid': submitted && !gType })}
             />
           </div>
 
