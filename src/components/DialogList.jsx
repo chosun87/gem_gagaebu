@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Sidebar, Panel, DataView, Badge, InputSwitch, Button } from '@/components/PrimeReact';
+import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message } from '@/components/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import DialogLedger from '@/components/DialogLedger';
@@ -31,15 +31,6 @@ export default function DialogList({ visible, onHide, params }) {
     });
   }, [yearData, params]);
 
-  const fnOpenDialogLedger = (ledger) => {
-    setLedger(ledger);
-    setShowDialogLedger(true);
-  }
-
-  const fnHideDialogLedger = () => {
-    setShowDialogLedger(false);
-  }
-
   // 헤더에 출력할 조건 텍스트 생성
   const headerText = useMemo(() => {
     if (!params) return '조회 내역';
@@ -49,6 +40,15 @@ export default function DialogList({ visible, onHide, params }) {
     if (params.category) parts.push(`[${params.category}]`);
     return parts.length > 0 ? parts.join(' ') + ' 내역' : '조회 내역';
   }, [params]);
+
+  const fnOpenDialogLedger = (ledger) => {
+    setLedger(ledger);
+    setShowDialogLedger(true);
+  }
+
+  const fnHideDialogLedger = () => {
+    setShowDialogLedger(false);
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateFooter = (options) => {
@@ -121,12 +121,22 @@ export default function DialogList({ visible, onHide, params }) {
         footerTemplate={templateFooter}
       >
         <div className="list-page">
-          <DataView
-            className="list-dataview"
-            value={filteredData}
-            itemTemplate={templateDateViewItem}
-            emptyMessage="해당 조건의 내역이 없습니다."
-          />
+          {dataLoading ? (
+            <div className="flex align-items-center justify-content-center h-full p-5">
+              <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
+              <p>데이터를 불러오는 중입니다...</p>
+            </div>
+          ) : filteredData.length === 0 ? (
+            <div className="flex align-items-center justify-content-center h-full text-500 p-5">
+              <Message severity="warn" text="해당 조건의 내역이 없습니다." />
+            </div>
+          ) : (
+            <DataView
+              className="list-dataview"
+              value={filteredData}
+              itemTemplate={templateDateViewItem}
+            />
+          )}
         </div>
       </Panel>
 

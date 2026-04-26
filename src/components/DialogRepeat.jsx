@@ -110,6 +110,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     set_rpTotalAmount(count * rpAmount);
   };
 
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const onSave = async () => {
     set_submitted(true);
 
@@ -138,7 +139,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     try {
       const rpID = await saveRepeatEntry(repeat, formData);
       const { addedCount, updatedCount, deletedCount } = await generateLedgerFromRepeat(formData, rpID);
-      
+
       alert(`${addedCount}개의 내역이 신규 생성되고, ${updatedCount}개의 기존 내역이 업데이트, ${deletedCount}개의 기존 내역이 삭제 되었습니다.`);
       onHide();
     } catch (error) {

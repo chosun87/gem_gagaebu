@@ -26,6 +26,7 @@ export default function DialogTheme({ visible, onHide }) {
   const isMaterialTheme = theme.startsWith('md-') || theme.startsWith('mdc-');
   const supportsDarkMode = !currentThemeNode?.singleMode;
 
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const onScaleChange = (type) => {
     if (type === 'plus') {
       set_scale(prev => Math.min(prev + 1, 16));

@@ -9,17 +9,6 @@ import dayjs from 'dayjs';
 export default function MonthlySummary() {
   const { yearData, loading, selectedDate, setSelectedDate } = useData();
 
-  // 월 변경
-  const handleMonthChange = (e) => {
-    const newDate = new Date(e.year, e.month - 1, 1);
-    setSelectedDate(newDate);
-  }
-
-  // yearNavigator monthNavigator에 의한 월 변경
-  const handleViewDateChange = (e) => {
-    setSelectedDate(e.value);
-  }
-
   // 최근 3개월 데이터 계산 및 차트 데이터 가공
   const summaryData = useMemo(() => {
     const months = [];
@@ -45,7 +34,7 @@ export default function MonthlySummary() {
 
     // DataTable용 리스트 (최신순)
     const tableData = [...months].reverse().map(m => ({
-      monthLabel: dayjs(m).format('YYYY년 MM월'),
+      monthLabel: dayjs(m).format('YYYY-MM'),
       ...dataMap[m]
     }));
 
@@ -105,11 +94,24 @@ export default function MonthlySummary() {
     return { tableData, chartData, chartOptions };
   }, [yearData, selectedDate]);
 
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
+  // 월 변경
+  const handleMonthChange = (e) => {
+    const newDate = new Date(e.year, e.month - 1, 1);
+    setSelectedDate(newDate);
+  }
+
+  // yearNavigator monthNavigator에 의한 월 변경
+  const handleViewDateChange = (e) => {
+    setSelectedDate(e.value);
+  }
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // 금액 포맷팅 템플릿
   const amountBodyTemplate = (rowData, field) => {
     const amount = rowData[field] || 0;
     const colorClass = `gType-${field}`;
-    return <span className={`${colorClass} font-bold monospace`}>{amount.toLocaleString()}</span>;
+    return <span className={`${colorClass} monospace`}>{amount.toLocaleString()}</span>;
   };
 
   // Calendar 월 선택 템플릿
@@ -132,14 +134,14 @@ export default function MonthlySummary() {
         onViewDateChange={handleViewDateChange}
       />
 
-      <div className="summary-chart-container">
+      <div className="summary-chart-container hidden">
         <h3 className="text-center mb-3">최근 3개월 비교</h3>
         <Chart type="bar" data={summaryData.chartData} options={summaryData.chartOptions} />
       </div>
 
       <div className="summary-table-container pb-4">
         {/* <h3 className="text-center mb-3">최근 3개월 합계</h3> */}
-        <DataTable value={summaryData.tableData} className="text-sm shadow-1 border-round overflow-hidden" responsiveLayout="scroll">
+        <DataTable value={summaryData.tableData} responsiveLayout="scroll">
           <Column field="monthLabel" header="연월" className="font-bold"></Column>
           <Column field="수입" header="수입" body={(data) => amountBodyTemplate(data, '수입')} alignHeader="center" align="right"></Column>
           <Column field="지출" header="지출" body={(data) => amountBodyTemplate(data, '지출')} alignHeader="center" align="right"></Column>

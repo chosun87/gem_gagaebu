@@ -16,18 +16,6 @@ export default function MonthlyList() {
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
 
-  // 월 변경
-  const handleMonthChange = (e) => {
-    console.log(e);
-    const newDate = new Date(e.year, e.month - 1, 1);
-    setSelectedDate(newDate);
-  }
-
-  // yearNavigator monthNavigator에 의한 월 변경
-  const handleViewDateChange = (e) => {
-    setSelectedDate(e.value);
-  }
-
   // yearData에서 현재 선택된 달의 데이터만 필터링
   const currentMonthNum = selectedDate.getMonth() + 1;
   const monthData = yearData.filter(item => {
@@ -48,6 +36,20 @@ export default function MonthlyList() {
     setShowDialogLedger(false);
   }
 
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
+  // 월 변경
+  const handleMonthChange = (e) => {
+    console.log(e);
+    const newDate = new Date(e.year, e.month - 1, 1);
+    setSelectedDate(newDate);
+  }
+
+  // yearNavigator monthNavigator에 의한 월 변경
+  const handleViewDateChange = (e) => {
+    setSelectedDate(e.value);
+  }
+
+  // Calendar 월 선택 템플릿
   // 스와이프 핸들러 추가
   const touchStart = useRef(null);
   const minSwipeDistance = 50;

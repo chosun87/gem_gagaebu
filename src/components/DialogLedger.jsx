@@ -66,6 +66,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
     }
   }
 
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const onSave = async () => {
     set_submitted(true);
 

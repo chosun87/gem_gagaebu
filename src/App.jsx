@@ -16,15 +16,7 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isThemeOpen, setIsThemeOpen] = useState(false);
 
-  const renderMainContent = () => {
-    switch (activeIndex) {
-      case 0: return <Ledger />;
-      case 1: return <Statistics />;
-      case 2: return <Assets />;
-      default: return <Ledger />;
-    }
-  };
-
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const handleMenuChange = (menuIndex) => {
     if (menuIndex === 3) {  // 설정
       setIsSettingsOpen(true);
@@ -34,6 +26,15 @@ function App() {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const renderMainContent = () => {
+    switch (activeIndex) {
+      case 0: return <Ledger />;
+      case 1: return <Statistics />;
+      case 2: return <Assets />;
+      default: return <Ledger />;
+    }
+  };
+
   return (
     <div className="app-container">
       <Header onThemeClick={() => setIsThemeOpen(true)} />
