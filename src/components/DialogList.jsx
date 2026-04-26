@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
-import { Sidebar, DataView, Badge, InputSwitch, Button } from '@/components/PrimeReact';
+import { Sidebar, Panel, DataView, Badge, InputSwitch, Button } from '@/components/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import DialogLedger from '@/components/DialogLedger';
 
 export default function DialogList({ visible, onHide, params }) {
   const { yearData, handleChange_gExecute } = useData();
+  const { loading: dataLoading } = useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
 
@@ -16,13 +17,13 @@ export default function DialogList({ visible, onHide, params }) {
     return yearData.filter(item => {
       // 날짜 조건 (date)
       if (params.date && item.gDate !== params.date) return false;
-      
+
       // 타입 조건 (type)
       if (params.type && item.gType !== params.type) return false;
-      
+
       // 자산 조건 (accCode)
       if (params.accCode && item.gAcc1 !== params.accCode && item.gAcc2 !== params.accCode) return false;
-      
+
       // 분류 조건 (category)
       if (params.category && item.gCategory !== params.category) return false;
 
@@ -34,6 +35,39 @@ export default function DialogList({ visible, onHide, params }) {
     setLedger(ledger);
     setShowDialogLedger(true);
   }
+
+  const fnHideDialogLedger = () => {
+    setShowDialogLedger(false);
+  }
+
+  // 헤더에 출력할 조건 텍스트 생성
+  const headerText = useMemo(() => {
+    if (!params) return '조회 내역';
+    const parts = [];
+    if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'));
+    if (params.type) parts.push(`[${params.type}]`);
+    if (params.category) parts.push(`[${params.category}]`);
+    return parts.length > 0 ? parts.join(' ') + ' 내역' : '조회 내역';
+  }, [params]);
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const templateFooter = (options) => {
+    return (
+      <div className={options.className}>
+        <Button
+          severity="secondary" size="large" outlined label="취소"
+          onClick={onHide}
+          disabled={dataLoading}
+        />
+        <Button
+          severity="secondary" size="large" label="추가"
+          icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-plus"}
+          onClick={() => fnOpenDialogLedger(null)}
+          disabled={dataLoading}
+        />
+      </div>
+    );
+  };
 
   // MonthlyList.jsx에서 복사한 아이템 템플릿 (UI 일관성 유지)
   const templateDateViewItem = (item) => {
@@ -74,16 +108,6 @@ export default function DialogList({ visible, onHide, params }) {
     );
   };
 
-  // 헤더에 출력할 조건 텍스트 생성
-  const headerText = useMemo(() => {
-    if (!params) return '조회 내역';
-    const parts = [];
-    if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'));
-    if (params.type) parts.push(`[${params.type}]`);
-    if (params.category) parts.push(`[${params.category}]`);
-    return parts.length > 0 ? parts.join(' ') + ' 내역' : '조회 내역';
-  }, [params]);
-
   return (
     <Sidebar
       className="dialog-list shadow-7"
@@ -91,22 +115,26 @@ export default function DialogList({ visible, onHide, params }) {
       position="bottom"
       visible={visible}
       onHide={onHide}
-      style={{ height: 'auto', maxHeight: '80vh' }}
+      footerTemplate={templateFooter}
     >
-      <div className="list-page" style={{ paddingBottom: '1rem' }}>
-        <DataView
-          className="list-dataview"
-          value={filteredData}
-          itemTemplate={templateDateViewItem}
-          emptyMessage="해당 조건의 내역이 없습니다."
-        />
-      </div>
+      <Panel
+        footerTemplate={templateFooter}
+      >
+        <div className="list-page">
+          <DataView
+            className="list-dataview"
+            value={filteredData}
+            itemTemplate={templateDateViewItem}
+            emptyMessage="해당 조건의 내역이 없습니다."
+          />
+        </div>
+      </Panel>
 
       {/* 내역 수정용 다이얼로그 */}
       <DialogLedger
         ledger={ledger}
         visible={showDialogLedger}
-        onHide={() => setShowDialogLedger(false)}
+        onHide={fnHideDialogLedger}
       />
     </Sidebar>
   );

@@ -97,6 +97,7 @@ export default function MonthlyList() {
     );
   };
 
+  // 아이템 템플릿 (DialogList.jsx의 템플릿과 동일하게 구성)
   const templateDateViewItem = (item) => {
     const gTypeClass = `gType-${item.gType}`;
     const gExecutedClass = `gExecuted-${(item.gExecuted) ? 'Y' : 'N'}`;
@@ -182,7 +183,7 @@ export default function MonthlyList() {
       <DialogLedger
         ledger={ledger}
         visible={showDialogLedger}
-        onHide={() => fnHideDialogLedger()}
+        onHide={fnHideDialogLedger}
       />
     </>
   );
