@@ -11,9 +11,12 @@
     margin: 0 calc(var(--padding-base) * -1);
     padding-left: calc(var(--padding-base) - 0.5rem);
     padding-right: calc(var(--padding-base) - 0.5rem);
+    padding-bottom: calc(var(--padding-base) * 2);
     scrollbar-gutter: stable both-edges;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+
+    flex-grow: 1;
 
     .p-dataview-content {
       // padding: var(--padding-base) 0;

@@ -226,13 +226,13 @@ export default function Calendar() {
         onViewDateChange={handleViewDateChange}
       />
 
-      <div className="monthly-summary monospace">
+      <div className="ledger-summary-wrap monospace">
         <table>
           <colgroup>
-            <col width="15%" />
-            <col width="25%" />
-            <col width="25%" />
-            <col width="25%" />
+            <col style={{ width: "10%", minWidth: "3.5rem" }} />
+            <col style={{ width: "30%" }} />
+            <col style={{ width: "30%" }} />
+            <col style={{ width: "30%" }} />
           </colgroup>
           <thead>
             <tr>
@@ -244,19 +244,19 @@ export default function Calendar() {
           </thead>
           <tbody>
             <tr>
-              <td>수입</td>
+              <th className="text-left">수입</th>
               <td className="text-right">{monthTotal?.income0.toLocaleString()}</td>
               <td className="text-right">{monthTotal?.income1.toLocaleString()}</td>
               <td className="text-right">{monthTotal?.incomeA.toLocaleString()}</td>
             </tr>
             <tr>
-              <td>지출</td>
+              <th className="text-left">지출</th>
               <td className="text-right">{monthTotal?.expense0.toLocaleString()}</td>
               <td className="text-right">{monthTotal?.expense1.toLocaleString()}</td>
               <td className="text-right">{monthTotal?.expenseA.toLocaleString()}</td>
             </tr>
             <tr>
-              <td>이체</td>
+              <th className="text-left">이체</th>
               <td className="text-right">{monthTotal?.transfer0.toLocaleString()}</td>
               <td className="text-right">{monthTotal?.transfer1.toLocaleString()}</td>
               <td className="text-right">{monthTotal?.transferA.toLocaleString()}</td>
@@ -265,7 +265,9 @@ export default function Calendar() {
         </table>
       </div>
 
-      <div className="fc-swipe-wrapper" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className="fc-swipe-wrapper"
+        onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+      >
         <FullCalendar
           ref={fcRef}
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

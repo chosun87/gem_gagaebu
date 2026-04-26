@@ -150,32 +150,35 @@ export default function MonthlyList() {
           onViewDateChange={handleViewDateChange}
         />
 
-        <div className="list-swipe-wrapper flex flex-column flex-grow-1 overflow-hidden" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-          {loading ? (
-            <div className="flex align-items-center justify-content-center h-full p-5">
-              <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
-              <p>데이터를 불러오는 중입니다...</p>
-            </div>
-          ) : monthData.length === 0 ? (
-            <div className="flex align-items-center justify-content-center h-full text-500 p-5">
-              <Message severity="warn" text="이번 달 내역이 없습니다." />
-            </div>
-          ) : (
-            <DataView
-              className="list-dataview flex-grow-1"
-              value={monthData}
-              itemTemplate={templateDateViewItem}
-            />
-          )}
-        </div>
+        {/* <div className="list-swipe-wrapper flex flex-column flex-grow-1 overflow-hidden"
+          onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+        > */}
+        {loading ? (
+          <div className="flex align-items-center justify-content-center h-full p-5">
+            <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
+            <p>데이터를 불러오는 중입니다...</p>
+          </div>
+        ) : monthData.length === 0 ? (
+          <div className="flex align-items-center justify-content-center h-full text-500 p-5">
+            <Message severity="warn" text="이번 달 내역이 없습니다." />
+          </div>
+        ) : (
+          <DataView
+            className="list-dataview"
+            value={monthData}
+            itemTemplate={templateDateViewItem}
+          />
+        )}
       </div>
+      {/* </div> */}
 
       {/* Floating Action Button */}
-      <Button
+      < Button
         className="btn-floating-action btn-add-item shadow-7"
         severity="secondary" size="large" rounded
         icon="pi pi-plus"
-        onClick={() => fnOpenDialogLedger(null)}
+        onClick={() => fnOpenDialogLedger(null)
+        }
         tooltip="목록 추가" tooltipOptions={{ position: 'top' }}
       />
 

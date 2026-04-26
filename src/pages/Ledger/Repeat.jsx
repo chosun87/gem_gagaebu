@@ -88,7 +88,7 @@ export default function Repeat() {
           </div>
         ) : (
           <DataView
-            className="list-dataview flex-grow-1"
+            className="list-dataview"
             value={data}
             itemTemplate={templateDateViewItem}
           />

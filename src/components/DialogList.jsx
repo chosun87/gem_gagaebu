@@ -38,7 +38,7 @@ export default function DialogList({ visible, onHide, params }) {
     if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'));
     if (params.type) parts.push(`[${params.type}]`);
     if (params.category) parts.push(`[${params.category}]`);
-    return parts.length > 0 ? parts.join(' ') + ' 내역' : '조회 내역';
+    return parts.length === 1 ? parts[0] : '조회 내역';
   }, [params]);
 
   const fnOpenDialogLedger = (ledger) => {
