@@ -80,7 +80,9 @@ const AuthInternalProvider = ({ children }) => {
       };
 
       updateRemainingTime();
-      // intervalId = setInterval(updateRemainingTime, 1000);
+      if (!GOOGLE_AUTH_PARAMS.DISABLED_RELOGIN) {
+        intervalId = setInterval(updateRemainingTime, 1000);
+      }
     } else {
       setAuthRemainingTime(0);
       setExtensionPromptShown(false);

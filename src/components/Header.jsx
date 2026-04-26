@@ -1,6 +1,7 @@
 import { useAuth } from '@/context/AuthContext';
 import { Button, confirmDialog } from '@/assets/js/PrimeReact';
 import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
+import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
 
 export default function Header({ onThemeClick }) {
   const { isInitialized, isSignedIn, login, logout, extendLogin, authRemainingTime } = useAuth();
@@ -45,13 +46,15 @@ export default function Header({ onThemeClick }) {
             />
             <div className="flex flex-column align-items-center relative">
               {/* 인증만료까지 남은 시간 표시 (클릭 시 연장) */}
-              <span className="auth-remaining-time text-xs monospace"
-                style={{ cursor: 'pointer' }}
-                onClick={extendLogin}
-                title="인증 연장하기"
-              >
-                {authRemainingTime}
-              </span>
+              {!GOOGLE_AUTH_PARAMS.DISABLED_RELOGIN && (
+                <span className="auth-remaining-time text-xs monospace"
+                  style={{ cursor: 'pointer' }}
+                  onClick={extendLogin}
+                  title="인증 연장하기"
+                >
+                  {authRemainingTime}
+                </span>
+              )}
 
               {/* 로그아웃 버튼 */}
               <Button className="login text-base" severity="primary" rounded text raised size="small"
