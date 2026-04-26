@@ -234,6 +234,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     );
   };
 
+  const [dateSFocused, setDateSFocused] = useState(false);
+  const [dateEFocused, setDateEFocused] = useState(false);
+
   return (
     <Sidebar
       className="dialog-repeat shadow-7"
@@ -260,16 +263,22 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <div className="flex align-items-center column-gap-2">
               <PrimeCalendar id="rpDateS"
                 className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
-                locale="ko" dateFormat="yy-mm-dd (D)"
+                locale="ko"
+                dateFormat={dateSFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
                 value={rpDateS}
                 onChange={(e) => set_rpDateS(e.target.value)}
+                onFocus={() => setDateSFocused(true)}
+                onBlur={() => setDateSFocused(false)}
               />
               <span>~</span>
               <PrimeCalendar id="rpDateE"
                 className="flex-grow-1"
-                locale="ko" dateFormat="yy-mm-dd (D)"
+                locale="ko"
+                dateFormat={dateEFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
                 value={rpDateE}
                 onChange={(e) => set_rpDateE(e.target.value)}
+                onFocus={() => setDateEFocused(true)}
+                onBlur={() => setDateEFocused(false)}
               />
             </div>
           </div>

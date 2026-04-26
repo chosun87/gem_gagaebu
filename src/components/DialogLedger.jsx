@@ -183,6 +183,8 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
     );
   };
 
+  const [dateFocused, setDateFocused] = useState(false);
+
   return (
     <Sidebar
       className="dialog-ledger shadow-7"
@@ -207,9 +209,12 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
             <label htmlFor="gDate" className="required">날짜</label>
             <PrimeCalendar id="gDate"
               className={classNames({ 'p-invalid': submitted && !gDate })}
-              locale="ko" dateFormat="yy-mm-dd (D)"
+              locale="ko"
+              dateFormat={dateFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
               value={gDate}
               onChange={(e) => set_gDate(e.target.value)}
+              onFocus={() => setDateFocused(true)}
+              onBlur={() => setDateFocused(false)}
             />
 
             <Badge severity={gExecuted ? 'info' : 'secondary'}
