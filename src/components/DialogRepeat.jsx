@@ -225,8 +225,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
         />
         <Button className={(repeat === null) ? 'hidden' : ''}
           severity="danger" size="large"
-          tooltip="삭제"
-          tooltipOptions={{ position: 'top' }}
+          tooltip="삭제" tooltipOptions={{ position: 'top' }}
           icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-trash"}
           onClick={onDelete}
           disabled={dataLoading}
@@ -383,8 +382,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
               />
               <Button severity="info" outlined
                 icon="pi pi-calculator" label="계산"
-                tooltip="기간/주기 기반 자동 계산"
-                tooltipOptions={{ position: 'left' }}
+                tooltip="기간/주기 기반 자동 계산" tooltipOptions={{ position: 'left' }}
                 onClick={calculateTotalAmount}
               />
             </div>

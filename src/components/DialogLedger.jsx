@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Dropdown, InputSwitch } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Dropdown, InputSwitch, Badge } from '@/components/PrimeReact';
 import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
@@ -48,7 +48,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
     set_gAcc2Label(acc2Label);
   }, [gType]);
 
-  // 신규 입력일 때 날짜에 따라 집행 여부 자동 설정
+  // 신규 입력일 때 날짜에 따라 실행 여부 자동 설정
   useEffect(() => {
     if (!ledger && gDate) {
       const today = dayjs().startOf('day');
@@ -174,8 +174,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
         />
         <Button className={(ledger === null) ? 'hidden' : ''}
           severity="danger" size="large"
-          tooltip="삭제"
-          tooltipOptions={{ position: 'top' }}
+          tooltip="삭제" tooltipOptions={{ position: 'top' }}
           icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-trash"}
           onClick={onDelete}
           disabled={dataLoading}
@@ -200,7 +199,7 @@ export default function DialogLedger({ ledger, visible, onHide }) {
             <SelectButton id="gType"
               options={Object.values(G_TYPE)}
               value={gType} onChange={(e) => set_gType(e.target.value)}
-              className={classNames({ 'p-invalid': submitted && !gType })}
+              className={"text-lg" + classNames({ 'p-invalid': submitted && !gType })}
             />
           </div>
 
@@ -213,11 +212,14 @@ export default function DialogLedger({ ledger, visible, onHide }) {
               onChange={(e) => set_gDate(e.target.value)}
             />
 
-            <label htmlFor="gExecuted" className="ml-auto">집행 전</label>
+            <Badge severity={gExecuted ? 'info' : 'secondary'}
+              className="ml-auto mr-2 text-base"
+              value={gExecuted ? '실행 완료' : '실행 전'}
+            />
             <InputSwitch id="gExecuted"
               checked={gExecuted} trueValue={false} falseValue={true}
               onChange={(e) => set_gExecuted(e.value)}
-            />{gExecuted ? 'Y' : 'N'}
+            />
           </div>
 
           <div className="inputWrap">

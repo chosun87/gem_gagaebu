@@ -16,14 +16,12 @@ export default function Header({ onThemeClick }) {
       <div className="app-header-buttons">
         <Button className="fullscreen text-base" severity="info" rounded text raised size="small"
           icon={isFullscreen ? "fa-solid fa-compress" : "fa-solid fa-expand"}
-          tooltip={isFullscreen ? "화면 축소" : "전체화면"}
-          tooltipOptions={{ position: 'left' }}
+          tooltip={isFullscreen ? "화면 축소" : "전체화면"} tooltipOptions={{ position: 'left' }}
           onClick={toggleFullscreen}
         />
         <Button className="theme text-base" severity="info" rounded text raised size="small"
           icon="pi pi-palette"
-          tooltip="테마"
-          tooltipOptions={{ position: 'left' }}
+          tooltip="테마" tooltipOptions={{ position: 'left' }}
           onClick={onThemeClick}
         />
 
@@ -32,14 +30,12 @@ export default function Header({ onThemeClick }) {
             <Button className="refresh text-base" severity="info" rounded text raised size="small"
               icon="pi pi-refresh"
               disabled={!isInitialized}
-              tooltip="새로고침"
-              tooltipOptions={{ position: 'left' }}
+              tooltip="새로고침" tooltipOptions={{ position: 'left' }}
             />
             <Button className="login text-base" severity="primary" rounded text raised size="small"
               icon="pi pi-sign-out"
               disabled={!isInitialized}
-              tooltip="로그아웃"
-              tooltipOptions={{ position: 'left' }}
+              tooltip="로그아웃" tooltipOptions={{ position: 'left' }}
               onClick={logout}
             />
           </>
@@ -47,8 +43,7 @@ export default function Header({ onThemeClick }) {
           <Button className="login text-base" severity="primary" rounded text raised size="small"
             icon="pi pi-user"
             disabled={!isInitialized}
-            tooltip="로그인"
-            tooltipOptions={{ position: 'left' }}
+            tooltip="로그인" tooltipOptions={{ position: 'left' }}
             onClick={login}
           />
         )}

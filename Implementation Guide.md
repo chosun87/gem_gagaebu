@@ -126,13 +126,13 @@ import Footer from './components/Footer';
     - 오늘자 달력(<FullCalendar>)이 보이고, 각 날짜별로 '내용'을 보여줌
     - '내용'
       - 날짜별 총수입액(Blue), 총지출액(Red), 총이체액(Green) (색으로 구분. 색은 추후 변경 가능)
-      - 집행이 안된 건(집행=false)이 있으면 해당 날짜(숫자) 옆에 빨간색 '*' 마킹을 함.
+      - 실행이 안된 건(실행=false)이 있으면 해당 날짜(숫자) 옆에 빨간색 '*' 마킹을 함.
     - 각 날짜를 클릭하면 <Sidebar position="bottom">가 나타나고, 해당 일자의 '목록'이 보여짐.
       - '목록'은 아래 목록 Tab의 화면 구성, 기능과 동일하되 해당 날짜의 데이터만 보여짐.
   - 목록 <TabPanel> 화면
     - 이번달 수입액, 지출액, 이체액 목록 화면.
     - <DataView>로 구현.
-    - 각 줄 맨 앞에 <Checkbox>가 있고, 이 <Checkbox>로 집행 항목을 true/false 입력할 수 있음.
+    - 각 줄 맨 앞에 <Checkbox>가 있고, 이 <Checkbox>로 실행 항목을 true/false 입력할 수 있음.
     - 각 줄 맨 뒤에 금액 출력.
 4) 통계
   - 빈화면. 화면 내용은 다음 단계에서.
@@ -159,7 +159,7 @@ import Footer from './components/Footer';
     - 코드 시트 : codeGroup / code / codeLabel / codeIcon / codeRank / codeMemo
     - 연도 시트 : 연도별로 수입/지출/이체 내역 시트 생성. 시트명은 연도 숫자 4자리.
 * 연도 시트 항목
-    - 집행(gExecuted), 구분(gType : 수입/지출/이체), 날짜(gDate)
+    - 실행(gExecuted), 구분(gType : 수입/지출/이체), 날짜(gDate)
     - 수입일때 : 자산(gAcc1) / 분류(gCategory : 수입 분류 코드) / 금액(gAmount) / 내용(gMemo)
     - 지출일때 : 자산(gAcc1) / 분류(gCategory : 지출 분류 코드) / 금액(gAmount) / 내용(gMemo)
     - 이체일때 : 출금(gAcc1) / 입금(gAcc2) / 금액(gAmount) / 내용(gMemo)
@@ -229,7 +229,7 @@ import Footer from './components/Footer';
     
     - 해당하는 날짜의 연도 시트가 없을 경우 연도 시트 생성
     - 완료 후 몇개의 행을 추가했는지, 몇개의 행을 덮어 썼는지 알럿창.
-    - 아직 집행이 안된 ledger
+    - 아직 실행이 안된 ledger
 
 
 
@@ -241,11 +241,11 @@ import Footer from './components/Footer';
     - 주기 대응: '매월(M)'일 경우 해당 날짜에, '매주(W)'일 경우 해당 요일에 맞춰 생성합니다.
     - 중복 방지: 각 날짜에 동일한 rpID를 가진 내역이 이미 시트에 존재할 경우 중복 생성을 건너뜁니다.
     - 시트 자동 생성: 해당 연도의 시트가 존재하지 않을 경우, 자동으로 시트를 생성하고 헤더를 추가합니다.
-    - 집행 상태 자동 설정: 생성 시점 기준으로 오늘 포함 과거 날짜는 gExecuted=true, 미래 날짜는 false로 설정합니다.
+    - 실행 상태 자동 설정: 생성 시점 기준으로 오늘 포함 과거 날짜는 gExecuted=true, 미래 날짜는 false로 설정합니다.
 
-    * 이미 집행된 경우 (gExecuted=true):
+    * 이미 실행된 경우 (gExecuted=true):
         - 사용자가 이미 실제 지출/수입으로 확정한 내역이므로, 반복 내역이 수정되더라도 해당 데이터는 그대로 유지하고 건너뜁니다(지나가기).
-    * 아직 집행 전인 경우 (gExecuted=false):
+    * 아직 실행 전인 경우 (gExecuted=false):
         - 반복 내역의 설정(금액, 자산, 분류 등)이 변경되었을 수 있으므로, 해당 행을 최신 정보로 덮어씁니다(업데이트).
     * 내역이 없는 경우:
         - 새로운 가계부 행을 **추가(신규 생성)**합니다.
@@ -311,7 +311,7 @@ import Footer from './components/Footer';
   - 목록은 MonthlyList.jsx의 목록 기능을 그대로 사용.
 
 * MonthlySummary.jsx 추가
-  - 월간 수입, 지출, 이체의 총계(미집행건도 포함)를 보여주는 화면.
+  - 월간 수입, 지출, 이체의 총계(미실행건도 포함)를 보여주는 화면.
   - 화면 상단에 바 차트. (chartjs)
     - 최근 3개월간 수입, 지출, 이체 비교 차트
   - 화면 하단에 3개월간 수입, 지출, 이체 합계액

@@ -156,8 +156,7 @@ export default function DialogTheme({ visible, onHide }) {
             <InputSwitch id="darkmode"
               className="ml-auto"
               disabled={!supportsDarkMode}
-              tooltip="다크 모드"
-              tooltipOptions={{ position: 'left' }}
+              tooltip="다크 모드" tooltipOptions={{ position: 'left' }}
               checked={isDarkMode} onChange={onDarkModeToggle} />
           </div>
 
@@ -170,8 +169,7 @@ export default function DialogTheme({ visible, onHide }) {
             <InputSwitch id="condensed"
               className="ml-auto"
               disabled={!isMaterialTheme}
-              tooltip="Material 테마 전용 압축 레이아웃"
-              tooltipOptions={{ position: 'left' }}
+              tooltip="Material 테마 전용 압축 레이아웃" tooltipOptions={{ position: 'left' }}
               checked={condensed} onChange={(e) => set_condensed(e.value)}
             />
           </div>
@@ -193,8 +191,7 @@ export default function DialogTheme({ visible, onHide }) {
             <label htmlFor="ripple" className="text-lg">리플 효과 (Ripple Effect)</label>
             <InputSwitch id="ripple"
               className="ml-auto"
-              tooltip="리플 효과"
-              tooltipOptions={{ position: 'left' }}
+              tooltip="리플 효과" tooltipOptions={{ position: 'left' }}
               checked={ripple} onChange={(e) => set_ripple(e.value)} />
           </div>
         </div>

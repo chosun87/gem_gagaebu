@@ -99,8 +99,7 @@ export default function DialogList({ visible, onHide, params }) {
         </div>
 
         <InputSwitch checked={item.gExecuted} trueValue={false} falseValue={true}
-          tooltip="집행"
-          tooltipOptions={{ position: 'top' }}
+          tooltip="실행" tooltipOptions={{ position: 'top' }}
           onChange={(e) => handleChange_gExecute(item, e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />

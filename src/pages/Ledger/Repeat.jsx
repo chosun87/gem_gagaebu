@@ -65,8 +65,7 @@ export default function Repeat() {
             </div>
           )}
           <InputSwitch checked={item.rpComplete} trueValue={false} falseValue={true}
-            tooltip="완료"
-            tooltipOptions={{ position: 'top' }}
+            tooltip="완료" tooltipOptions={{ position: 'top' }}
             onChange={(e) => handleChange_rpComplete(item, e.target.value)}
             onClick={(e) => e.stopPropagation()}
           />
@@ -102,8 +101,7 @@ export default function Repeat() {
         severity="secondary" size="large" rounded
         icon="pi pi-plus"
         onClick={() => fnOpenDialogRepeat(null)}
-        tooltip="반복 추가"
-        tooltipOptions={{ position: 'top' }}
+        tooltip="반복 추가" tooltipOptions={{ position: 'top' }}
       />
 
       {/* 반복 입력 폼 다이얼로그 */}

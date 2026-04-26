@@ -110,8 +110,7 @@ export default function MonthlySummary() {
   // 금액 포맷팅 템플릿
   const amountBodyTemplate = (rowData, field) => {
     const amount = rowData[field] || 0;
-    const colorClass = `gType-${field}`;
-    return <span className={`${colorClass} monospace`}>{amount.toLocaleString()}</span>;
+    return <>{amount.toLocaleString()}</>;
   };
 
   // Calendar 월 선택 템플릿
@@ -123,7 +122,7 @@ export default function MonthlySummary() {
   );
 
   return (
-    <div className="panel-inner summary-page flex flex-column gap-4">
+    <div className="panel-inner summary-page">
       <PrimeCalendar className="month-calendar"
         inline
         locale="ko"
@@ -139,13 +138,34 @@ export default function MonthlySummary() {
         <Chart type="bar" data={summaryData.chartData} options={summaryData.chartOptions} />
       </div>
 
-      <div className="summary-table-container pb-4">
+      <div className="summary-table-container">
         {/* <h3 className="text-center mb-3">최근 3개월 합계</h3> */}
-        <DataTable value={summaryData.tableData} responsiveLayout="scroll">
-          <Column field="monthLabel" header="연월" className="font-bold"></Column>
-          <Column field="수입" header="수입" body={(data) => amountBodyTemplate(data, '수입')} alignHeader="center" align="right"></Column>
-          <Column field="지출" header="지출" body={(data) => amountBodyTemplate(data, '지출')} alignHeader="center" align="right"></Column>
-          <Column field="이체" header="이체" body={(data) => amountBodyTemplate(data, '이체')} alignHeader="center" align="right"></Column>
+        <DataTable
+          stripedRows responsiveLayout="scroll"
+          value={summaryData.tableData}
+        >
+          <Column field="monthLabel" header="연월"
+            bodyClassName="px-0 font-bold"
+            style={{ width: '10%', minWidth: '5rem' }}
+          />
+          <Column field="수입" header="수입"
+            alignHeader="center" align="right"
+            bodyClassName="px-0 monospace gType-수입"
+            body={(data) => amountBodyTemplate(data, '수입')}
+            style={{ width: '30%' }}
+          />
+          <Column field="지출" header="지출"
+            alignHeader="center" align="right"
+            bodyClassName="px-0 monospace gType-지출"
+            body={(data) => amountBodyTemplate(data, '지출')}
+            style={{ width: '30%' }}
+          />
+          <Column field="이체" header="이체"
+            alignHeader="center" align="right"
+            bodyClassName="px-0 monospace gType-이체"
+            body={(data) => amountBodyTemplate(data, '이체')}
+            style={{ width: '30%' }}
+          />
         </DataTable>
       </div>
     </div>

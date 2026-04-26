@@ -22,6 +22,16 @@ export default function Calendar() {
   const [showDialogList, setShowDialogList] = useState(false);
   const [dialogParams, setDialogParams] = useState({});
 
+  useEffect(() => {
+    if (fcRef.current && selectedDate) {
+      const calendarApi = fcRef.current.getApi();
+      // flushSync 에러 방지를 위해 비동기 처리 (타스크 큐로 위임)
+      setTimeout(() => {
+        calendarApi.gotoDate(selectedDate);
+      }, 0);
+    }
+  }, [selectedDate]);
+
   // 일일 합계 데이터 가공
   const dailySummary = useMemo(() => {
     const summary = {};
@@ -51,16 +61,32 @@ export default function Calendar() {
     return summary;
   }, [yearData]);
 
-  useEffect(() => {
-    if (fcRef.current && selectedDate) {
-      const calendarApi = fcRef.current.getApi();
-      // flushSync 에러 방지를 위해 비동기 처리 (타스크 큐로 위임)
-      setTimeout(() => {
-        calendarApi.gotoDate(selectedDate);
-      }, 0);
-    }
-  }, [selectedDate]);
+  /*
+  // yearData에서 현재 선택된 달의 데이터만 필터링 (방어 코드 포함)
+  const currentMonthNum = selectedDate ? selectedDate.getMonth() + 1 : dayjs().month() + 1;
 
+  const monthData = (yearData || []).filter(item => {
+    if (!item?.gDate || typeof item.gDate !== 'string') return false;
+
+    const dateParts = item.gDate.split(/[-./\s]+/);
+    if (dateParts.length >= 2) {
+      const rowMonthNum = parseInt(dateParts[1], 10);
+      return rowMonthNum === currentMonthNum;
+    }
+    return false;
+  });
+  */
+
+  // 별표 색상 가져오기
+  const _getStarClass = (data) => {
+    let result = ""
+    if (data?.income0) result = "gType-수입 "
+    if (data?.expense0) result += "gType-지출 "
+    if (data?.transfer0) result += "gType-이체 "
+    return result;
+  }
+
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   // 월 변경 (화살표 클릭 등)
   const handleMonthChange = (e) => {
     if (!e.year || !e.month) return;
@@ -75,19 +101,7 @@ export default function Calendar() {
     }
   }
 
-  // yearData에서 현재 선택된 달의 데이터만 필터링 (방어 코드 포함)
-  const currentMonthNum = selectedDate ? selectedDate.getMonth() + 1 : dayjs().month() + 1;
-  const monthData = (yearData || []).filter(item => {
-    if (!item?.gDate || typeof item.gDate !== 'string') return false;
-
-    const dateParts = item.gDate.split(/[-./\s]+/);
-    if (dateParts.length >= 2) {
-      const rowMonthNum = parseInt(dateParts[1], 10);
-      return rowMonthNum === currentMonthNum;
-    }
-    return false;
-  });
-
+  // 날짜 칸 클릭 처리
   const handleDateClick = (info) => {
     setDialogParams({ date: info.dateStr });
     setShowDialogList(true);
@@ -117,15 +131,6 @@ export default function Calendar() {
     }
     touchStart.current = null;
   };
-
-  // 별표 색상 가져오기
-  const _getStarClass = (data) => {
-    let result = ""
-    if (data?.income0) result = "gType-수입 "
-    if (data?.expense0) result += "gType-지출 "
-    if (data?.transfer0) result += "gType-이체 "
-    return result;
-  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿

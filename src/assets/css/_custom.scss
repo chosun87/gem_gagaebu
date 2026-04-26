@@ -33,6 +33,14 @@
   }
 }
 
+.p-badge {
+  height: 1.75rem;
+  border-radius: 1.75rem;
+  line-height: 1.2;
+  display: inline-flex;
+  align-items: center;
+}
+
 /* 토요일 (일곱 번째 열) 색상 설정 */
 .p-datepicker {
   table {
@@ -157,5 +165,15 @@
 
   .p-panel-footer {
     padding: var(--padding-base);
+  }
+}
+
+.p-datatable {
+  .p-datatable-thead {
+    &>tr {
+      &>th {
+        background: var(--highlight-bg);
+      }
+    }
   }
 }

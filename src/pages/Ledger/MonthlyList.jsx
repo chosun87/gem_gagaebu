@@ -129,8 +129,7 @@ export default function MonthlyList() {
         </div>
 
         <InputSwitch checked={item.gExecuted} trueValue={false} falseValue={true}
-          tooltip="집행"
-          tooltipOptions={{ position: 'top' }}
+          tooltip="실행" tooltipOptions={{ position: 'top' }}
           onChange={(e) => handleChange_gExecute(item, e.target.value)}
           onClick={(e) => e.stopPropagation()}
         />
@@ -177,8 +176,7 @@ export default function MonthlyList() {
         severity="secondary" size="large" rounded
         icon="pi pi-plus"
         onClick={() => fnOpenDialogLedger(null)}
-        tooltip="목록 추가"
-        tooltipOptions={{ position: 'top' }}
+        tooltip="목록 추가" tooltipOptions={{ position: 'top' }}
       />
 
       {/* 가계부 입력 폼 다이얼로그 */}
