@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 
 import { G_TYPE } from '@/assets/js/constants';
 
-export default function DialogLedger({ ledger, visible, onHide }) {
+export default function DialogLedger({ ledger, visible, onHide, params }) {
 
   const { saveLedgerEntry, deleteLedgerEntry, loading: dataLoading, assetNodes, categoryOptions, defaultAssetCode } = useData();
 
@@ -26,21 +26,21 @@ export default function DialogLedger({ ledger, visible, onHide }) {
 
   useEffect(() => {
     if (visible) {
-      set_gDate(ledger?.gDate ? dayjs(ledger.gDate).toDate() : new Date());
-      set_gType(ledger?.gType || '지출');
-      set_gAcc1(ledger?.gAcc1 || defaultAssetCode || '');
+      set_gDate(ledger?.gDate ? dayjs(ledger.gDate).toDate() : (params?.date ? dayjs(params.date).toDate() : new Date()));
+      set_gType(ledger?.gType || params?.type || '지출');
+      set_gAcc1(ledger?.gAcc1 || params?.accCode || defaultAssetCode || '');
       set_gAcc2(ledger?.gAcc2 || '');
-      set_gCategory(ledger?.gCategory || '');
+      set_gCategory(ledger?.gCategory || params?.category || '');
       set_gAmount(ledger?.gAmount || 0);
       set_gMemo(ledger?.gMemo || '');
       set_gExecuted(ledger?.gExecuted || false);
       set_submitted(false);
 
-      const [acc1Label, acc2Label] = _getAccLabels(ledger?.gType || '지출');
+      const [acc1Label, acc2Label] = _getAccLabels(ledger?.gType || params?.type || '지출');
       set_gAcc1Label(acc1Label);
       set_gAcc2Label(acc2Label);
     }
-  }, [ledger, visible, defaultAssetCode]);
+  }, [ledger, visible, defaultAssetCode, params]);
 
   useEffect(() => {
     const [acc1Label, acc2Label] = _getAccLabels(gType);

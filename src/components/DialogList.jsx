@@ -142,6 +142,7 @@ export default function DialogList({ visible, onHide, params }) {
       {/* 내역 수정용 다이얼로그 */}
       <DialogLedger
         ledger={ledger}
+        params={params}
         visible={showDialogLedger}
         onHide={fnHideDialogLedger}
       />
