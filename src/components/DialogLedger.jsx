@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Dropdown, InputSwitch, Badge } from '@/components/PrimeReact';
-import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Dropdown, InputSwitch, Badge } from '@/assets/js/PrimeReact';
+import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
@@ -296,7 +296,6 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
           </div>
         </div>
       </Panel>
-      <ConfirmDialog />
     </Sidebar>
   );
 }

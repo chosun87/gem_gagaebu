@@ -3,7 +3,7 @@ ChartJS.register(...registerables);
 
 import { useState, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
-import { Chart, Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/components/PrimeReact';
+import { Chart, Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 
 export default function MonthlySummary() {

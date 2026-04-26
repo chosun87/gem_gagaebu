@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, ConfirmDialog, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown } from '@/components/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
@@ -389,7 +389,6 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
         </div>
       </Panel>
-      <ConfirmDialog />
     </Sidebar>
   );
 }

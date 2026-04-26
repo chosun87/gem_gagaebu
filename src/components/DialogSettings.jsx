@@ -1,4 +1,4 @@
-import { Sidebar, Panel } from '@/components/PrimeReact';
+import { Sidebar, Panel } from '@/assets/js/PrimeReact';
 
 export default function Settings({ visible, onHide }) {
 

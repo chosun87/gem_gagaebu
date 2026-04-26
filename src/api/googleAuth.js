@@ -1,4 +1,4 @@
-import { GOOGLE_AUTH } from '@/assets/js/google_api';
+import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
 
 // GAPI 클라이언트만 초기화 (auth2 제외)
 export const initGoogleApi = () => {
@@ -10,7 +10,7 @@ export const initGoogleApi = () => {
     window.gapi.load('client', async () => {
       try {
         await window.gapi.client.init({
-          discoveryDocs: GOOGLE_AUTH.DISCOVERY_DOCS,
+          discoveryDocs: GOOGLE_AUTH_PARAMS.DISCOVERY_DOCS,
           plugin_name: "gagaebu"
         });
         resolve();

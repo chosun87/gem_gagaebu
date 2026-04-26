@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Card, Message, Tag } from '@/components/PrimeReact';
-import { Calendar as PrimeCalendar, Checkbox, Dropdown, InputNumber, InputSwitch, InputText, SelectButton } from '@/components/PrimeReact';
+import { Card, Message, Tag } from '@/assets/js/PrimeReact';
+import { Calendar as PrimeCalendar, Checkbox, Dropdown, InputNumber, InputSwitch, InputText, SelectButton } from '@/assets/js/PrimeReact';
 
 export default function Statistics() {
   const [inputText, setInputText] = useState('');

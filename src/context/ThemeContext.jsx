@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import PrimeReact from 'primereact/api';
-import { THEME_NODES } from '@/assets/js/constants_theme';
+import { THEME_NODES } from '@/assets/js/PrimeReactThemes';
 
 const ThemeContext = createContext();
 

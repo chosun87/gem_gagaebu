@@ -10,6 +10,8 @@ import Assets from '@/pages/Assets';
 import DialogSettings from '@/components/DialogSettings';
 import DialogTheme from '@/components/DialogTheme';
 
+import { ConfirmDialog } from '@/assets/js/PrimeReact';
+
 function App() {
   const { isSignedIn } = useAuth();
   const [activeIndex, setActiveIndex] = useState(0);
@@ -60,6 +62,8 @@ function App() {
         visible={isThemeOpen}
         onHide={() => setIsThemeOpen(false)}
       />
+
+      <ConfirmDialog />
     </div>
   );
 }

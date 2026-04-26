@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, InputSwitch, DataView, Message, Tag, Menu } from '@/components/PrimeReact';
+import { Badge, Button, InputSwitch, DataView, Message, Tag, Menu } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 
 import DialogRepeat from '@/components/DialogRepeat';

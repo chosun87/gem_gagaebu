@@ -1,4 +1,4 @@
-import { TabView, TabPanel } from '@/components/PrimeReact';
+import { TabView, TabPanel } from '@/assets/js/PrimeReact';
 import Calendar from '@/pages/Ledger/Calendar';
 import MonthlyList from '@/pages/Ledger/MonthlyList';
 import MonthlySummary from '@/pages/Ledger/MonthlySummary';

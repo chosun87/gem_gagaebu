@@ -1,13 +1,13 @@
 import { useState, useRef } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/components/PrimeReact';
+import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
 import DialogLedger from '@/components/DialogLedger';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
-import { PrimeReact_locale } from '@/components/PrimeReact';
+import { PrimeReact_locale } from '@/assets/js/PrimeReact';
 addLocale('ko', PrimeReact_locale.ko.Calendar);
 locale('ko');
 

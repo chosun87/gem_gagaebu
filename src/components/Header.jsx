@@ -1,10 +1,21 @@
 import { useAuth } from '@/context/AuthContext';
-import { Button } from '@/components/PrimeReact';
+import { Button, confirmDialog } from '@/assets/js/PrimeReact';
 import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
 
 export default function Header({ onThemeClick }) {
-  const { isInitialized, isSignedIn, login, logout, authRemainingTime } = useAuth();
+  const { isInitialized, isSignedIn, login, logout, extendLogin, authRemainingTime } = useAuth();
   const isFullscreen = useFullscreenStatus();
+
+  const fnLogout = () => {
+    confirmDialog({
+      message: '로그아웃 하시겠습니까?',
+      header: '로그아웃 확인',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: '로그아웃',
+      rejectLabel: '취소',
+      accept: () => logout(),
+    });
+  };
 
   return (
     <header className="app-header shadow-2">
@@ -33,15 +44,21 @@ export default function Header({ onThemeClick }) {
               tooltip="새로고침" tooltipOptions={{ position: 'left' }}
             />
             <div className="flex flex-column align-items-center relative">
-              {/* 인증만료까지 남은 시간 표시 */}
-              <span className="auth-remaining-time text-xs monospace">{authRemainingTime}</span>
+              {/* 인증만료까지 남은 시간 표시 (클릭 시 연장) */}
+              <span className="auth-remaining-time text-xs monospace"
+                style={{ cursor: 'pointer' }}
+                onClick={extendLogin}
+                title="인증 연장하기"
+              >
+                {authRemainingTime}
+              </span>
 
               {/* 로그아웃 버튼 */}
               <Button className="login text-base" severity="primary" rounded text raised size="small"
                 icon="pi pi-sign-out"
                 disabled={!isInitialized}
                 tooltip="로그아웃" tooltipOptions={{ position: 'left' }}
-                onClick={logout}
+                onClick={fnLogout}
               />
             </div>
           </>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, TreeSelect } from '@/components/PrimeReact';
+import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, TreeSelect } from '@/assets/js/PrimeReact';
 import { useTheme } from '@/context/ThemeContext';
-import { THEME_NODES, INPUT_STYLE_OPTIONS, SCALES } from '@/assets/js/constants_theme';
+import { THEME_NODES, INPUT_STYLE_OPTIONS, SCALES } from '@/assets/js/PrimeReactThemes';
 
 export default function DialogTheme({ visible, onHide }) {
   const {

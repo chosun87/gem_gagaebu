@@ -1,5 +1,5 @@
 import { useAuth } from '@/context/AuthContext';
-import { Message } from '@/components/PrimeReact';
+import { Message } from '@/assets/js/PrimeReact';
 
 export default function AuthGuard({ children }) {
   const { isInitialized, isSignedIn } = useAuth();

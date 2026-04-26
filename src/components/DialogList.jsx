@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message } from '@/components/PrimeReact';
+import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import DialogLedger from '@/components/DialogLedger';

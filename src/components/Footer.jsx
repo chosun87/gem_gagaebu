@@ -1,4 +1,4 @@
-import { TabMenu } from '@/components/PrimeReact';
+import { TabMenu } from '@/assets/js/PrimeReact';
 
 export default function Footer({ activeIndex, onMenuChange }) {
   const itemRenderer = (item, index) => {
