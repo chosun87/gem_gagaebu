@@ -46,7 +46,7 @@ export const useData = () => {
     // 반복 데이터
     sheet반복Data: repeat.sheet반복Data,
     loadSheet반복Data: repeat.loadSheet반복Data,
-    handleChange_rpComplete: repeat.handleChange_rpComplete,
+    handleChange_rpCompleted: repeat.handleChange_rpCompleted,
     saveRepeatEntry: repeat.saveRepeatEntry,
     deleteRepeatEntry: repeat.deleteRepeatEntry,
 

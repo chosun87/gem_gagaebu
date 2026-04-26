@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
 import { Badge, Button, InputSwitch, DataView, Message, Tag, Menu } from '@/components/PrimeReact';
 import dayjs from 'dayjs';
@@ -7,7 +7,7 @@ import DialogRepeat from '@/components/DialogRepeat';
 import DialogList from '@/components/DialogList';
 
 export default function Repeat() {
-  const { sheet반복Data, sheetYYYYData, loading, handleChange_rpComplete } = useData();
+  const { sheet반복Data, sheetYYYYData, loading, handleChange_rpCompleted } = useData();
   const [repeat, setRepeat] = useState(null);
   const [showDialogRepeat, setShowDialogRepeat] = useState(false);
 
@@ -16,7 +16,36 @@ export default function Repeat() {
   const [showDialogList, setShowDialogList] = useState(false);
   const [dialogListParams, setDialogListParams] = useState({});
 
-  const data = sheet반복Data || [];
+  const data = useMemo(() => {
+    const list = [...(sheet반복Data || [])];
+    return list.sort((a, b) => {
+      // 1. 완료 여부 정렬 (미완료 우선)
+      if (a.rpCompleted !== b.rpCompleted) {
+        return a.rpCompleted ? 1 : -1;
+      }
+
+      // 2. 반복 주기 정렬 (매주 'W' 우선)
+      if (a.rpPeriod !== b.rpPeriod) {
+        return a.rpPeriod === 'W' ? -1 : 1;
+      }
+
+      // 3. rpDay 정렬 (높은 값 우선)
+      const getDayValue = (item) => {
+        if (item.rpPeriod === 'M') return parseInt(item.rpDay) || 0;
+        if (item.rpPeriod === 'W') {
+          const dayMap = { '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6, '일': 7 };
+          return dayMap[item.rpDay] || 0;
+        }
+        return 0;
+      };
+
+      const dayDiff = getDayValue(b) - getDayValue(a);
+      if (dayDiff !== 0) return dayDiff;
+
+      // 4. 종료일 정렬 (늦은 날짜 우선)
+      return dayjs(b.rpDateE).unix() - dayjs(a.rpDateE).unix();
+    });
+  }, [sheet반복Data]);
 
   const menuItems = [
     {
@@ -57,11 +86,11 @@ export default function Repeat() {
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDateViewItem = (item) => {
     const rpTypeClass = `rpType-${item.rpType}`;
-    const rpCompleteClass = `rpComplete-${(item.rpComplete) ? 'Y' : 'N'}`;
+    const rpCompletedClass = `rpCompleted-${(item.rpCompleted) ? 'Y' : 'N'}`;
 
     return (
       <div
-        className={`list-item ${rpTypeClass} ${rpCompleteClass} col-12`}
+        className={`list-item ${rpTypeClass} ${rpCompletedClass} col-12`}
         onClick={(e) => {
           setSelectedItem(item);
           menuLeft.current.toggle(e);
@@ -76,13 +105,13 @@ export default function Repeat() {
           <div className="flex align-items-center gap-1">
             <div className="rpDate monospace">{item.rpDateS} ~ {item.rpDateE}</div>
           </div>
-          <div className="flex align-items-center gap-2 flex-wrap">
+          <div className="flex align-items-center column-gap-2">
             <span className="rpDay text-lg font-semibold text-nowrap">
               {item.rpPeriod === 'W' ? `매주 (${item.rpDay})` : `매월 ${item.rpDay}일`}
             </span>
             <span className="rpMemo">{item.rpMemo}</span>
           </div>
-          <div className="flex align-items-center gap-2">
+          <div className="flex align-items-center">
             <span className="rpAcc">{item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}</span>
           </div>
         </div>
@@ -96,9 +125,9 @@ export default function Repeat() {
               총 {item.rpTotalAmount.toLocaleString()}원
             </div>
           )}
-          <InputSwitch checked={item.rpComplete} trueValue={false} falseValue={true}
+          <InputSwitch checked={item.rpCompleted} trueValue={false} falseValue={true}
             tooltip="완료" tooltipOptions={{ position: 'top' }}
-            onChange={(e) => handleChange_rpComplete(item, e.target.value)}
+            onChange={(e) => handleChange_rpCompleted(item, e.target.value)}
             onClick={(e) => e.stopPropagation()}
           />
         </div>

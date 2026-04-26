@@ -9,6 +9,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import DialogList from '@/components/DialogList';
+import LedgerSummary from '@/components/LedgerSummary';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 import { PrimeReact_locale } from '@/components/PrimeReact';
@@ -226,44 +227,7 @@ export default function Calendar() {
         onViewDateChange={handleViewDateChange}
       />
 
-      <div className="ledger-summary-wrap monospace">
-        <table>
-          <colgroup>
-            <col style={{ width: "10%", minWidth: "3.5rem" }} />
-            <col style={{ width: "30%" }} />
-            <col style={{ width: "30%" }} />
-            <col style={{ width: "30%" }} />
-          </colgroup>
-          <thead>
-            <tr>
-              <th className="text-left">구분</th>
-              <th className="text-right">실행 전</th>
-              <th className="text-right">실행 완료</th>
-              <th className="text-right">합계</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th className="text-left">수입</th>
-              <td className="text-right">{monthTotal?.income0.toLocaleString()}</td>
-              <td className="text-right">{monthTotal?.income1.toLocaleString()}</td>
-              <td className="text-right">{monthTotal?.incomeA.toLocaleString()}</td>
-            </tr>
-            <tr>
-              <th className="text-left">지출</th>
-              <td className="text-right">{monthTotal?.expense0.toLocaleString()}</td>
-              <td className="text-right">{monthTotal?.expense1.toLocaleString()}</td>
-              <td className="text-right">{monthTotal?.expenseA.toLocaleString()}</td>
-            </tr>
-            <tr>
-              <th className="text-left">이체</th>
-              <td className="text-right">{monthTotal?.transfer0.toLocaleString()}</td>
-              <td className="text-right">{monthTotal?.transfer1.toLocaleString()}</td>
-              <td className="text-right">{monthTotal?.transferA.toLocaleString()}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <LedgerSummary symmary={monthTotal} />
 
       <div className="fc-swipe-wrapper"
         onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}

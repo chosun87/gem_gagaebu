@@ -37,7 +37,7 @@ export const RepeatProvider = ({ children }) => {
           rpDateE: row[SHEET_COL_INDEX.REPEAT.rpDateE] || '',
           rpPeriod: row[SHEET_COL_INDEX.REPEAT.rpPeriod] || '',
           rpDay: row[SHEET_COL_INDEX.REPEAT.rpDay] || '',
-          rpComplete: (String(row[SHEET_COL_INDEX.REPEAT.rpComplete]).toUpperCase() === 'TRUE'),
+          rpCompleted: (String(row[SHEET_COL_INDEX.REPEAT.rpCompleted]).toUpperCase() === 'TRUE'),
           rpType: row[SHEET_COL_INDEX.REPEAT.rpType] || '',
           rpAcc1: row[SHEET_COL_INDEX.REPEAT.rpAcc1] || '',
           rpAcc2: row[SHEET_COL_INDEX.REPEAT.rpAcc2] || '',
@@ -58,20 +58,20 @@ export const RepeatProvider = ({ children }) => {
     }
   };
 
-  const handleChange_rpComplete = async (rowData, newValue) => {
+  const handleChange_rpCompleted = async (rowData, newValue) => {
     setSheet반복Data(prevData => prevData.map(item =>
       item.sheetRowNo === rowData.sheetRowNo
-        ? { ...item, rpComplete: newValue }
+        ? { ...item, rpCompleted: newValue }
         : item
     ));
 
     try {
-      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpComplete);
+      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpCompleted);
       await updateSheetCell(`반복!${sheetColName}${rowData.sheetRowNo}`, newValue);
     } catch (error) {
       setSheet반복Data(prevData => prevData.map(item =>
         item.sheetRowNo === rowData.sheetRowNo
-          ? { ...item, rpComplete: !newValue }
+          ? { ...item, rpCompleted: !newValue }
           : item
       ));
     }
@@ -88,7 +88,7 @@ export const RepeatProvider = ({ children }) => {
       rowValues[SHEET_COL_INDEX.REPEAT.rpDateE] = formData.rpDateE ? dayjs(formData.rpDateE).format('YYYY-MM-DD') : '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpPeriod] = formData.rpPeriod || 'M';
       rowValues[SHEET_COL_INDEX.REPEAT.rpDay] = formData.rpDay || '1';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpComplete] = formData.rpComplete ?? false;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpCompleted] = formData.rpCompleted ?? false;
       rowValues[SHEET_COL_INDEX.REPEAT.rpType] = formData.rpType || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpAcc1] = formData.rpAcc1 || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2] = formData.rpAcc2 || '';
@@ -96,7 +96,7 @@ export const RepeatProvider = ({ children }) => {
       rowValues[SHEET_COL_INDEX.REPEAT.rpAmount] = formData.rpAmount || 0;
       rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount] = formData.rpTotalAmount || 0;
       rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = formData.rpMemo || '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = ''; 
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = '';
 
       if (!repeat) {
         await appendSheetRow('반복', rowValues);
@@ -137,7 +137,7 @@ export const RepeatProvider = ({ children }) => {
       sheet반복Data,
       loading,
       loadSheet반복Data,
-      handleChange_rpComplete,
+      handleChange_rpCompleted,
       saveRepeatEntry,
       deleteRepeatEntry
     }}>

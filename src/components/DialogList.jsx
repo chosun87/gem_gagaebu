@@ -3,6 +3,7 @@ import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message } from '@
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import DialogLedger from '@/components/DialogLedger';
+import LedgerSummary from '@/components/LedgerSummary';
 
 export default function DialogList({ visible, onHide, params }) {
   const { yearData, sheetYYYYData, loadSheet연도Data, loadedSheetYYYY, handleChange_gExecute } = useData();
@@ -59,6 +60,34 @@ export default function DialogList({ visible, onHide, params }) {
     return parts.length === 1 ? parts[0] : (params.rpID ? params.header : '조회 내역');
   }, [params]);
 
+  // 필터링된 데이터의 합계 계산
+  const listTotal = useMemo(() => {
+    const total = {
+      income0: 0, expense0: 0, transfer0: 0,
+      income1: 0, expense1: 0, transfer1: 0,
+      incomeA: 0, expenseA: 0, transferA: 0
+    };
+
+    filteredData.forEach(item => {
+      const amount = Number(item.gAmount) || 0;
+      if (!item.gExecuted) {
+        if (item.gType === '수입') total.income0 += amount;
+        else if (item.gType === '지출') total.expense0 += amount;
+        else if (item.gType === '이체') total.transfer0 += amount;
+      } else {
+        if (item.gType === '수입') total.income1 += amount;
+        else if (item.gType === '지출') total.expense1 += amount;
+        else if (item.gType === '이체') total.transfer1 += amount;
+      }
+    });
+
+    total.incomeA = total.income0 + total.income1;
+    total.expenseA = total.expense0 + total.expense1;
+    total.transferA = total.transfer0 + total.transfer1;
+
+    return total;
+  }, [filteredData]);
+
   const fnOpenDialogLedger = (ledger) => {
     setLedger(ledger);
     setShowDialogLedger(true);
@@ -103,8 +132,8 @@ export default function DialogList({ visible, onHide, params }) {
         />
 
         <div className="flex-grow-1 flex flex-column gap-1">
-          <div className="flex align-items-center gap-2">
-            {!params.date && <span className="gDate text-lg font-semibold">{dayjs(item.gDate).format('YY-MM-DD')}</span>}
+          <div className="flex align-items-center column-gap-2">
+            {!params.date && <span className="gDate text-lg font-semibold monospace">{dayjs(item.gDate).format('YY-MM-DD')}</span>}
             <span className="gMemo">{item.gMemo}</span>
           </div>
           <div className="flex align-items-center gap-1">
@@ -132,11 +161,12 @@ export default function DialogList({ visible, onHide, params }) {
       position="bottom"
       visible={visible}
       onHide={onHide}
-      footerTemplate={templateFooter}
     >
       <Panel
         footerTemplate={templateFooter}
       >
+        <LedgerSummary symmary={listTotal} />
+
         <div className="list-page">
           {dataLoading ? (
             <div className="flex align-items-center justify-content-center h-full p-5">

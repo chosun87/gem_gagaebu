@@ -44,7 +44,7 @@ export const SHEET_COL_INDEX = {
     rpDateE: 2,
     rpPeriod: 3,
     rpDay: 4,
-    rpComplete: 5,
+    rpCompleted: 5,
     rpType: 6,
     rpAcc1: 7,
     rpAcc2: 8,

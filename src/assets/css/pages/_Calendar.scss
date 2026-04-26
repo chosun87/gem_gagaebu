@@ -14,61 +14,6 @@
     flex-direction: column;
   }
 
-  .ledger-summary-wrap {
-    background-color: var(--surface-card);
-    border-radius: var(--border-radius);
-    padding: calc(var(--padding-base) / 2);
-    padding-bottom: 0.25rem;
-    border: 1px solid var(--surface-border);
-
-    table {
-      width: 100%;
-      table-layout: fixed;
-      border-collapse: collapse;
-
-      th,
-      td {
-        padding: 0.25rem calc(var(--padding-base) / 2);
-        line-height: 1;
-      }
-
-      thead th {
-        color: var(--highlight-text-color);
-        background-color: var(--highlight-bg);
-      }
-
-      tbody {
-        tr {
-          td {
-            &:first-child {
-              width: 4rem;
-            }
-          }
-
-          &:first-child {
-
-            th,
-            td {
-              padding-top: 0.5rem;
-            }
-          }
-
-          &:nth-child(1) td:last-child {
-            color: var(--color-수입);
-          }
-
-          &:nth-child(2) td:last-child {
-            color: var(--color-지출);
-          }
-
-          &:nth-child(3) td:last-child {
-            color: var(--color-이체);
-          }
-        }
-      }
-    }
-  }
-
   .fc {
     flex: 1 1 auto;
 

@@ -22,7 +22,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   const [rpAmount, set_rpAmount] = useState(repeat?.rpAmount || 0);
   const [rpTotalAmount, set_rpTotalAmount] = useState(repeat?.rpTotalAmount || 0);
   const [rpMemo, set_rpMemo] = useState(repeat?.rpMemo || '');
-  const [rpComplete, set_rpComplete] = useState(repeat?.rpComplete || false);
+  const [rpCompleted, set_rpCompleted] = useState(repeat?.rpCompleted || false);
 
   const [rpAcc1Label, set_rpAcc1Label] = useState('자산1');
   const [rpAcc2Label, set_rpAcc2Label] = useState('자산2');
@@ -53,7 +53,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       set_rpAmount(repeat?.rpAmount || 0);
       set_rpTotalAmount(repeat?.rpTotalAmount || 0);
       set_rpMemo(repeat?.rpMemo || '');
-      set_rpComplete(repeat?.rpComplete || false);
+      set_rpCompleted(repeat?.rpCompleted || false);
       set_submitted(false);
 
       const [acc1Label, acc2Label] = _getAccLabels(repeat?.rpType || '지출');
@@ -133,7 +133,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       rpAmount,
       rpTotalAmount,
       rpMemo,
-      rpComplete
+      rpCompleted
     };
 
     try {
@@ -257,7 +257,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="inputWrap">
             <label htmlFor="rpDateS" className="required">기간</label>
-            <div className="flex align-items-center gap-2">
+            <div className="flex align-items-center column-gap-2">
               <PrimeCalendar id="rpDateS"
                 className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
                 locale="ko" dateFormat="yy-mm-dd (D)"

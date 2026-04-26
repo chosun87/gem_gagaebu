@@ -115,7 +115,7 @@ export default function MonthlyList() {
         />
 
         <div className="flex-grow-1 flex flex-column gap-1">
-          <div className="flex align-items-center gap-2">
+          <div className="flex align-items-center column-gap-2">
             <span className="gDate text-lg font-semibold">{dayjs(item.gDate).format('DD일')}</span>
             <span className="gMemo">{item.gMemo}</span>
           </div>

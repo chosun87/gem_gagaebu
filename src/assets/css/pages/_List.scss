@@ -34,6 +34,15 @@
     padding: 10px;
     border-radius: 0.5rem;
 
+    .flex {
+      flex-wrap: wrap;
+    }
+
+    .gDate,
+    .gMemo {
+      white-space: nowrap;
+    }
+
     .rpCategory {
       width: 3rem;
       min-width: 3rem;
