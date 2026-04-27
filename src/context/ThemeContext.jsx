@@ -12,6 +12,7 @@ export const ThemeProvider = ({ children }) => {
   const [ripple, set_ripple] = useState(localStorage.getItem('app-ripple') === 'false' ? false : true);
   const [inputStyle, set_inputStyle] = useState(localStorage.getItem('app-inputStyle') || 'outlined');
   const [condensed, set_condensed] = useState(localStorage.getItem('app-condensed') === 'true');
+  const [chartColor, set_chartColor] = useState(localStorage.getItem('app-chartColor') || 'blue');
 
   useEffect(() => {
     const themeLink = document.getElementById('theme-link');
@@ -60,6 +61,10 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem('app-condensed', condensed);
   }, [condensed]);
 
+  useEffect(() => {
+    localStorage.setItem('app-chartColor', chartColor);
+  }, [chartColor]);
+
   const changeTheme = (newTheme) => {
     setTheme(newTheme);
   };
@@ -70,7 +75,8 @@ export const ThemeProvider = ({ children }) => {
       scale, set_scale,
       ripple, set_ripple,
       inputStyle, set_inputStyle,
-      condensed, set_condensed
+      condensed, set_condensed,
+      chartColor, set_chartColor
     }}>
       {children}
     </ThemeContext.Provider>

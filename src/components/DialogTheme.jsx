@@ -9,7 +9,8 @@ export default function DialogTheme({ visible, onHide }) {
     inputStyle, set_inputStyle,
     ripple, set_ripple,
     theme, changeTheme,
-    condensed, set_condensed
+    condensed, set_condensed,
+    chartColor, set_chartColor
   } = useTheme();
 
   const allThemes = THEME_NODES.flatMap(group => group.children || []);
@@ -172,6 +173,37 @@ export default function DialogTheme({ visible, onHide }) {
               tooltip="Material 테마 전용 압축 레이아웃" tooltipOptions={{ position: 'left' }}
               checked={condensed} onChange={(e) => set_condensed(e.value)}
             />
+          </div>
+
+          <Divider />
+
+          <div className="inputWrap" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+            <label className="text-lg mb-2">Chart 컬러</label>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { name: 'blue', color: 'var(--blue-500)' },
+                { name: 'green', color: 'var(--green-500)' },
+                { name: 'yellow', color: 'var(--yellow-500)' },
+                { name: 'cyan', color: 'var(--cyan-500)' },
+                { name: 'pink', color: 'var(--pink-500)' },
+                { name: 'indigo', color: 'var(--indigo-500)' },
+                { name: 'teal', color: 'var(--teal-500)' },
+                { name: 'orange', color: 'var(--orange-500)' },
+                { name: 'purple', color: 'var(--purple-500)' },
+                { name: 'red', color: 'var(--red-500)' },
+                { name: 'primary', color: 'var(--primary-color)' }
+              ].map((c) => (
+                <Button
+                  key={c.name}
+                  type="button"
+                  rounded
+                  size="small"
+                  style={{ backgroundColor: c.color, borderColor: c.color, width: '2rem', height: '2rem', padding: 0 }}
+                  icon={chartColor === c.name ? "pi pi-check" : ""}
+                  onClick={() => set_chartColor(c.name)}
+                />
+              ))}
+            </div>
           </div>
 
           <Divider />

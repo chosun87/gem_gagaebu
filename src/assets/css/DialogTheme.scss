@@ -22,6 +22,10 @@
 }
 
 .dialog-theme {
+  .formWrap {
+    gap: 0;
+  }
+
   .colorChip {
     width: 4.5rem;
     height: 1.5rem;
