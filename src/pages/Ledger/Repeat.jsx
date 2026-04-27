@@ -118,11 +118,11 @@ export default function Repeat() {
 
         <div className="h-full flex flex-column align-items-end justify-content-between">
           <div className="rpAmount monospace text-right font-bold text-lg">
-            {item.rpAmount.toLocaleString()}<span className="unit text-xs ">원</span>
+            {(item.rpAmount || 0).toLocaleString()}<span className="unit text-xs ">원</span>
           </div>
           {item.rpTotalAmount !== 0 && (
             <div className="rpTotalAmount monospace text-right text-xs opacity-70 mt-1">
-              총 {item.rpTotalAmount.toLocaleString()}원
+              총 {(item.rpTotalAmount || 0).toLocaleString()}원
             </div>
           )}
           <InputSwitch checked={item.rpCompleted} trueValue={false} falseValue={true}

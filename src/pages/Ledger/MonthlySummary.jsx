@@ -58,8 +58,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // 금액 포맷팅 템플릿
   const amountBodyTemplate = (rowData, field) => {
-    const amount = rowData[field] || 0;
-    return <>{amount.toLocaleString()}</>;
+    return <>{(rowData[field] || 0).toLocaleString()}</>;
   };
 
   // Calendar 월 선택 템플릿

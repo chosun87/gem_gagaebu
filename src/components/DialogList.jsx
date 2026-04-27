@@ -150,7 +150,7 @@ export default function DialogList({ visible, onHide, params }) {
         </div>
 
         <div className="gAmount monospace text-right font-bold text-lg">
-          {item.gAmount.toLocaleString()}<span className="unit text-xs">원</span>
+          {(item?.gAmount || 0).toLocaleString()}<span className="unit text-xs">원</span>
         </div>
 
         <InputSwitch checked={item.gExecuted} trueValue={false} falseValue={true}
