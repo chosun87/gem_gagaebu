@@ -206,7 +206,7 @@
     .p-selectbutton {
       flex-grow: 1;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
 
       .p-button {
         width: 100%;
