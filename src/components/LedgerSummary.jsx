@@ -1,8 +1,8 @@
 import React from 'react';
 
 export default function LedgerSummary({ symmary }) {
-  if (!symmary) return null;
-  if (!(symmary?.incomeA !== 0 || symmary?.expenseA !== 0 || symmary?.transferA !== 0)) return
+  // if (!symmary) return null;
+  // if (!(symmary?.incomeA === 0 || symmary?.expenseA === 0 && symmary?.transferA === 0)) return
 
   return (
     <div className="ledger-summary-wrap monospace">

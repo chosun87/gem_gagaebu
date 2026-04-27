@@ -58,7 +58,7 @@ export default function Calendar() {
         else if (item.gType === '지출') { summary[dateStr].expense1 += amount; ++summary[dateStr].length1; }
         else if (item.gType === '이체') { summary[dateStr].transfer1 += amount; ++summary[dateStr].length1; }
       }
-      console.log(summary[dateStr]);
+      // console.log(dateStr, summary[dateStr]);
     });
 
     return summary;
@@ -88,8 +88,8 @@ export default function Calendar() {
     total.incomeA = total.income0 + total.income1;
     total.expenseA = total.expense0 + total.expense1;
     total.transferA = total.transfer0 + total.transfer1;
-    console.log(total)
 
+    return total;
   }, [selectedDate, dailySummary]);
 
   /*
@@ -107,15 +107,6 @@ export default function Calendar() {
     return false;
   });
   */
-
-  // 별표 색상 가져오기
-  const _getStarClass = (data) => {
-    let result = ""
-    if (data?.income0) result = "gType-수입 "
-    if (data?.expense0) result += "gType-지출 "
-    if (data?.transfer0) result += "gType-이체 "
-    return result;
-  }
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   // 월 변경 (화살표 클릭 등)
@@ -192,29 +183,37 @@ export default function Calendar() {
 
     const argDate = dayjs(arg.date).format('YYYY-MM-DD');
     const data = dailySummary[argDate];
-
-    const starClass = _getStarClass(data)
-
-    return (
-      <div className="custom-day-content">
-        <div className="day-number">
-          {day}
-          {(data?.income0 > 0 || data?.income0 < 0) && <i className={`fa-solid fa-star gType-수입`}></i>}
-          {(data?.expense0 > 0 || data?.expense0 < 0) && <i className={`fa-solid fa-star gType-지출`}></i>}
-          {(data?.transfer0 > 0 || data?.transfer0 < 0) && <i className={`fa-solid fa-star gType-이체`}></i>}
-          {data?.length0 > 0 && <span className="text-xs 실행전">{data?.length0}</span>}
-        </div>
-        <div className="daily-totals monospace text-xs">
-          {(data?.income1 || data?.expense1 || data?.transfer1) &&
-            <>
-              <div className="total-income">{(data?.income1 || 0).toLocaleString()}</div>
-              <div className="total-expense">{(data?.expense1 || 0).toLocaleString()}</div>
-              <div className="total-transfer">{(data?.transfer1 || 0).toLocaleString()}</div>
-            </>
-          }
-        </div>
-      </div >
-    );
+    if (data === undefined) {
+      return (
+        <div className="custom-day-content">
+          <div className="day-number">
+            {day}
+          </div>
+          <div className="daily-totals monospace text-xs"></div>
+        </div >
+      );
+    } else {
+      return (
+        <div className="custom-day-content">
+          <div className="day-number">
+            {day}
+            {(data?.income0 !== 0) && <i className={`fa-solid fa-star gType-수입`}></i>}
+            {(data?.expense0 !== 0) && <i className={`fa-solid fa-star gType-지출`}></i>}
+            {(data?.transfer0 !== 0) && <i className={`fa-solid fa-star gType-이체`}></i>}
+            {data?.length0 > 0 && <span className="text-xs 실행전">{data?.length0}</span>}
+          </div>
+          <div className="daily-totals monospace text-xs">
+            {/* {(data?.income1 || data?.expense1 || data?.transfer1) &&
+              <> */}
+            <div className="total-income">{(data?.income1 || 0).toLocaleString()}</div>
+            <div className="total-expense">{(data?.expense1 || 0).toLocaleString()}</div>
+            <div className="total-transfer">{(data?.transfer1 || 0).toLocaleString()}</div>
+            {/* </>
+            } */}
+          </div>
+        </div >
+      );
+    }
   };
 
   return (
