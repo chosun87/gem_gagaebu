@@ -390,7 +390,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                 onValueChange={(e) => set_rpTotalAmount(e.target.value)}
               />
               <Button severity="info" outlined
-                icon="pi pi-calculator" label="계산"
+                icon="pi pi-calculator"
                 tooltip="기간/주기 기반 자동 계산" tooltipOptions={{ position: 'left' }}
                 onClick={calculateTotalAmount}
               />

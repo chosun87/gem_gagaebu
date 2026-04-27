@@ -113,8 +113,9 @@ export default function DialogList({ visible, onHide, params }) {
           disabled={dataLoading}
         />
         <Button
-          severity="secondary" size="large" label="AI로 입력"
+          severity="secondary" size="large"
           className='icon-gemini'
+          tooltip="AI로 입력" tooltipOptions={{ position: 'top' }}
           icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-plus"}
           onClick={() => alert('AI 입력 기능은 준비 중입니다.')}
           disabled={dataLoading}

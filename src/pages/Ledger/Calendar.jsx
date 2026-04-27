@@ -197,13 +197,13 @@ export default function Calendar() {
       <div className="custom-day-content">
         <div className="day-number">
           {day}
-          {data?.income0 > 0 && <i className={`fa-solid fa-star gType-수입`}></i>}
-          {data?.expense0 > 0 && <i className={`fa-solid fa-star gType-지출`}></i>}
-          {data?.transfer0 > 0 && <i className={`fa-solid fa-star gType-이체`}></i>}
+          {data?.income0 !== 0 && <i className={`fa-solid fa-star gType-수입`}></i>}
+          {data?.expense0 !== 0 && <i className={`fa-solid fa-star gType-지출`}></i>}
+          {data?.transfer0 !== 0 && <i className={`fa-solid fa-star gType-이체`}></i>}
           {data?.length0 > 0 && <span className="text-xs 실행전">{data?.length0}</span>}
         </div>
         <div className="daily-totals monospace text-xs">
-          {(data?.income1 > 0 || data?.expense1 > 0 || data?.transfer1 > 0) &&
+          {(data?.income1 !== 0 || data?.expense1 !== 0 || data?.transfer1 !== 0) &&
             <>
               <div className="total-income">{data.income1.toLocaleString()}</div>
               <div className="total-expense">{data.expense1.toLocaleString()}</div>

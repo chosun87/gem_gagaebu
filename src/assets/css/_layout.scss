@@ -200,6 +200,7 @@
     .p-inputtext,
     .p-inputnumber {
       flex-grow: 1;
+      min-width: 1.5rem;
     }
 
     .p-selectbutton {
