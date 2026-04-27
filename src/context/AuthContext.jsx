@@ -1,10 +1,11 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { initGoogleApi, signOut, setToken } from '@/api/googleAuth';
 import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
 import { confirmDialog } from '@/assets/js/PrimeReact';
 
 const AuthContext = createContext(null);
+const AuthTimerContext = createContext(null);
 
 const AuthInternalProvider = ({ children }) => {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -102,6 +103,8 @@ const AuthInternalProvider = ({ children }) => {
   };
 
 
+
+
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       // 구글 토큰 자체의 만료 시간과 관계없이, 설정된 TOKEN_EXPIRY_MIN 분을 세션 유지 시간으로 사용
@@ -136,17 +139,24 @@ const AuthInternalProvider = ({ children }) => {
     googleLogin();
   };
 
+  const authValue = useMemo(() => ({
+    isInitialized,
+    isSignedIn,
+    login,
+    logout,
+    extendLogin
+  }), [isInitialized, isSignedIn]);
+
+  const timerValue = useMemo(() => ({
+    authRemainingTime: formatRemainingTime(authRemainingTime)
+  }), [authRemainingTime]);
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
-    <AuthContext.Provider value={{
-      isInitialized,
-      isSignedIn,
-      login,
-      logout,
-      extendLogin,
-      authRemainingTime: formatRemainingTime(authRemainingTime)
-    }}>
-      {children}
+    <AuthContext.Provider value={authValue}>
+      <AuthTimerContext.Provider value={timerValue}>
+        {children}
+      </AuthTimerContext.Provider>
     </AuthContext.Provider>
   );
 };
@@ -162,3 +172,4 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+export const useAuthTimer = () => useContext(AuthTimerContext);

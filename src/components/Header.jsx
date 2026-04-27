@@ -1,10 +1,11 @@
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, useAuthTimer } from '@/context/AuthContext';
 import { Button, confirmDialog } from '@/assets/js/PrimeReact';
 import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
 import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
 
 export default function Header({ onThemeClick }) {
-  const { isInitialized, isSignedIn, login, logout, extendLogin, authRemainingTime } = useAuth();
+  const { isInitialized, isSignedIn, login, logout, extendLogin } = useAuth();
+  const { authRemainingTime } = useAuthTimer();
   const isFullscreen = useFullscreenStatus();
 
   const fnLogout = () => {
