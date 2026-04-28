@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, TreeSelect } from '@/assets/js/PrimeReact';
+import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, Dropdown } from '@/assets/js/PrimeReact';
 import { useTheme } from '@/context/ThemeContext';
 import { THEME_NODES, INPUT_STYLE_OPTIONS, SCALES } from '@/assets/js/PrimeReactThemes';
 
@@ -49,47 +49,37 @@ export default function DialogTheme({ visible, onHide }) {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const templateSelectedTheme = (themeKey) => {
-    if (!themeKey) return null;
-
-    const allThemes = THEME_NODES.flatMap(group => group.children || []);
-    const selectedTheme = allThemes.find(t => t.key === themeKey);
-
-    if (selectedTheme) {
+  const templateSelectedTheme = (option, props) => {
+    if (option) {
       return (
         <div className="flex align-items-center gap-2">
           <div
             className="colorChip shadow-1"
-            style={{ backgroundColor: selectedTheme.color }}
+            style={{ backgroundColor: option.color }}
           ></div>
-          <span>{selectedTheme.label}</span>
+          <span>{option.label}</span>
         </div>
       );
     }
-
-    return <span>{themeKey}</span>;
+    return <span>{props.placeholder}</span>;
   };
 
-  const templateTreeSelectNode = (node) => {
-    if (node.children) {
-      return (
-        <div className="theme-group">
-          {node.iconUrl && <img className="icon"
-            src={node.iconUrl}
-            alt={node.label}
-          />}
-          <span className="font-bold">{node.label}</span>
-        </div>
-      );
-    }
-
+  const templateThemeGroup = (option) => {
     return (
-      <div className="theme-item">
-        <div
-          className="colorChip shadow-1"
-          style={{ backgroundColor: node.color }}
-        ></div>
-        <span>{node.label}</span>
+      <div className="theme-group flex align-items-center gap-2">
+        {option.iconUrl && <img className="icon" style={{ height: '1.2rem' }}
+          src={option.iconUrl}
+          alt={option.label}
+        />}
+        <span className="font-bold">{option.label}</span>
+      </div>
+    );
+  };
+
+  const templateThemeItem = (option) => {
+    return (
+      <div className="theme-item" style={{ backgroundColor: option.color }}>
+        {option.key === currentThemeNode?.key && <i className="pi pi-check"></i>}
       </div>
     );
   };
@@ -127,16 +117,20 @@ export default function DialogTheme({ visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="theme" className="text-lg mb-2">테마</label>
-            <div class="inputWrap">
-              <TreeSelect id="theme"
+            <div className="inputWrap">
+              <Dropdown id="theme"
                 className="themeSelector w-full"
+                panelClassName="themeSelectorPanel"
                 placeholder="테마를 선택하세요"
-                display="comma"
-                selectionMode="single"
                 options={THEME_NODES}
-                value={theme}
-                nodeTemplate={templateTreeSelectNode}
-                valueTemplate={() => templateSelectedTheme(theme)}
+                optionLabel="label"
+                optionValue="key"
+                optionGroupLabel="label"
+                optionGroupChildren="children"
+                optionGroupTemplate={templateThemeGroup}
+                itemTemplate={templateThemeItem}
+                value={currentThemeNode?.key}
+                valueTemplate={templateSelectedTheme}
                 onChange={(e) => {
                   let newTheme = e.value;
                   if (newTheme.includes('{MODE}')) {
@@ -145,8 +139,6 @@ export default function DialogTheme({ visible, onHide }) {
                   changeTheme(newTheme);
                 }}
               />
-              {/* expandedKeys={expandedKeysTheme}
-                onToggle={(e) => setExpandedKeysTheme(e.value)} */}
             </div>
           </div>
 
