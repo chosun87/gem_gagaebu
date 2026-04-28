@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown } from '@/assets/js/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown, ToggleButton } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
@@ -250,7 +250,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       >
         <div className="formWrap">
           <div className="formRow">
-            <div class="inputWrap">
+            <div className="inputWrap">
               <SelectButton id="rpType" size="large"
                 className={"gType" + classNames({ 'p-invalid': submitted && !rpType })}
                 options={Object.values(RP_TYPE)}
@@ -312,7 +312,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpCategory" className="required">분류</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <Dropdown id="rpCategory"
                 className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
                 placeholder="분류 선택"
@@ -335,7 +335,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpMemo">내용</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <InputText id="rpMemo"
                 value={rpMemo}
                 onChange={(e) => set_rpMemo(e.target.value)}
@@ -345,7 +345,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpAcc1" className="required">{rpAcc1Label}</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <Dropdown id="rpAcc1"
                 className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
                 placeholder="자산 선택"
@@ -364,7 +364,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className={`formRow ${rpType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="rpAcc2" className="required">{rpAcc2Label}</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <Dropdown id="rpAcc2"
                 className={classNames('w-full', { 'p-invalid': submitted && rpType === '이체' && !rpAcc2 })}
                 placeholder="자산 선택"
@@ -383,26 +383,53 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpAmount" className="required">회당 금액</label>
-            <div class="inputWrap">
-              <InputNumber id="rpAmount"
-                className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
-                mode="currency" currency="KRW" locale="ko-KR"
-                value={rpAmount}
-                onValueChange={(e) => set_rpAmount(e.target.value)}
-              />
+            <div className="inputWrap">
+              <div className="p-inputgroup w-full">
+                <ToggleButton
+                  onIcon="pi pi-minus" onLabel=""
+                  offIcon="pi pi-plus" offLabel=""
+                  tooltip="양수/음수 전환" tooltipOptions={{ position: 'top' }}
+                  checked={rpAmount < 0}
+                  onChange={(e) => {
+                    set_rpAmount(prev => {
+                      const val = Math.abs(prev || 0);
+                      return (e.value && val !== 0) ? -val : val;
+                    });
+                  }}
+                />
+                <InputNumber id="rpAmount"
+                  className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
+                  mode="currency" currency="KRW" locale="ko-KR"
+                  value={rpAmount}
+                  onValueChange={(e) => set_rpAmount(e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
           <div className="formRow">
             <label htmlFor="rpTotalAmount">총 금액</label>
             <div className="inputWrap flex-nowrap gap-2">
-              <InputNumber id="rpTotalAmount"
-                className="w-full"
-                mode="currency" currency="KRW" locale="ko-KR"
-                placeholder="전체 계약 금액 또는 목표 금액"
-                value={rpTotalAmount}
-                onValueChange={(e) => set_rpTotalAmount(e.target.value)}
-              />
+              <div className="p-inputgroup w-full">
+                <ToggleButton
+                  onIcon="pi pi-minus" onLabel=""
+                  offIcon="pi pi-plus" offLabel=""
+                  tooltip="양수/음수 전환" tooltipOptions={{ position: 'top' }}
+                  checked={rpTotalAmount < 0}
+                  onChange={(e) => {
+                    set_rpTotalAmount(prev => {
+                      const val = Math.abs(prev || 0);
+                      return (e.value && val !== 0) ? -val : val;
+                    });
+                  }}
+                />
+                <InputNumber id="rpTotalAmount"
+                  mode="currency" currency="KRW" locale="ko-KR"
+                  placeholder="전체 계약 금액 또는 목표 금액"
+                  value={rpTotalAmount}
+                  onValueChange={(e) => set_rpTotalAmount(e.target.value)}
+                />
+              </div>
               <Button severity="info" outlined
                 icon="pi pi-calculator"
                 tooltip="기간/주기 기반 자동 계산" tooltipOptions={{ position: 'left' }}

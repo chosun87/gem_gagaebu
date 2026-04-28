@@ -148,7 +148,7 @@ export default function DialogTheme({ visible, onHide }) {
             <label htmlFor="darkmode" className={!supportsDarkMode ? 'text-lg opacity-50' : 'text-lg'}>
               다크 모드 (Dark Mode)
             </label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <InputSwitch id="darkmode"
                 className="ml-auto"
                 disabled={!supportsDarkMode}
@@ -164,7 +164,7 @@ export default function DialogTheme({ visible, onHide }) {
             <label htmlFor="condensed" className={!isMaterialTheme ? 'text-lg opacity-50' : 'text-lg'}>
               Condensed (Material 테마 전용)
             </label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <InputSwitch id="condensed"
                 className="ml-auto"
                 disabled={!isMaterialTheme}
@@ -191,7 +191,7 @@ export default function DialogTheme({ visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="ripple" className="text-lg">리플 효과 (Ripple Effect)</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <InputSwitch id="ripple"
                 className="ml-auto"
                 tooltip="리플 효과" tooltipOptions={{ position: 'left' }}

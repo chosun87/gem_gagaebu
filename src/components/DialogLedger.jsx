@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Dropdown, InputSwitch, Badge } from '@/assets/js/PrimeReact';
+import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Dropdown, InputSwitch, Badge, ToggleButton } from '@/assets/js/PrimeReact';
 import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
@@ -198,7 +198,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       >
         <div className="formWrap">
           <div className="formRow">
-            <div class="inputWrap">
+            <div className="inputWrap">
               <SelectButton id="gType"
                 className={"gType" + classNames({ 'p-invalid': submitted && !gType })}
                 options={Object.values(G_TYPE)}
@@ -209,7 +209,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
           <div className="formRow">
             <label htmlFor="gDate" className="required">날짜</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <PrimeCalendar id="gDate"
                 className={classNames({ 'p-invalid': submitted && !gDate })}
                 locale="ko"
@@ -234,7 +234,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
           <div className="formRow">
             <label htmlFor="gCategory" className="required">분류</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <Dropdown id="gCategory"
                 className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
                 placeholder="분류 선택"
@@ -257,7 +257,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
           <div className="formRow">
             <label htmlFor="gMemo">내용</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <InputText id="gMemo"
                 value={gMemo}
                 onChange={(e) => set_gMemo(e.target.value)}
@@ -267,7 +267,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
           <div className="formRow">
             <label htmlFor="gAcc1" className="required">{gAcc1Label}</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <Dropdown id="gAcc1"
                 className={classNames('w-full', { 'p-invalid': submitted && !gAcc1 })}
                 placeholder="자산 선택"
@@ -286,7 +286,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
           <div className={`formRow ${gType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="gAcc2" className="required">{gAcc2Label}</label>
-            <div class="inputWrap">
+            <div className="inputWrap">
               <Dropdown id="gAcc2"
                 className={classNames('w-full', { 'p-invalid': submitted && gType === '이체' && !gAcc2 })}
                 placeholder="자산 선택"
@@ -305,13 +305,27 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
           <div className="formRow">
             <label htmlFor="gAmount" className="required">금액</label>
-            <div class="inputWrap">
-              <InputNumber id="gAmount"
-                className={classNames({ 'p-invalid': submitted && (gAmount === 0 || gAmount === null) })}
-                mode="currency" currency="KRW" locale="ko-KR"
-                value={gAmount}
-                onValueChange={(e) => set_gAmount(e.target.value)}
-              />
+            <div className="inputWrap">
+              <div className="p-inputgroup w-full">
+                <ToggleButton
+                  onIcon="pi pi-minus" onLabel=""
+                  offIcon="pi pi-plus" offLabel=""
+                  tooltip="양수/음수 전환" tooltipOptions={{ position: 'top' }}
+                  checked={gAmount < 0}
+                  onChange={(e) => {
+                    set_gAmount(prev => {
+                      const val = Math.abs(prev || 0);
+                      return (e.value && val !== 0) ? -val : val;
+                    });
+                  }}
+                />
+                <InputNumber id="gAmount"
+                  className={classNames({ 'p-invalid': submitted && (gAmount === 0 || gAmount === null) })}
+                  mode="currency" currency="KRW" locale="ko-KR"
+                  value={gAmount}
+                  onValueChange={(e) => set_gAmount(e.target.value)}
+                />
+              </div>
             </div>
           </div>
         </div>
