@@ -5,6 +5,7 @@ import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
 import DialogLedger from '@/components/DialogLedger';
+import DialogAI from '@/components/DialogAI';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 import { PrimeReact_locale } from '@/assets/js/PrimeReact';
@@ -16,6 +17,7 @@ export default function MonthlyList() {
   const { yearData, loading, selectedDate, setSelectedDate, handleChange_gExecute } = useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
+  const [showDialogAI, setShowDialogAI] = useState(false);
 
   const speedDialItems = [
     {
@@ -24,7 +26,7 @@ export default function MonthlyList() {
       className: 'icon-gemini',
       tooltip: 'AI로 입력', tooltipOptions: { position: 'left' },
       command: () => {
-        alert('AI 입력 기능은 준비 중입니다.');
+        setShowDialogAI(true);
       }
     },
     {
@@ -207,6 +209,10 @@ export default function MonthlyList() {
         ledger={ledger}
         visible={showDialogLedger}
         onHide={fnHideDialogLedger}
+      />
+      <DialogAI
+        visible={showDialogAI}
+        onHide={() => setShowDialogAI(false)}
       />
     </>
   );

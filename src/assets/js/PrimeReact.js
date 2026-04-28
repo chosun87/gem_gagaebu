@@ -17,6 +17,7 @@ export { FloatLabel } from 'primereact/floatlabel';
 export { InputNumber } from 'primereact/inputnumber';
 export { InputSwitch } from 'primereact/inputswitch';
 export { InputText } from 'primereact/inputtext';
+export { InputTextarea } from 'primereact/inputtextarea';
 export { Menu } from 'primereact/menu';
 export { Message } from 'primereact/message';
 export { Panel } from 'primereact/panel';

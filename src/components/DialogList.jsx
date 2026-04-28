@@ -4,12 +4,14 @@ import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import DialogLedger from '@/components/DialogLedger';
 import LedgerSummary from '@/components/LedgerSummary';
+import DialogAI from '@/components/DialogAI';
 
 export default function DialogList({ visible, onHide, params }) {
   const { yearData, sheetYYYYData, loadSheet연도Data, loadedSheetYYYY, handleChange_gExecute } = useData();
   const { loading: dataLoading } = useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
+  const [showDialogAI, setShowDialogAI] = useState(false);
 
   // 반복 내역 전체 조회를 위한 연도별 데이터 로드
   useEffect(() => {
@@ -117,7 +119,7 @@ export default function DialogList({ visible, onHide, params }) {
           className='icon-gemini'
           tooltip="AI로 입력" tooltipOptions={{ position: 'top' }}
           icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-plus"}
-          onClick={() => alert('AI 입력 기능은 준비 중입니다.')}
+          onClick={() => setShowDialogAI(true)}
           disabled={dataLoading}
         />
       </div>
@@ -201,6 +203,10 @@ export default function DialogList({ visible, onHide, params }) {
         params={params}
         visible={showDialogLedger}
         onHide={fnHideDialogLedger}
+      />
+      <DialogAI
+        visible={showDialogAI}
+        onHide={() => setShowDialogAI(false)}
       />
     </Sidebar>
   );

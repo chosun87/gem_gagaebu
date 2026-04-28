@@ -133,6 +133,11 @@
 .p-sidebar {
   .p-sidebar-header {
     padding: var(--padding-base);
+
+    .dialog-title {
+      display: flex;
+      align-items: center;
+    }
   }
 
   .p-sidebar-content {
