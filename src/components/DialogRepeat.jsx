@@ -262,9 +262,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpDateS" className="required">기간</label>
-            <div class="inputWrap gap-2">
+            <div class="inputWrap flex-nowrap gap-1">
               <PrimeCalendar id="rpDateS"
-                className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
+                className={classNames({ 'p-invalid': submitted && !rpDateS })}
                 locale="ko"
                 dateFormat={dateSFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
                 value={rpDateS}
@@ -274,7 +274,6 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
               />
               <span>~</span>
               <PrimeCalendar id="rpDateE"
-                className="flex-grow-1"
                 locale="ko"
                 dateFormat={dateEFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
                 value={rpDateE}
@@ -287,7 +286,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpPeriod" className="required">반복 주기</label>
-            <div class="inputWrap">
+            <div class="inputWrap gap-2">
               <SelectButton id="rpPeriod"
                 className={classNames({ 'p-invalid': submitted && !rpPeriod })}
                 options={periodOptions}
@@ -302,7 +301,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                 }}
               />
               <Dropdown id="rpDay"
-                className={classNames('ml-3 w-4', { 'p-invalid': submitted && (rpDay === null || rpDay === '') })}
+                className={classNames('w-4', { 'p-invalid': submitted && (rpDay === null || rpDay === '') })}
                 placeholder={rpPeriod === 'W' ? "요일 선택" : "날짜 선택"}
                 options={rpPeriod === 'W' ? weekDays : monthDays}
                 value={rpDay}
@@ -317,13 +316,13 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
               <Dropdown id="rpCategory"
                 className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
                 placeholder="분류 선택"
-                options={categoryOptions.find(node => node.key === rpType)?.children || []}
+                options={categoryOptions.find(node => node.cdGroup === rpType)?.children || []}
                 optionLabel="cdLabel"
                 optionValue="cd"
                 value={rpCategory}
                 onChange={(e) => {
                   set_rpCategory(e.value);
-                  const selectedCategory = categoryOptions.find(node => node.key === rpType)?.children.find(c => c.cd === e.value);
+                  const selectedCategory = categoryOptions.find(node => node.cdGroup === rpType)?.children.find(c => c.cd === e.value);
                   if (selectedCategory?.cdDefaultAcc1) {
                     set_rpAcc1(selectedCategory.cdDefaultAcc1);
                   }
@@ -396,9 +395,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpTotalAmount">총 금액</label>
-            <div className="inputWrap gap-2">
+            <div className="inputWrap flex-nowrap gap-2">
               <InputNumber id="rpTotalAmount"
-                className="flex-grow-1"
+                className="w-full"
                 mode="currency" currency="KRW" locale="ko-KR"
                 placeholder="전체 계약 금액 또는 목표 금액"
                 value={rpTotalAmount}

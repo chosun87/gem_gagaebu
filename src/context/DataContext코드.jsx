@@ -37,19 +37,19 @@ export const CodeProvider = ({ children }) => {
             cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
           });
         } else if (['지출', '이체', '수입'].includes(group) || group.includes('분류')) {
-          const categoryKey = group.replace('분류', '');
-          if (!categoryCds[categoryKey]) {
-            categoryCds[categoryKey] = {
-              key: categoryKey,
-              label: group,
+          const cdGroup = group.replace('분류', '');
+          if (!categoryCds[cdGroup]) {
+            categoryCds[cdGroup] = {
+              cdGroup: cdGroup,
+              label: cdGroup,
               selectable: false,
               children: []
             };
           }
-          categoryCds[categoryKey].children.push({
+          categoryCds[cdGroup].children.push({
             cd: row[SHEET_COL_INDEX.CODE.cd],
             cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
-            cdIcon: row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag',
+            cdIcon: (row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag') + ` gType-${cdGroup}`,
             cdDefaultAcc1: row[SHEET_COL_INDEX.CODE.cdDefaultAcc1] || ''
           });
         }

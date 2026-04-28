@@ -7,7 +7,7 @@ import { Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/assets
 import dayjs from 'dayjs';
 import MonthlySummaryChart from '@/components/MonthlySummaryChart';
 
-const MONTH_LENGTH = 3;
+const MONTH_LENGTH = 6;
 
 export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   const { yearData } = useData();
@@ -17,7 +17,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   const summaryData = useMemo(() => {
     const months = [];
     // 선택된 달을 포함한 최근 3개월 계산
-    for (let i = monthLength - 1; i >= 0; i--) {
+    for (let i = monthLength + 1; i >= 0; i--) {
       months.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
     }
 
@@ -82,7 +82,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
       />
 
       <section className="panel-body">
-        <h3 className="text-center">최근 3개월 비교</h3>
+        <h3 className="text-center">최근 {summaryData.months.length}개월 비교</h3>
 
         <MonthlySummaryChart
           months={summaryData.months}

@@ -219,15 +219,16 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                 onFocus={() => setDateFocused(true)}
                 onBlur={() => setDateFocused(false)}
               />
-
-              <Badge severity={gExecuted ? 'info' : 'secondary'}
-                className="ml-auto mr-2 text-base"
-                value={gExecuted ? '실행 완료' : '실행 전'}
-              />
-              <InputSwitch id="gExecuted"
-                checked={gExecuted} trueValue={false} falseValue={true}
-                onChange={(e) => set_gExecuted(e.value)}
-              />
+              <div class="flex flex-nowrap ml-auto">
+                <Badge severity={gExecuted ? 'info' : 'secondary'}
+                  className="mr-2 text-base"
+                  value={gExecuted ? '실행 완료' : '실행 전'}
+                />
+                <InputSwitch id="gExecuted"
+                  checked={gExecuted} trueValue={false} falseValue={true}
+                  onChange={(e) => set_gExecuted(e.value)}
+                />
+              </div>
             </div>
           </div>
 
@@ -239,13 +240,13 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                 placeholder="분류 선택"
                 itemTemplate={categoryItemTemplate}
                 valueTemplate={categoryValueTemplate}
-                options={categoryOptions.find(node => node.key === gType)?.children || []}
+                options={categoryOptions.find(node => node.cdGroup === gType)?.children || []}
                 optionLabel="cdLabel"
                 optionValue="cd"
                 value={gCategory}
                 onChange={(e) => {
                   set_gCategory(e.value);
-                  const selectedCategory = categoryOptions.find(node => node.key === gType)?.children.find(c => c.cd === e.value);
+                  const selectedCategory = categoryOptions.find(node => node.cdGroup === gType)?.children.find(c => c.cd === e.value);
                   if (selectedCategory?.cdDefaultAcc1) {
                     set_gAcc1(selectedCategory.cdDefaultAcc1);
                   }
