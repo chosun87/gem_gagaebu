@@ -180,7 +180,7 @@ export default function Calendar() {
 
   const formatCompactAmount = (amount) => {
     if (!amount) return '0';
-    if (Math.abs(amount) >= 10000000) {
+    if (Math.abs(amount) >= 1000000) {
       return Math.trunc(amount / 10000).toLocaleString() + '만';
     }
     return amount.toLocaleString();
