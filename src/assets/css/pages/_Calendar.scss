@@ -29,7 +29,7 @@
     }
 
     .fc-col-header-cell-cushion {
-      padding: 8px 4px;
+      padding: 0.5rem 0.25rem;
     }
 
     .fc-daygrid-body {
@@ -46,10 +46,10 @@
             width: 100%;
 
             .fc-daygrid-day-number {
-              padding: 4px 0;
+              padding: 0.25rem 0;
 
               .custom-day-content {
-                padding-left: 4px;
+                padding-left: 0.25rem;
                 align-items: flex-start;
               }
             }
@@ -64,7 +64,7 @@
       align-items: flex-end;
       width: 100%;
       height: 100%;
-      padding: 2px;
+      padding: 0.125rem;
 
       .day-number {
         width: 100%;

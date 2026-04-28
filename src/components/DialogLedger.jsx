@@ -197,107 +197,121 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
         footerTemplate={templateFooter}
       >
         <div className="formWrap">
-          <div className="inputWrap">
-            <SelectButton id="gType"
-              className={"gType" + classNames({ 'p-invalid': submitted && !gType })}
-              options={Object.values(G_TYPE)}
-              value={gType} onChange={(e) => set_gType(e.target.value)}
-            />
+          <div className="formRow">
+            <div class="inputWrap">
+              <SelectButton id="gType"
+                className={"gType" + classNames({ 'p-invalid': submitted && !gType })}
+                options={Object.values(G_TYPE)}
+                value={gType} onChange={(e) => set_gType(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="gDate" className="required">날짜</label>
-            <PrimeCalendar id="gDate"
-              className={classNames({ 'p-invalid': submitted && !gDate })}
-              locale="ko"
-              dateFormat={dateFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
-              value={gDate}
-              onChange={(e) => set_gDate(e.target.value)}
-              onFocus={() => setDateFocused(true)}
-              onBlur={() => setDateFocused(false)}
-            />
+            <div class="inputWrap">
+              <PrimeCalendar id="gDate"
+                className={classNames({ 'p-invalid': submitted && !gDate })}
+                locale="ko"
+                dateFormat={dateFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
+                value={gDate}
+                onChange={(e) => set_gDate(e.target.value)}
+                onFocus={() => setDateFocused(true)}
+                onBlur={() => setDateFocused(false)}
+              />
 
-            <Badge severity={gExecuted ? 'info' : 'secondary'}
-              className="ml-auto mr-2 text-base"
-              value={gExecuted ? '실행 완료' : '실행 전'}
-            />
-            <InputSwitch id="gExecuted"
-              checked={gExecuted} trueValue={false} falseValue={true}
-              onChange={(e) => set_gExecuted(e.value)}
-            />
+              <Badge severity={gExecuted ? 'info' : 'secondary'}
+                className="ml-auto mr-2 text-base"
+                value={gExecuted ? '실행 완료' : '실행 전'}
+              />
+              <InputSwitch id="gExecuted"
+                checked={gExecuted} trueValue={false} falseValue={true}
+                onChange={(e) => set_gExecuted(e.value)}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="gCategory" className="required">분류</label>
-            <Dropdown id="gCategory"
-              className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
-              placeholder="분류 선택"
-              options={categoryOptions.find(node => node.key === gType)?.children || []}
-              optionLabel="cdLabel"
-              optionValue="cd"
-              value={gCategory}
-              onChange={(e) => {
-                set_gCategory(e.value);
-                const selectedCategory = categoryOptions.find(node => node.key === gType)?.children.find(c => c.cd === e.value);
-                if (selectedCategory?.cdDefaultAcc1) {
-                  set_gAcc1(selectedCategory.cdDefaultAcc1);
-                }
-              }}
-              itemTemplate={categoryItemTemplate}
-              valueTemplate={categoryValueTemplate}
-            />
+            <div class="inputWrap">
+              <Dropdown id="gCategory"
+                className={classNames('w-full', { 'p-invalid': submitted && !gCategory })}
+                placeholder="분류 선택"
+                itemTemplate={categoryItemTemplate}
+                valueTemplate={categoryValueTemplate}
+                options={categoryOptions.find(node => node.key === gType)?.children || []}
+                optionLabel="cdLabel"
+                optionValue="cd"
+                value={gCategory}
+                onChange={(e) => {
+                  set_gCategory(e.value);
+                  const selectedCategory = categoryOptions.find(node => node.key === gType)?.children.find(c => c.cd === e.value);
+                  if (selectedCategory?.cdDefaultAcc1) {
+                    set_gAcc1(selectedCategory.cdDefaultAcc1);
+                  }
+                }}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="gMemo">내용</label>
-            <InputText id="gMemo"
-              value={gMemo}
-              onChange={(e) => set_gMemo(e.target.value)}
-            />
+            <div class="inputWrap">
+              <InputText id="gMemo"
+                value={gMemo}
+                onChange={(e) => set_gMemo(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="gAcc1" className="required">{gAcc1Label}</label>
-            <Dropdown id="gAcc1"
-              className={classNames('w-full', { 'p-invalid': submitted && !gAcc1 })}
-              placeholder="자산 선택"
-              options={assetNodes}
-              optionLabel="accLabel"
-              optionValue="accCode"
-              optionGroupLabel="accType"
-              optionGroupChildren="children"
-              value={gAcc1}
-              onChange={(e) => set_gAcc1(e.value)}
-              itemTemplate={assetItemTemplate}
-              valueTemplate={assetValueTemplate}
-            />
+            <div class="inputWrap">
+              <Dropdown id="gAcc1"
+                className={classNames('w-full', { 'p-invalid': submitted && !gAcc1 })}
+                placeholder="자산 선택"
+                options={assetNodes}
+                optionLabel="accLabel"
+                optionValue="accCode"
+                optionGroupLabel="accType"
+                optionGroupChildren="children"
+                value={gAcc1}
+                onChange={(e) => set_gAcc1(e.value)}
+                itemTemplate={assetItemTemplate}
+                valueTemplate={assetValueTemplate}
+              />
+            </div>
           </div>
 
-          <div className={`inputWrap ${gType !== '이체' ? 'hidden' : ''}`}>
+          <div className={`formRow ${gType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="gAcc2" className="required">{gAcc2Label}</label>
-            <Dropdown id="gAcc2"
-              className={classNames('w-full', { 'p-invalid': submitted && gType === '이체' && !gAcc2 })}
-              placeholder="자산 선택"
-              options={assetNodes}
-              optionLabel="accLabel"
-              optionValue="accCode"
-              optionGroupLabel="accType"
-              optionGroupChildren="children"
-              value={gAcc2}
-              onChange={(e) => set_gAcc2(e.value)}
-              itemTemplate={assetItemTemplate}
-              valueTemplate={assetValueTemplate}
-            />
+            <div class="inputWrap">
+              <Dropdown id="gAcc2"
+                className={classNames('w-full', { 'p-invalid': submitted && gType === '이체' && !gAcc2 })}
+                placeholder="자산 선택"
+                options={assetNodes}
+                optionLabel="accLabel"
+                optionValue="accCode"
+                optionGroupLabel="accType"
+                optionGroupChildren="children"
+                value={gAcc2}
+                onChange={(e) => set_gAcc2(e.value)}
+                itemTemplate={assetItemTemplate}
+                valueTemplate={assetValueTemplate}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="gAmount" className="required">금액</label>
-            <InputNumber id="gAmount"
-              mode="currency" currency="KRW" locale="ko-KR"
-              value={gAmount}
-              onValueChange={(e) => set_gAmount(e.target.value)}
-              className={classNames({ 'p-invalid': submitted && (gAmount === 0 || gAmount === null) })}
-            />
+            <div class="inputWrap">
+              <InputNumber id="gAmount"
+                className={classNames({ 'p-invalid': submitted && (gAmount === 0 || gAmount === null) })}
+                mode="currency" currency="KRW" locale="ko-KR"
+                value={gAmount}
+                onValueChange={(e) => set_gAmount(e.target.value)}
+              />
+            </div>
           </div>
         </div>
       </Panel>

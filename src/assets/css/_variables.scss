@@ -24,8 +24,8 @@
   --footer-height: 4.5rem;
 
   // 너비
-  --sidebar-width: 300px;
-  --content-max-width: 1200px;
+  // --sidebar-width: 300px;
+  // --content-max-width: 1200px;
 
   // 색상
   --color-수입: var(--blue-500);
@@ -68,17 +68,17 @@
 // $dark-color: #343a40;
 
 // 폰트
-$font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+$font-family: var(--font-family);
 
 // 화면 크기
-$screen-md: 768px;
+$screen-md: var(--screen-md);
 
 // 높이
-$header-height: 55px;
-$footer-height: 4rem;
+$header-height: var(--header-height);
+$footer-height: var(--footer-height);
 
 // 너비
-$sidebar-width: 20rem;
+// $sidebar-width: var(--sidebar-width);
 
 // z-index
 

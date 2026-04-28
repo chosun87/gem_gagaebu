@@ -106,13 +106,13 @@ export default function DialogTheme({ visible, onHide }) {
         <div className="formWrap">
           <Divider />
 
-          <div className="inputWrap" style={{ gap: '3rem' }}>
-            <label htmlFor="inputStyle" className="text-lg">글씨 크기 ({scale}px)</label>
-            <div className="flex align-items-center gap-3">
-              <Button icon="pi pi-minus" className="p-button-text p-button-rounded w-2rem h-2rem" disabled={scale === 12}
+          <div className="formRow">
+            <label htmlFor="inputStyle" className="text-lg">글씨 크기<br></br>({scale}px)</label>
+            <div className="inputWrap gap-2">
+              <Button icon="pi pi-minus" className="p-button-text p-button-rounded w-2rem h-2rem ml-auto" disabled={scale === 12}
                 onClick={() => onScaleChange('minus')}
               />
-              <div className="flex align-items-center gap-2 flex-grow-1">
+              <div className="flex align-items-center gap-2">
                 {SCALES.map((s) => (
                   <i key={s} className={`${s == scale ? 'pi pi-circle-fill text-primary' : 'pi pi-circle text-200'} text-normal transition-duration-200`} />
                 ))}
@@ -125,61 +125,93 @@ export default function DialogTheme({ visible, onHide }) {
 
           <Divider />
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="theme" className="text-lg mb-2">테마</label>
-            <TreeSelect id="theme"
-              className="themeSelector w-full"
-              placeholder="테마를 선택하세요"
-              display="comma"
-              selectionMode="single"
-              options={THEME_NODES}
-              value={theme}
-              nodeTemplate={templateTreeSelectNode}
-              valueTemplate={() => templateSelectedTheme(theme)}
-              onChange={(e) => {
-                let newTheme = e.value;
-                if (newTheme.includes('{MODE}')) {
-                  newTheme = newTheme.replace('{MODE}', isDarkMode ? 'dark' : 'light');
-                }
-                changeTheme(newTheme);
-              }}
-            />
-            {/* expandedKeys={expandedKeysTheme}
-              onToggle={(e) => setExpandedKeysTheme(e.value)} */}
+            <div class="inputWrap">
+              <TreeSelect id="theme"
+                className="themeSelector w-full"
+                placeholder="테마를 선택하세요"
+                display="comma"
+                selectionMode="single"
+                options={THEME_NODES}
+                value={theme}
+                nodeTemplate={templateTreeSelectNode}
+                valueTemplate={() => templateSelectedTheme(theme)}
+                onChange={(e) => {
+                  let newTheme = e.value;
+                  if (newTheme.includes('{MODE}')) {
+                    newTheme = newTheme.replace('{MODE}', isDarkMode ? 'dark' : 'light');
+                  }
+                  changeTheme(newTheme);
+                }}
+              />
+              {/* expandedKeys={expandedKeysTheme}
+                onToggle={(e) => setExpandedKeysTheme(e.value)} */}
+            </div>
           </div>
 
           <Divider />
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="darkmode" className={!supportsDarkMode ? 'text-lg opacity-50' : 'text-lg'}>
               다크 모드 (Dark Mode)
             </label>
-            <InputSwitch id="darkmode"
-              className="ml-auto"
-              disabled={!supportsDarkMode}
-              tooltip="다크 모드" tooltipOptions={{ position: 'left' }}
-              checked={isDarkMode} onChange={onDarkModeToggle} />
+            <div class="inputWrap">
+              <InputSwitch id="darkmode"
+                className="ml-auto"
+                disabled={!supportsDarkMode}
+                tooltip="다크 모드" tooltipOptions={{ position: 'left' }}
+                checked={isDarkMode} onChange={onDarkModeToggle}
+              />
+            </div>
           </div>
 
           <Divider />
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="condensed" className={!isMaterialTheme ? 'text-lg opacity-50' : 'text-lg'}>
               Condensed (Material 테마 전용)
             </label>
-            <InputSwitch id="condensed"
-              className="ml-auto"
-              disabled={!isMaterialTheme}
-              tooltip="Material 테마 전용 압축 레이아웃" tooltipOptions={{ position: 'left' }}
-              checked={condensed} onChange={(e) => set_condensed(e.value)}
-            />
+            <div class="inputWrap">
+              <InputSwitch id="condensed"
+                className="ml-auto"
+                disabled={!isMaterialTheme}
+                tooltip="Material 테마 전용 압축 레이아웃" tooltipOptions={{ position: 'left' }}
+                checked={condensed} onChange={(e) => set_condensed(e.value)}
+              />
+            </div>
           </div>
 
           <Divider />
 
-          <div className="inputWrap" style={{ flexDirection: 'column', alignItems: 'flex-start' }}>
-            <label className="text-lg mb-2">Chart 컬러</label>
-            <div className="flex flex-wrap gap-2">
+          <div className="formRow" style={{ gap: '3rem' }}>
+            <label htmlFor="inputStyle" className="text-lg">입력 스타일</label>
+            <div className="inputWrap gap-2">
+              <SelectButton id="inputStyle"
+                value={inputStyle}
+                onChange={(e) => set_inputStyle(e.value)}
+                options={INPUT_STYLE_OPTIONS}
+              />
+            </div>
+          </div>
+
+          <Divider />
+
+          <div className="formRow">
+            <label htmlFor="ripple" className="text-lg">리플 효과 (Ripple Effect)</label>
+            <div class="inputWrap">
+              <InputSwitch id="ripple"
+                className="ml-auto"
+                tooltip="리플 효과" tooltipOptions={{ position: 'left' }}
+                checked={ripple} onChange={(e) => set_ripple(e.value)} />
+            </div>
+          </div>
+
+          <Divider />
+
+          <div className="formRow" style={{ alignItems: 'flex-start' }}>
+            <label className="text-lg">Chart<br></br>컬러</label>
+            <div className="inputWrap gap-2">
               {[
                 { name: 'blue', color: 'var(--blue-500)' },
                 { name: 'green', color: 'var(--green-500)' },
@@ -204,27 +236,6 @@ export default function DialogTheme({ visible, onHide }) {
                 />
               ))}
             </div>
-          </div>
-
-          <Divider />
-
-          <div className="inputWrap" style={{ gap: '3rem' }}>
-            <label htmlFor="inputStyle" className="text-lg">입력 스타일</label>
-            <SelectButton id="inputStyle"
-              value={inputStyle}
-              onChange={(e) => set_inputStyle(e.value)}
-              options={INPUT_STYLE_OPTIONS}
-            />
-          </div>
-
-          <Divider />
-
-          <div className="inputWrap">
-            <label htmlFor="ripple" className="text-lg">리플 효과 (Ripple Effect)</label>
-            <InputSwitch id="ripple"
-              className="ml-auto"
-              tooltip="리플 효과" tooltipOptions={{ position: 'left' }}
-              checked={ripple} onChange={(e) => set_ripple(e.value)} />
           </div>
         </div>
       </Panel>

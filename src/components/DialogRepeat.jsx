@@ -249,18 +249,20 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
         footerTemplate={templateFooter}
       >
         <div className="formWrap">
-          <div className="inputWrap">
-            <SelectButton id="rpType" size="large"
-              className={"gType" + classNames({ 'p-invalid': submitted && !rpType })}
-              options={Object.values(RP_TYPE)}
-              value={rpType}
-              onChange={(e) => set_rpType(e.target.value)}
-            />
+          <div className="formRow">
+            <div class="inputWrap">
+              <SelectButton id="rpType" size="large"
+                className={"gType" + classNames({ 'p-invalid': submitted && !rpType })}
+                options={Object.values(RP_TYPE)}
+                value={rpType}
+                onChange={(e) => set_rpType(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="rpDateS" className="required">기간</label>
-            <div className="flex align-items-center column-gap-2">
+            <div class="inputWrap gap-2">
               <PrimeCalendar id="rpDateS"
                 className={classNames('flex-grow-1', { 'p-invalid': submitted && !rpDateS })}
                 locale="ko"
@@ -283,105 +285,118 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="rpPeriod" className="required">반복 주기</label>
-            <SelectButton id="rpPeriod"
-              className={classNames('w-full', { 'p-invalid': submitted && !rpPeriod })}
-              options={periodOptions}
-              optionLabel="cdLabel"
-              optionValue="cd"
-              value={rpPeriod}
-              onChange={(e) => {
-                set_rpPeriod(e.value);
-                // 주기가 변경되면 반복일 초기화 (센스있게 1일 또는 월요일로)
-                if (e.value === 'M') set_rpDay('1');
-                else if (e.value === 'W') set_rpDay('월');
-              }}
-            />
-            <Dropdown id="rpDay"
-              className={classNames('ml-3 w-5', { 'p-invalid': submitted && (rpDay === null || rpDay === '') })}
-              options={rpPeriod === 'W' ? weekDays : monthDays}
-              value={rpDay}
-              onChange={(e) => set_rpDay(e.value)}
-              placeholder={rpPeriod === 'W' ? "요일 선택" : "날짜 선택"}
-            />
+            <div class="inputWrap">
+              <SelectButton id="rpPeriod"
+                className={classNames({ 'p-invalid': submitted && !rpPeriod })}
+                options={periodOptions}
+                optionLabel="cdLabel"
+                optionValue="cd"
+                value={rpPeriod}
+                onChange={(e) => {
+                  set_rpPeriod(e.value);
+                  // 주기가 변경되면 반복일 초기화 (센스있게 1일 또는 월요일로)
+                  if (e.value === 'M') set_rpDay('1');
+                  else if (e.value === 'W') set_rpDay('월');
+                }}
+              />
+              <Dropdown id="rpDay"
+                className={classNames('ml-3 w-4', { 'p-invalid': submitted && (rpDay === null || rpDay === '') })}
+                placeholder={rpPeriod === 'W' ? "요일 선택" : "날짜 선택"}
+                options={rpPeriod === 'W' ? weekDays : monthDays}
+                value={rpDay}
+                onChange={(e) => set_rpDay(e.value)}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="rpCategory" className="required">분류</label>
-            <Dropdown id="rpCategory"
-              className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
-              placeholder="분류 선택"
-              options={categoryOptions.find(node => node.key === rpType)?.children || []}
-              optionLabel="cdLabel"
-              optionValue="cd"
-              value={rpCategory}
-              onChange={(e) => {
-                set_rpCategory(e.value);
-                const selectedCategory = categoryOptions.find(node => node.key === rpType)?.children.find(c => c.cd === e.value);
-                if (selectedCategory?.cdDefaultAcc1) {
-                  set_rpAcc1(selectedCategory.cdDefaultAcc1);
-                }
-              }}
-              itemTemplate={categoryItemTemplate}
-              valueTemplate={categoryValueTemplate}
-            />
+            <div class="inputWrap">
+              <Dropdown id="rpCategory"
+                className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
+                placeholder="분류 선택"
+                options={categoryOptions.find(node => node.key === rpType)?.children || []}
+                optionLabel="cdLabel"
+                optionValue="cd"
+                value={rpCategory}
+                onChange={(e) => {
+                  set_rpCategory(e.value);
+                  const selectedCategory = categoryOptions.find(node => node.key === rpType)?.children.find(c => c.cd === e.value);
+                  if (selectedCategory?.cdDefaultAcc1) {
+                    set_rpAcc1(selectedCategory.cdDefaultAcc1);
+                  }
+                }}
+                itemTemplate={categoryItemTemplate}
+                valueTemplate={categoryValueTemplate}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="rpMemo">내용</label>
-            <InputText id="rpMemo"
-              value={rpMemo}
-              onChange={(e) => set_rpMemo(e.target.value)}
-            />
+            <div class="inputWrap">
+              <InputText id="rpMemo"
+                value={rpMemo}
+                onChange={(e) => set_rpMemo(e.target.value)}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="rpAcc1" className="required">{rpAcc1Label}</label>
-            <Dropdown id="rpAcc1"
-              className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
-              placeholder="자산 선택"
-              options={assetNodes}
-              optionLabel="accLabel"
-              optionValue="accCode"
-              optionGroupLabel="accType"
-              optionGroupChildren="children"
-              value={rpAcc1}
-              onChange={(e) => set_rpAcc1(e.value)}
-              itemTemplate={assetItemTemplate}
-              valueTemplate={assetValueTemplate}
-            />
+            <div class="inputWrap">
+              <Dropdown id="rpAcc1"
+                className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
+                placeholder="자산 선택"
+                options={assetNodes}
+                optionLabel="accLabel"
+                optionValue="accCode"
+                optionGroupLabel="accType"
+                optionGroupChildren="children"
+                value={rpAcc1}
+                onChange={(e) => set_rpAcc1(e.value)}
+                itemTemplate={assetItemTemplate}
+                valueTemplate={assetValueTemplate}
+              />
+            </div>
           </div>
 
-          <div className={`inputWrap ${rpType !== '이체' ? 'hidden' : ''}`}>
+          <div className={`formRow ${rpType !== '이체' ? 'hidden' : ''}`}>
             <label htmlFor="rpAcc2" className="required">{rpAcc2Label}</label>
-            <Dropdown id="rpAcc2"
-              className={classNames('w-full', { 'p-invalid': submitted && rpType === '이체' && !rpAcc2 })}
-              placeholder="자산 선택"
-              options={assetNodes}
-              optionLabel="accLabel"
-              optionValue="accCode"
-              optionGroupLabel="accType"
-              optionGroupChildren="children"
-              value={rpAcc2}
-              onChange={(e) => set_rpAcc2(e.value)}
-              itemTemplate={assetItemTemplate}
-              valueTemplate={assetValueTemplate}
-            />
+            <div class="inputWrap">
+              <Dropdown id="rpAcc2"
+                className={classNames('w-full', { 'p-invalid': submitted && rpType === '이체' && !rpAcc2 })}
+                placeholder="자산 선택"
+                options={assetNodes}
+                optionLabel="accLabel"
+                optionValue="accCode"
+                optionGroupLabel="accType"
+                optionGroupChildren="children"
+                value={rpAcc2}
+                onChange={(e) => set_rpAcc2(e.value)}
+                itemTemplate={assetItemTemplate}
+                valueTemplate={assetValueTemplate}
+              />
+            </div>
           </div>
 
-          <div className="inputWrap">
+          <div className="formRow">
             <label htmlFor="rpAmount" className="required">회당 금액</label>
-            <InputNumber id="rpAmount"
-              className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
-              mode="currency" currency="KRW" locale="ko-KR"
-              value={rpAmount}
-              onValueChange={(e) => set_rpAmount(e.target.value)}
-            />
+            <div class="inputWrap">
+              <InputNumber id="rpAmount"
+                className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
+                mode="currency" currency="KRW" locale="ko-KR"
+                value={rpAmount}
+                onValueChange={(e) => set_rpAmount(e.target.value)}
+              />
+            </div>
           </div>
-          <div className="inputWrap">
+
+          <div className="formRow">
             <label htmlFor="rpTotalAmount">총 금액</label>
-            <div className="flex align-items-center gap-2 w-full">
+            <div className="inputWrap gap-2">
               <InputNumber id="rpTotalAmount"
                 className="flex-grow-1"
                 mode="currency" currency="KRW" locale="ko-KR"

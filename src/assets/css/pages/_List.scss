@@ -22,7 +22,7 @@
       // padding: var(--padding-base) 0;
 
       .p-grid {
-        gap: 10px;
+        gap: calc(var(--padding-base) / 2);
       }
     }
   }
@@ -30,9 +30,9 @@
   .list-item {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px;
-    border-radius: 0.5rem;
+    gap: calc(var(--padding-base) / 2);
+    padding: calc(var(--padding-base) / 2);
+    border-radius: calc(var(--padding-base) / 2);
 
     .flex {
       flex-wrap: wrap;
