@@ -178,6 +178,14 @@ export default function Calendar() {
     );
   };
 
+  const formatCompactAmount = (amount) => {
+    if (!amount) return '0';
+    if (Math.abs(amount) >= 10000000) {
+      return Math.trunc(amount / 10000).toLocaleString() + '만';
+    }
+    return amount.toLocaleString();
+  };
+
   const templateDayCell = (arg) => {
     const day = arg.date.getDate();
 
@@ -205,9 +213,9 @@ export default function Calendar() {
           <div className="daily-totals monospace text-xs">
             {/* {(data?.income1 || data?.expense1 || data?.transfer1) &&
               <> */}
-            <div className="total-income">{(data?.income1 || 0).toLocaleString()}</div>
-            <div className="total-expense">{(data?.expense1 || 0).toLocaleString()}</div>
-            <div className="total-transfer">{(data?.transfer1 || 0).toLocaleString()}</div>
+            <div className="total-income">{formatCompactAmount(data?.income1)}</div>
+            <div className="total-expense">{formatCompactAmount(data?.expense1)}</div>
+            <div className="total-transfer">{formatCompactAmount(data?.transfer1)}</div>
             {/* </>
             } */}
           </div>
