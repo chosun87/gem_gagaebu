@@ -1,7 +1,7 @@
 import { Chart as ChartJS, registerables } from 'chart.js';
 ChartJS.register(...registerables);
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useData } from '@/context/DataContext';
 import { Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
@@ -10,23 +10,50 @@ import MonthlySummaryChart from '@/components/MonthlySummaryChart';
 const MONTH_LENGTH = 6;
 
 export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
-  const { yearData } = useData();
+  const { sheetYYYYData, loadedSheetYYYY, loadSheet연도Data } = useData();
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const fetchingYears = useRef(new Set());
+
+  const months = useMemo(() => {
+    const arr = [];
+    for (let i = monthLength + 1; i >= 0; i--) {
+      arr.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
+    }
+    return arr;
+  }, [selectedDate, monthLength]);
+
+  const requiredYears = useMemo(() => {
+    const years = new Set();
+    months.forEach(m => years.add(m.split('-')[0]));
+    return Array.from(years);
+  }, [months]);
+
+  useEffect(() => {
+    requiredYears.forEach(year => {
+      if (!loadedSheetYYYY[year] && !fetchingYears.current.has(year)) {
+        fetchingYears.current.add(year);
+        loadSheet연도Data(year).finally(() => {
+          fetchingYears.current.delete(year);
+        });
+      }
+    });
+  }, [requiredYears, loadedSheetYYYY, loadSheet연도Data]);
 
   // 데이터 가공 ---------------------------------------------------------------------------------------
   const summaryData = useMemo(() => {
-    const months = [];
-    // 선택된 달을 포함한 최근 3개월 계산
-    for (let i = monthLength + 1; i >= 0; i--) {
-      months.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
-    }
-
     const rawData = {};
     months.forEach(m => {
       rawData[m] = { month: m, 수입: 0, 지출: 0, 이체: 0 };
     });
 
-    (yearData || []).forEach(item => {
+    const allData = [];
+    requiredYears.forEach(year => {
+      if (sheetYYYYData[year]) {
+        allData.push(...sheetYYYYData[year]);
+      }
+    });
+
+    allData.forEach(item => {
       if (item.gDeleted) return;
       const m = dayjs(item.gDate).format('YYYY-MM');
       if (rawData[m]) {
@@ -41,7 +68,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
     }));
 
     return { months, tableData, rawData };
-  }, [yearData, selectedDate]);
+  }, [sheetYYYYData, months, requiredYears]);
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   // 월 변경
