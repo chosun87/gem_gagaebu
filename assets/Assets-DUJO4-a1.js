@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-DAs1UGHr.js";var t=e();function n(){return(0,t.jsxs)(`div`,{className:`app-page assets-page`,children:[(0,t.jsx)(`h2`,{className:`app-page-title text-3xl`,children:`자산`}),(0,t.jsx)(`p`,{children:`자산 화면입니다.`})]})}export{n as default};
