@@ -1,10 +1,10 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
 import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message, ProgressSpinner } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
-import DialogLedger from '@/components/DialogLedger';
+const DialogLedger = lazy(() => import('@/components/DialogLedger'));
 import LedgerSummary from '@/components/LedgerSummary';
-import DialogAI from '@/components/DialogAI';
+const DialogAI = lazy(() => import('@/components/DialogAI'));
 
 export default function DialogList({ visible, onHide, params }) {
   const { yearData, sheetYYYYData, loadSheet연도Data, loadedSheetYYYY, handleChange_gExecute } = useData();
@@ -198,16 +198,20 @@ export default function DialogList({ visible, onHide, params }) {
       </Panel>
 
       {/* 내역 수정용 다이얼로그 */}
-      <DialogLedger
-        ledger={ledger}
-        params={params}
-        visible={showDialogLedger}
-        onHide={fnHideDialogLedger}
-      />
-      <DialogAI
-        visible={showDialogAI}
-        onHide={() => setShowDialogAI(false)}
-      />
+      <Suspense fallback={null}>
+        <DialogLedger
+          ledger={ledger}
+          params={params}
+          visible={showDialogLedger}
+          onHide={fnHideDialogLedger}
+        />
+      </Suspense>
+      <Suspense fallback={null}>
+        <DialogAI
+          visible={showDialogAI}
+          onHide={() => setShowDialogAI(false)}
+        />
+      </Suspense>
     </Sidebar>
   );
 }
