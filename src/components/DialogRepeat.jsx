@@ -262,7 +262,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpDateS" className="required">기간</label>
-            <div class="inputWrap flex-nowrap gap-1">
+            <div className="inputWrap flex-nowrap gap-1">
               <PrimeCalendar id="rpDateS"
                 className={classNames({ 'p-invalid': submitted && !rpDateS })}
                 locale="ko"
@@ -286,7 +286,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
           <div className="formRow">
             <label htmlFor="rpPeriod" className="required">반복 주기</label>
-            <div class="inputWrap gap-2">
+            <div className="inputWrap gap-2">
               <SelectButton id="rpPeriod"
                 className={classNames({ 'p-invalid': submitted && !rpPeriod })}
                 options={periodOptions}

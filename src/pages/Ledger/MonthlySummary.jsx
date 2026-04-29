@@ -3,6 +3,7 @@ ChartJS.register(...registerables);
 
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useData } from '@/context/DataContext';
+import { useMonthSync } from '@/hooks/useMonthSync';
 import { Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 import MonthlySummaryChart from '@/components/MonthlySummaryChart';
@@ -10,8 +11,8 @@ import MonthlySummaryChart from '@/components/MonthlySummaryChart';
 const MONTH_LENGTH = 6;
 
 export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
-  const { sheetYYYYData, loadedSheetYYYY, loadSheet연도Data } = useData();
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { sheetYYYYData, loadedSheetYYYY, loadSheet연도Data, selectedDate } = useData();
+  const { handleMonthChange, handleViewDateChange } = useMonthSync('/ledger/monthlySummary');
   const fetchingYears = useRef(new Set());
 
   const months = useMemo(() => {
@@ -71,16 +72,6 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   }, [sheetYYYYData, months, requiredYears]);
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-  // 월 변경
-  const handleMonthChange = (e) => {
-    const newDate = new Date(e.year, e.month - 1, 1);
-    setSelectedDate(newDate);
-  }
-
-  // yearNavigator monthNavigator에 의한 월 변경
-  const handleViewDateChange = (e) => {
-    setSelectedDate(e.value);
-  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // 금액 포맷팅 템플릿

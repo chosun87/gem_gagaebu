@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Card, Message, Tag } from '@/assets/js/PrimeReact';
+import { Card, Message, Tag, ProgressSpinner } from '@/assets/js/PrimeReact';
 import { Calendar as PrimeCalendar, Checkbox, Dropdown, InputNumber, InputSwitch, InputText, SelectButton } from '@/assets/js/PrimeReact';
 
 export default function Statistics() {
@@ -67,6 +67,8 @@ export default function Statistics() {
           </div>
         </div>
       </Card>
+
+      <ProgressSpinner />
     </div>
   );
 }

@@ -45,22 +45,3 @@ label.required {
 .gType-이체 {
   color: var(--color-이체);
 }
-
-/* --- 인증관련 화면 --- */
-.isNotSignedIn.p-panel,
-.isNotInitialized.p-panel {
-  height: 100%;
-
-  .p-toggleable-content {
-    height: 100%;
-
-    .p-panel-content {
-      height: 100%;
-      padding: var(--padding-base);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-  }
-}

@@ -446,3 +446,89 @@ AI 입력화면
 * 메인 월간 목록 화면(MonthlyList.jsx)의 하단 플로팅 버튼(SpeedDial)과 조건 검색 화면(DialogList.jsx)의 "AI로 입력" 버튼을 클릭하면 준비 중이라는 알림 대신 이 새로운 화면이 열리도록 연결해 두었습니다.
 
 * 아직 실제 AI 분석 로직은 백엔드/API 연동이 필요하므로 "분석" 버튼 클릭 시 임시 로딩 후 알림창이 뜨도록 처리해 둔 상태입니다. 확인해 보시고 텍스트 에어리어 크기나 문구 등 수정이 필요한 부분이 있다면 편하게 말씀해 주세요!
+
+
+
+* Routing URL
+  1. 가계부 : /gem_gagaebu/ledger
+    - 기본. /gem_gagaebu/ledger/calendar로 이동됨.
+
+    1.1. 달력 : /gem_gagaebu/ledger/calendar(/${yearMonth})
+      - 기본 : 금월로 이동됨. 월을 파라미터로 전달받아 변경 가능
+      - 예 : /gem_gagaebu/ledger/calendar/202604
+
+      1.1.1. 달력 일자 조회 : /gem_gagaebu/ledger/calendar
+
+    1.2. 목록 : /gem_gagaebu/ledger/monthlyList(/${yearMonth})
+      - 기본 : 금월로 이동됨. 월을 파라미터로 전달받아 변경 가능
+      - 예 : /gem_gagaebu/ledger/monthlyList/202604
+
+    1.3. 그래프 : /gem_gagaebu/ledger/monthlySummary(/${yearMonth})(/${months})
+      - 기본 : 금월. months 기본값은 3
+      - 예: /gem_gagaebu/ledger/monthlySummary/202405 또는 /gem_gagaebu/ledger/monthlySummary/202405/6
+
+    1.4. 조건 : /gem_gagaebu/ledger/condition(/${year})(/${month})(/${category})
+      - 예: /gem_gagaebu/ledger/condition/2024/5/식비
+
+* Routing URL
+  2. 통계 : /gem_gagaebu/statistics
+
+  3. 자산 : /gem_gagaebu/asset
+
+  4. 설정 : /gem_gagaebu/settings
+
+  5. login : /gem_gagaebu/login
+
+  6. logout : /gem_gagaebu/logout
+
+  7. 테마 : /gem_gagaebu/theme
+
+
+
+react-router-dom을 적용하여 애플리케이션의 라우팅 구조 개편을 완료했습니다! 🎉
+
+1. App.jsx 전면 개편 (메뉴 라우팅)
+  * 기존의 activeIndex 상태 기반 화면 전환을 제거하고 <Routes>와 <Route> 기반으로 변경했습니다.
+  * /gem_gagaebu/ledger, /gem_gagaebu/statistics, /gem_gagaebu/asset 경로로 이동 시 해당 컴포넌트가 렌더링되도록 연결했습니다.
+  * 하단 탭바(Footer) 클릭 시 navigate() 함수를 통해 URL이 변경되며, 현재 URL 주소를 감지해 활성화(Active) 상태를 유지하도록 구성했습니다.
+  * /gem_gagaebu/logout 접근 시 즉시 로그아웃 처리 후 /gem_gagaebu/login으로 리다이렉트되도록 추가했습니다.
+  * 설정(/gem_gagaebu/settings)과 테마(/gem_gagaebu/theme) 경로는 다이얼로그(팝업) 형태로 구현되어 있으므로, 메인 배경은 유지한 채 팝업만 열리도록 처리했습니다. (팝업을 닫으면 이전 URL로 돌아갑니다.)
+
+2. Ledger.jsx 개편 (서브 라우팅)
+  * 가계부 내 서브 메뉴(달력, 목록, 그래프, 반복)의 탭 전환을 URL 기반으로 변경했습니다.
+  * calendar, list, monthlySummary, repeat 경로에 따라 자동으로 알맞은 탭을 열어줍니다. 탭을 클릭해도 URL이 즉시 갱신됩니다.
+  * (예: /gem_gagaebu/ledger/list 에 접근하면 "목록" 탭이 선택된 상태로 나타납니다.)
+
+
+
+주요 페이지 컴포넌트들에 대해 **다이나믹 로딩(Dynamic Loading / Lazy Loading)**을 적용했습니다. 이를 통해 초기 로딩 시 모든 코드를 한꺼번에 불러오지 않고, 사용자가 해당 메뉴에 접근할 때 필요한 코드만 나누어 로드하게 되어 초기 구동 속도가 개선됩니다.
+
+1. App.jsx (메인 페이지):
+
+  * Ledger, Statistics, Assets 컴포넌트를 React.lazy를 사용하여 필요 시점에 로드하도록 변경했습니다.
+  * 전체 라우트 영역을 <Suspense>로 감싸고, 로딩 중에는 중앙에 큰 스피너(PageLoading)가 표시되도록 했습니다.
+
+2. Ledger.jsx (가계부 내부 탭):
+  * 가계부 내의 각 탭(Calendar, MonthlyList, MonthlySummary, Repeat) 역시 개별적으로 다이나믹 로딩되도록 설정했습니다.
+  * 각 탭의 내용 영역에 개별적인 <Suspense>를 적용하여, 탭 전환 시 코드 로딩이 필요한 경우 해당 영역 내에서만 작은 스피너(TabLoading)가 표시됩니다. (탭 헤더 등 UI는 그대로 유지되어 사용자 경험이 더 부드러워집니다.)
+
+3. DialogTheme와 DialogSettings 같은 다이얼로그 컴포넌트들도 React.lazy를 사용하여 다이나믹 로딩을 적용했습니다.
+  * DialogTheme, DialogSettings 지연 로딩: 이제 앱이 처음 켜질 때 이 컴포넌트들을 미리 로드하지 않고, 사용자가 실제 메뉴를 클릭하여 다이얼로그가 필요한 시점에 코드를 불러옵니다.
+  * <Suspense> 적용: 다이얼로그가 로드되는 짧은 순간 동안 화면 깨짐이 없도록 fallback={null} 옵션과 함께 <Suspense>로 감싸주었습니다.
+
+이제 각 페이지와 탭이 코드를 분할(Code Splitting)하여 관리하게 되었습니다.
+
+
+
+달력(Calendar.jsx), 목록(MonthlyList.jsx), 그래프(MonthlySummary.jsx) 페이지에서 연월 선택 시 해당 정보가 URL에 반영되도록 구현을 완료했습니다.
+
+1. URL 파라미터 연동 (yearMonth):
+  * 각 페이지에서 useParams를 통해 URL의 연월 정보(예: 202604)를 읽어와 화면에 표시되는 데이터를 동기화합니다.
+  * 반대로 화면에서 달력을 조작하거나 스와이프하여 달을 변경하면, 즉시 URL이 /ledger/calendar/202605와 같은 형식으로 갱신됩니다.
+
+2. 중첩 라우팅 강화 (Ledger.jsx):
+  * 가계부 내의 각 탭이 :yearMonth 파라미터를 가질 수 있도록 하위 라우트 구성을 업데이트했습니다.
+  * 탭을 전환할 때 현재 선택된 연월 정보를 유지한 채로 이동하므로, '달력'에서 4월을 보다가 '목록' 탭을 눌러도 그대로 4월 내역이 나타납니다.
+
+3. 직접 접근 및 북마크 지원:
+  * 이제 특정 연월의 가계부 주소를 복사해 두거나 북마크하면, 나중에 해당 주소로 접속했을 때 즉시 해당 달의 데이터를 확인할 수 있습니다.

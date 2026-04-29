@@ -1,11 +1,12 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag, SpeedDial, Tooltip } from '@/assets/js/PrimeReact';
+import { useMonthSync } from '@/hooks/useMonthSync';
+import { Badge, Calendar as PrimeCalendar, DataView, Dropdown, InputSwitch, Message, SpeedDial, Tooltip, ProgressSpinner } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
-import DialogLedger from '@/components/DialogLedger';
-import DialogAI from '@/components/DialogAI';
+const DialogLedger = lazy(() => import('@/components/DialogLedger'));
+const DialogAI = lazy(() => import('@/components/DialogAI'));
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
 import { PrimeReact_locale } from '@/assets/js/PrimeReact';
@@ -14,7 +15,8 @@ addLocale('ko', PrimeReact_locale.ko.Calendar);
 locale('ko');
 
 export default function MonthlyList() {
-  const { yearData, loading, selectedDate, setSelectedDate, handleChange_gExecute } = useData();
+  const { yearData, loading, selectedDate, handleChange_gExecute } = useData();
+  const { handleMonthChange, handleViewDateChange, moveMonth } = useMonthSync('/ledger/monthlyList');
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
   const [showDialogAI, setShowDialogAI] = useState(false);
@@ -58,17 +60,6 @@ export default function MonthlyList() {
   }
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-  // 월 변경
-  const handleMonthChange = (e) => {
-    console.log(e);
-    const newDate = new Date(e.year, e.month - 1, 1);
-    setSelectedDate(newDate);
-  }
-
-  // yearNavigator monthNavigator에 의한 월 변경
-  const handleViewDateChange = (e) => {
-    setSelectedDate(e.value);
-  }
 
   // Calendar 월 선택 템플릿
   // 스와이프 핸들러 추가
@@ -86,11 +77,9 @@ export default function MonthlyList() {
 
     if (Math.abs(distance) > minSwipeDistance) {
       if (distance > 0) {
-        // 왼쪽으로 스와이프 -> 다음 달
-        setSelectedDate(dayjs(selectedDate).add(1, 'month').toDate());
+        moveMonth(1);
       } else {
-        // 오른쪽으로 스와이프 -> 이전 달
-        setSelectedDate(dayjs(selectedDate).subtract(1, 'month').toDate());
+        moveMonth(-1);
       }
     }
     touchStart.current = null;
@@ -175,12 +164,12 @@ export default function MonthlyList() {
             onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
           > */}
         {loading ? (
-          <div className="flex align-items-center justify-content-center h-full p-5">
-            <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
+          <div className="full-page">
+            <ProgressSpinner />
             <p>데이터를 불러오는 중입니다...</p>
           </div>
         ) : monthData.length === 0 ? (
-          <div className="flex align-items-center justify-content-center h-full text-500 p-5">
+          <div className="full-page text-500">
             <Message severity="warn" text="이번 달 내역이 없습니다." />
           </div>
         ) : (
@@ -205,15 +194,19 @@ export default function MonthlyList() {
       />
 
       {/* 가계부 입력 폼 다이얼로그 */}
-      <DialogLedger
-        ledger={ledger}
-        visible={showDialogLedger}
-        onHide={fnHideDialogLedger}
-      />
-      <DialogAI
-        visible={showDialogAI}
-        onHide={() => setShowDialogAI(false)}
-      />
+      <Suspense fallback={null}>
+        <DialogLedger
+          ledger={ledger}
+          visible={showDialogLedger}
+          onHide={fnHideDialogLedger}
+        />
+      </Suspense>
+      <Suspense fallback={null}>
+        <DialogAI
+          visible={showDialogAI}
+          onHide={() => setShowDialogAI(false)}
+        />
+      </Suspense>
     </>
   );
 }

@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
+import { useMonthSync } from '@/hooks/useMonthSync';
 import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
@@ -8,7 +9,7 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import DialogList from '@/components/DialogList';
+const DialogList = lazy(() => import('@/components/DialogList'));
 import LedgerSummary from '@/components/LedgerSummary';
 
 // 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
@@ -17,7 +18,9 @@ addLocale('ko', PrimeReact_locale.ko.Calendar);
 locale('ko');
 
 export default function Calendar() {
-  const { yearData, loading, selectedDate, setSelectedDate } = useData();
+  const { yearData, loading, selectedDate } = useData();
+  const { handleMonthChange, handleViewDateChange, moveMonth } = useMonthSync('/ledger/calendar');
+
   const fcRef = useRef(null);
 
   const [showDialogList, setShowDialogList] = useState(false);
@@ -109,19 +112,6 @@ export default function Calendar() {
   */
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-  // 월 변경 (화살표 클릭 등)
-  const handleMonthChange = (e) => {
-    if (!e.year || !e.month) return;
-    const newDate = new Date(e.year, e.month - 1, 1);
-    setSelectedDate(newDate);
-  }
-
-  // yearNavigator, monthNavigator에 의한 월/연도 변경
-  const handleViewDateChange = (e) => {
-    if (e.value instanceof Date) {
-      setSelectedDate(e.value);
-    }
-  }
 
   // 날짜 칸 클릭 처리
   const handleDateClick = (info) => {
@@ -144,11 +134,9 @@ export default function Calendar() {
 
     if (Math.abs(distance) > minSwipeDistance) {
       if (distance > 0) {
-        // 왼쪽으로 스와이프 -> 다음 달
-        setSelectedDate(dayjs(selectedDate).add(1, 'month').toDate());
+        moveMonth(1);
       } else {
-        // 오른쪽으로 스와이프 -> 이전 달
-        setSelectedDate(dayjs(selectedDate).subtract(1, 'month').toDate());
+        moveMonth(-1);
       }
     }
     touchStart.current = null;
@@ -259,11 +247,13 @@ export default function Calendar() {
         />
       </div>
 
-      <DialogList
-        visible={showDialogList}
-        onHide={() => setShowDialogList(false)}
-        params={dialogParams}
-      />
+      <Suspense fallback={null}>
+        <DialogList
+          visible={showDialogList}
+          onHide={() => setShowDialogList(false)}
+          params={dialogParams}
+        />
+      </Suspense>
     </div>
   );
 }

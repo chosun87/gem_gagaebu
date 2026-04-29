@@ -21,6 +21,7 @@ export { InputTextarea } from 'primereact/inputtextarea';
 export { Menu } from 'primereact/menu';
 export { Message } from 'primereact/message';
 export { Panel } from 'primereact/panel';
+export { ProgressSpinner } from 'primereact/progressspinner';
 export { Ripple } from 'primereact/ripple';
 export { SelectButton } from 'primereact/selectbutton';
 export { Sidebar } from 'primereact/sidebar';

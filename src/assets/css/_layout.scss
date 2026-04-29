@@ -188,6 +188,16 @@
 }
 
 
+.full-page {
+  height: 100%;
+  padding: var(--padding-base);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
 /* Form */
 .formWrap {
   display: flex;

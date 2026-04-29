@@ -219,7 +219,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                 onFocus={() => setDateFocused(true)}
                 onBlur={() => setDateFocused(false)}
               />
-              <div class="flex flex-nowrap ml-auto">
+              <div className="flex flex-nowrap ml-auto">
                 <Badge severity={gExecuted ? 'info' : 'secondary'}
                   className="mr-2 text-base"
                   value={gExecuted ? '실행 완료' : '실행 전'}

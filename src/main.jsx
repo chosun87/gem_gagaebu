@@ -9,7 +9,7 @@ import '@/assets/css/all.scss';
 import { PrimeReactProvider } from 'primereact/api';
 import PrimeReact from 'primereact/api';
 
-import { HashRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { DataProvider } from '@/context/DataContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -22,11 +22,11 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <AuthProvider>
           <DataProvider>
-            <HashRouter>
+            <BrowserRouter basename="/gem_gagaebu">
 
               <App />
 
-            </HashRouter>
+            </BrowserRouter>
           </DataProvider>
         </AuthProvider>
       </ThemeProvider>

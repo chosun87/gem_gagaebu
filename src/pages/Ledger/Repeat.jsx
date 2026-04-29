@@ -1,10 +1,10 @@
-import { useState, useRef, useMemo } from 'react';
+import { useState, useRef, useMemo, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
 import { Badge, Button, InputSwitch, DataView, Message, Tag, Menu } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 
-import DialogRepeat from '@/components/DialogRepeat';
-import DialogList from '@/components/DialogList';
+const DialogRepeat = lazy(() => import('@/components/DialogRepeat'));
+const DialogList = lazy(() => import('@/components/DialogList'));
 
 export default function Repeat() {
   const { sheet반복Data, sheetYYYYData, loading, handleChange_rpCompleted } = useData();
@@ -139,12 +139,12 @@ export default function Repeat() {
     <>
       <div className="panel-inner list-page repeat-page">
         {loading && data.length === 0 ? (
-          <div className="flex align-items-center justify-content-center h-full p-5">
-            <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
+          <div className="full-page">
+            <ProgressSpinner />
             <p>데이터를 불러오는 중입니다...</p>
           </div>
         ) : data.length === 0 ? (
-          <div className="flex align-items-center justify-content-center h-full text-500 p-5">
+          <div className="full-page text-500">
             <Message severity="warn" text="반복 내역이 없습니다." />
           </div>
         ) : (
@@ -170,18 +170,22 @@ export default function Repeat() {
       />
 
       {/* 반복 입력 폼 다이얼로그 */}
-      <DialogRepeat
-        repeat={repeat}
-        visible={showDialogRepeat}
-        onHide={() => fnHideDialogRepeat()}
-      />
+      <Suspense fallback={null}>
+        <DialogRepeat
+          repeat={repeat}
+          visible={showDialogRepeat}
+          onHide={() => fnHideDialogRepeat()}
+        />
+      </Suspense>
 
       {/* 연관 내역 조회 다이얼로그 */}
-      <DialogList
-        visible={showDialogList}
-        onHide={() => fnHideDialogList()}
-        params={dialogListParams}
-      />
+      <Suspense fallback={null}>
+        <DialogList
+          visible={showDialogList}
+          onHide={() => fnHideDialogList()}
+          params={dialogListParams}
+        />
+      </Suspense>
     </>
   );
 }

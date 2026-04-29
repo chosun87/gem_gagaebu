@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message } from '@/assets/js/PrimeReact';
+import { Sidebar, Panel, DataView, Badge, InputSwitch, Button, Message, ProgressSpinner } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import DialogLedger from '@/components/DialogLedger';
@@ -179,12 +179,12 @@ export default function DialogList({ visible, onHide, params }) {
 
         <div className="list-page">
           {dataLoading ? (
-            <div className="flex align-items-center justify-content-center h-full p-5">
-              <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
+            <div className="full-page">
+              <ProgressSpinner />
               <p>데이터를 불러오는 중입니다...</p>
             </div>
           ) : filteredData.length === 0 ? (
-            <div className="flex align-items-center justify-content-center h-full text-500 p-5">
+            <div className="full-page text-500">
               <Message severity="warn" text="해당 조건의 내역이 없습니다." />
             </div>
           ) : (
