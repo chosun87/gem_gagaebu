@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { fetchSheetData, updateSheetCell, appendSheetRow, appendSheetRows, updateSheetRow, createSheet, updateSheetHeaders } from '@/api/sheetApi';
 import { parseAmount, calculateRepeatDates } from '@/utils/dataUtils';
 import { useAuth } from '@/context/AuthContext';
@@ -27,7 +27,7 @@ export const YYYYProvider = ({ children }) => {
     }
   }, [isSignedIn, selectedYear]);
 
-  const loadSheet연도Data = async (targetYear) => {
+  const loadSheet연도Data = useCallback(async (targetYear) => {
     setLoading(true);
     try {
       const rawData = await fetchSheetData(SHEET_NAME_RANGE.YEAR.replace("YYYY", targetYear));
@@ -68,9 +68,9 @@ export const YYYYProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleChange_gExecute = async (rowData, newValue) => {
+  const handleChange_gExecute = useCallback(async (rowData, newValue) => {
     const YYYY = rowData.sheetName;
 
     setSheetYYYYData(prev => ({
@@ -95,9 +95,9 @@ export const YYYYProvider = ({ children }) => {
         )
       }));
     }
-  };
+  }, []);
 
-  const ensureSheetExists = async (sheetName) => {
+  const ensureSheetExists = useCallback(async (sheetName) => {
     try {
       await fetchSheetData(`${sheetName}!A1:A1`);
     } catch (error) {
@@ -105,9 +105,9 @@ export const YYYYProvider = ({ children }) => {
       const headers = Object.keys(SHEET_COL_INDEX.YYYY).sort((a, b) => SHEET_COL_INDEX.YYYY[a] - SHEET_COL_INDEX.YYYY[b]);
       await updateSheetHeaders(sheetName, headers);
     }
-  };
+  }, []);
 
-  const saveLedgerEntry = async (ledger, formData) => {
+  const saveLedgerEntry = useCallback(async (ledger, formData) => {
     setLoading(true);
     try {
       const gDate = dayjs(formData.gDate);
@@ -189,9 +189,9 @@ export const YYYYProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loadSheet연도Data, ensureSheetExists]);
 
-  const generateLedgerFromRepeat = async (repeat, rpID) => {
+  const generateLedgerFromRepeat = useCallback(async (repeat, rpID) => {
     setLoading(true);
     let addedCount = 0;
     let updatedCount = 0;
@@ -302,9 +302,9 @@ export const YYYYProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [sheetYYYYData, loadedSheetYYYY, loadSheet연도Data, ensureSheetExists]);
 
-  const deleteLedgerEntry = async (ledger) => {
+  const deleteLedgerEntry = useCallback(async (ledger) => {
     if (!ledger) return;
     setLoading(true);
     try {
@@ -325,24 +325,37 @@ export const YYYYProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [loadSheet연도Data]);
 
   const yearData = useMemo(() => sheetYYYYData[selectedYear] || [], [sheetYYYYData, selectedYear]);
 
+  const contextValue = useMemo(() => ({
+    sheetYYYYData,
+    loadedSheetYYYY,
+    yearData,
+    loading,
+    selectedDate,
+    setSelectedDate,
+    loadSheet연도Data,
+    handleChange_gExecute,
+    saveLedgerEntry,
+    generateLedgerFromRepeat,
+    deleteLedgerEntry
+  }), [
+    sheetYYYYData,
+    loadedSheetYYYY,
+    yearData,
+    loading,
+    selectedDate,
+    loadSheet연도Data,
+    handleChange_gExecute,
+    saveLedgerEntry,
+    generateLedgerFromRepeat,
+    deleteLedgerEntry
+  ]);
+
   return (
-    <YYYYContext.Provider value={{
-      sheetYYYYData,
-      loadedSheetYYYY,
-      yearData,
-      loading,
-      selectedDate,
-      setSelectedDate,
-      loadSheet연도Data,
-      handleChange_gExecute,
-      saveLedgerEntry,
-      generateLedgerFromRepeat,
-      deleteLedgerEntry
-    }}>
+    <YYYYContext.Provider value={contextValue}>
       {children}
     </YYYYContext.Provider>
   );

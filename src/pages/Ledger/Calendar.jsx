@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
+import { useSwipe } from '@/hooks/useSwipe';
 import { Badge, Button, Calendar as PrimeCalendar, DataView, Dialog, Dropdown, InputSwitch, Message, Tag } from '@/assets/js/PrimeReact';
 import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
@@ -119,28 +120,10 @@ export default function Calendar() {
     setShowDialogList(true);
   };
 
-  // 스와이프 핸들러 추가
-  const touchStart = useRef(null);
-  const minSwipeDistance = 50;
-
-  const onTouchStart = (e) => {
-    touchStart.current = e.targetTouches[0].clientX;
-  };
-
-  const onTouchEnd = (e) => {
-    if (!touchStart.current) return;
-    const touchEnd = e.changedTouches[0].clientX;
-    const distance = touchStart.current - touchEnd;
-
-    if (Math.abs(distance) > minSwipeDistance) {
-      if (distance > 0) {
-        moveMonth(1);
-      } else {
-        moveMonth(-1);
-      }
-    }
-    touchStart.current = null;
-  };
+  const swipeHandlers = useSwipe({
+    onSwipeLeft: () => moveMonth(1),
+    onSwipeRight: () => moveMonth(-1)
+  });
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿
@@ -227,7 +210,7 @@ export default function Calendar() {
       <LedgerSummary symmary={monthTotal} />
 
       <div className="fc-swipe-wrapper"
-        onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}
+        {...swipeHandlers}
       >
         <FullCalendar
           ref={fcRef}

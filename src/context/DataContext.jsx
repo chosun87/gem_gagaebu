@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { CodeProvider, useCodeData } from './DataContext코드';
 import { AssetProvider, useAssetData } from './DataContext자산';
 import { RepeatProvider, useRepeatData } from './DataContext반복';
@@ -27,7 +27,7 @@ export const useData = () => {
   const yyyy = useYYYYData();
 
   // 모든 컨텍스트의 데이터를 하나로 합쳐서 반환 (기존 호환성 유지)
-  return {
+  return useMemo(() => ({
     // 코드 데이터
     periodOptions: code.periodOptions,
     categoryOptions: code.categoryOptions,
@@ -64,5 +64,5 @@ export const useData = () => {
 
     // 로딩 상태 통합
     loading: code.loading || asset.loading || repeat.loading || yyyy.loading
-  };
+  }), [code, asset, repeat, yyyy]);
 };

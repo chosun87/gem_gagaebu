@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { fetchSheetData } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -16,7 +16,7 @@ export const AssetProvider = ({ children }) => {
     }
   }, [isSignedIn]);
 
-  const loadSheet자산Data = async () => {
+  const loadSheet자산Data = useCallback(async () => {
     setLoading(true);
     try {
       const rawData = await fetchSheetData(SHEET_NAME_RANGE.ASSET);
@@ -47,7 +47,7 @@ export const AssetProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const assetNodes = useMemo(() => {
     const groups = {};
@@ -85,26 +85,36 @@ export const AssetProvider = ({ children }) => {
   }, [sheet자산Data]);
 
   // 추후 CRUD를 위한 스텁 (Stub for future CRUD)
-  const saveAssetEntry = async (entry) => {
+  const saveAssetEntry = useCallback(async (entry) => {
     console.log('saveAssetEntry stub', entry);
     return true;
-  };
+  }, []);
 
-  const deleteAssetEntry = async (entry) => {
+  const deleteAssetEntry = useCallback(async (entry) => {
     console.log('deleteAssetEntry stub', entry);
     return true;
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    sheet자산Data,
+    assetNodes,
+    defaultAssetCode,
+    loading,
+    loadSheet자산Data,
+    saveAssetEntry,
+    deleteAssetEntry
+  }), [
+    sheet자산Data,
+    assetNodes,
+    defaultAssetCode,
+    loading,
+    loadSheet자산Data,
+    saveAssetEntry,
+    deleteAssetEntry
+  ]);
 
   return (
-    <AssetContext.Provider value={{
-      sheet자산Data,
-      assetNodes,
-      defaultAssetCode,
-      loading,
-      loadSheet자산Data,
-      saveAssetEntry,
-      deleteAssetEntry
-    }}>
+    <AssetContext.Provider value={contextValue}>
       {children}
     </AssetContext.Provider>
   );

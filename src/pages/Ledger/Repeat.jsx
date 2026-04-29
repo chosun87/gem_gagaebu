@@ -2,6 +2,7 @@ import { useState, useRef, useMemo, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
 import { Badge, Button, InputSwitch, DataView, Message, Tag, Menu } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
+import { REPEAT_PERIOD } from '@/assets/js/constants';
 
 const DialogRepeat = lazy(() => import('@/components/DialogRepeat'));
 const DialogList = lazy(() => import('@/components/DialogList'));
@@ -26,13 +27,13 @@ export default function Repeat() {
 
       // 2. 반복 주기 정렬 (매주 'W' 우선)
       if (a.rpPeriod !== b.rpPeriod) {
-        return a.rpPeriod === 'W' ? -1 : 1;
+        return a.rpPeriod === REPEAT_PERIOD.WEEKLY ? -1 : 1;
       }
 
       // 3. rpDay 정렬 (높은 값 우선)
       const getDayValue = (item) => {
-        if (item.rpPeriod === 'M') return parseInt(item.rpDay) || 0;
-        if (item.rpPeriod === 'W') {
+        if (item.rpPeriod === REPEAT_PERIOD.MONTHLY) return parseInt(item.rpDay) || 0;
+        if (item.rpPeriod === REPEAT_PERIOD.WEEKLY) {
           const dayMap = { '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6, '일': 7 };
           return dayMap[item.rpDay] || 0;
         }
@@ -107,7 +108,7 @@ export default function Repeat() {
           </div>
           <div className="flex align-items-center column-gap-2">
             <span className="rpDay text-lg font-semibold text-nowrap">
-              {item.rpPeriod === 'W' ? `매주 (${item.rpDay})` : `매월 ${item.rpDay}일`}
+              {item.rpPeriod === REPEAT_PERIOD.WEEKLY ? `매주 (${item.rpDay})` : `매월 ${item.rpDay}일`}
             </span>
             <span className="rpMemo">{item.rpMemo}</span>
           </div>

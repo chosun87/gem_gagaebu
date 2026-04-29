@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { fetchSheetData } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -17,7 +17,7 @@ export const CodeProvider = ({ children }) => {
     }
   }, [isSignedIn]);
 
-  const loadSheet코드Data = async () => {
+  const loadSheet코드Data = useCallback(async () => {
     setLoading(true);
     try {
       const rawData = await fetchSheetData(SHEET_NAME_RANGE.CODE);
@@ -61,28 +61,37 @@ export const CodeProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // 추후 CRUD를 위한 스텁 (Stub for future CRUD)
-  const saveCodeEntry = async (entry) => {
+  const saveCodeEntry = useCallback(async (entry) => {
     console.log('saveCodeEntry stub', entry);
     return true;
-  };
+  }, []);
 
-  const deleteCodeEntry = async (entry) => {
+  const deleteCodeEntry = useCallback(async (entry) => {
     console.log('deleteCodeEntry stub', entry);
     return true;
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    periodOptions,
+    categoryOptions,
+    loading,
+    loadSheet코드Data,
+    saveCodeEntry,
+    deleteCodeEntry
+  }), [
+    periodOptions,
+    categoryOptions,
+    loading,
+    loadSheet코드Data,
+    saveCodeEntry,
+    deleteCodeEntry
+  ]);
 
   return (
-    <CodeContext.Provider value={{
-      periodOptions,
-      categoryOptions,
-      loading,
-      loadSheet코드Data,
-      saveCodeEntry,
-      deleteCodeEntry
-    }}>
+    <CodeContext.Provider value={contextValue}>
       {children}
     </CodeContext.Provider>
   );

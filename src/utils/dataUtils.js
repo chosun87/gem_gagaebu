@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { REPEAT_PERIOD } from '@/assets/js/constants';
 
 /**
  * 콤마(,) 등 숫자 외의 문자가 포함된 문자열을 숫자로 파싱합니다.
@@ -23,7 +24,7 @@ export const calculateRepeatDates = (repeat) => {
   const end = dayjs(rpDateE);
   const targetDates = [];
 
-  if (rpPeriod === 'M') {
+  if (rpPeriod === REPEAT_PERIOD.MONTHLY) {
     const day = parseInt(rpDay, 10);
     let temp = start.date(day);
     // 시작일(rpDateS)보다 계산된 날짜가 과거면 다음 달부터
@@ -33,7 +34,7 @@ export const calculateRepeatDates = (repeat) => {
       targetDates.push(temp);
       temp = temp.add(1, 'month');
     }
-  } else if (rpPeriod === 'W') {
+  } else if (rpPeriod === REPEAT_PERIOD.WEEKLY) {
     const dayOfWeekMap = { '일': 0, '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6 };
     const dayOfWeek = dayOfWeekMap[rpDay];
 

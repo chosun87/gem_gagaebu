@@ -70,7 +70,18 @@ export const SHEET_COL_INDEX = {
   }
 }
 
-// 거래 유형
+export const TRANSACTION_TYPE = {
+  INCOME: '수입',
+  EXPENSE: '지출',
+  TRANSFER: '이체'
+};
+
+export const REPEAT_PERIOD = {
+  MONTHLY: 'M',
+  WEEKLY: 'W'
+};
+
+// 거래 유형 (UI 바인딩용)
 export const G_TYPE = {
   수입: { label: '수입', value: '수입' },
   지출: { label: '지출', value: '지출' },

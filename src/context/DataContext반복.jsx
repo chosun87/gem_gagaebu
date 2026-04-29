@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { fetchSheetData, updateSheetCell, appendSheetRow, updateSheetRow } from '@/api/sheetApi';
 import { parseAmount } from '@/utils/dataUtils';
 import { useAuth } from '@/context/AuthContext';
@@ -18,7 +18,7 @@ export const RepeatProvider = ({ children }) => {
     }
   }, [isSignedIn]);
 
-  const loadSheet반복Data = async () => {
+  const loadSheet반복Data = useCallback(async () => {
     setLoading(true);
     try {
       const rawData = await fetchSheetData(SHEET_NAME_RANGE.REPEAT);
@@ -57,9 +57,9 @@ export const RepeatProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const handleChange_rpCompleted = async (rowData, newValue) => {
+  const handleChange_rpCompleted = useCallback(async (rowData, newValue) => {
     setSheet반복Data(prevData => prevData.map(item =>
       item.sheetRowNo === rowData.sheetRowNo
         ? { ...item, rpCompleted: newValue }
@@ -76,9 +76,9 @@ export const RepeatProvider = ({ children }) => {
           : item
       ));
     }
-  };
+  }, []);
 
-  const saveRepeatEntry = async (repeat, formData) => {
+  const saveRepeatEntry = useCallback(async (repeat, formData) => {
     setLoading(true);
     try {
       const rowValues = [];
@@ -141,9 +141,9 @@ export const RepeatProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const deleteRepeatEntry = async (repeat) => {
+  const deleteRepeatEntry = useCallback(async (repeat) => {
     if (!repeat) return;
     setLoading(true);
     try {
@@ -161,17 +161,26 @@ export const RepeatProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    sheet반복Data,
+    loading,
+    loadSheet반복Data,
+    handleChange_rpCompleted,
+    saveRepeatEntry,
+    deleteRepeatEntry
+  }), [
+    sheet반복Data,
+    loading,
+    loadSheet반복Data,
+    handleChange_rpCompleted,
+    saveRepeatEntry,
+    deleteRepeatEntry
+  ]);
 
   return (
-    <RepeatContext.Provider value={{
-      sheet반복Data,
-      loading,
-      loadSheet반복Data,
-      handleChange_rpCompleted,
-      saveRepeatEntry,
-      deleteRepeatEntry
-    }}>
+    <RepeatContext.Provider value={contextValue}>
       {children}
     </RepeatContext.Provider>
   );
