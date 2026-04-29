@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { fetchSheetData, updateSheetCell, appendSheetRow, updateSheetRow } from '@/api/sheetApi';
+import { parseAmount } from '@/utils/dataUtils';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
 import dayjs from 'dayjs';
@@ -42,8 +43,8 @@ export const RepeatProvider = ({ children }) => {
           rpAcc1: row[SHEET_COL_INDEX.REPEAT.rpAcc1] || '',
           rpAcc2: row[SHEET_COL_INDEX.REPEAT.rpAcc2] || '',
           rpCategory: row[SHEET_COL_INDEX.REPEAT.rpCategory] || '',
-          rpAmount: Number(String(row[SHEET_COL_INDEX.REPEAT.rpAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
-          rpTotalAmount: Number(String(row[SHEET_COL_INDEX.REPEAT.rpTotalAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
+          rpAmount: parseAmount(row[SHEET_COL_INDEX.REPEAT.rpAmount]),
+          rpTotalAmount: parseAmount(row[SHEET_COL_INDEX.REPEAT.rpTotalAmount]),
           rpMemo: row[SHEET_COL_INDEX.REPEAT.rpMemo] || '',
           rpDeleted: (String(row[SHEET_COL_INDEX.REPEAT.rpDeleted]).toUpperCase() === 'TRUE')
         });
@@ -98,13 +99,41 @@ export const RepeatProvider = ({ children }) => {
       rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = formData.rpMemo || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = '';
 
+      const newObj = {
+        sheetName: '반복',
+        sheetRowNo: repeat ? repeat.sheetRowNo : 0, // updated below
+        rpID: rowValues[SHEET_COL_INDEX.REPEAT.rpID],
+        rpDateS: rowValues[SHEET_COL_INDEX.REPEAT.rpDateS],
+        rpDateE: rowValues[SHEET_COL_INDEX.REPEAT.rpDateE],
+        rpPeriod: rowValues[SHEET_COL_INDEX.REPEAT.rpPeriod],
+        rpDay: rowValues[SHEET_COL_INDEX.REPEAT.rpDay],
+        rpCompleted: rowValues[SHEET_COL_INDEX.REPEAT.rpCompleted],
+        rpType: rowValues[SHEET_COL_INDEX.REPEAT.rpType],
+        rpAcc1: rowValues[SHEET_COL_INDEX.REPEAT.rpAcc1],
+        rpAcc2: rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2],
+        rpCategory: rowValues[SHEET_COL_INDEX.REPEAT.rpCategory],
+        rpAmount: rowValues[SHEET_COL_INDEX.REPEAT.rpAmount],
+        rpTotalAmount: rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount],
+        rpMemo: rowValues[SHEET_COL_INDEX.REPEAT.rpMemo],
+        rpDeleted: false
+      };
+
       if (!repeat) {
-        await appendSheetRow('반복', rowValues);
+        const res = await appendSheetRow('반복', rowValues);
+        if (res && res.updates && res.updates.updatedRange) {
+          const match = res.updates.updatedRange.split(':')[0].match(/\d+/);
+          if (match) newObj.sheetRowNo = parseInt(match[0], 10);
+        }
+
+        // Optimistic UI Update (추가)
+        setSheet반복Data(prev => [newObj, ...prev]);
       } else {
         await updateSheetRow('반복', repeat.sheetRowNo, rowValues);
+
+        // Optimistic UI Update (수정)
+        setSheet반복Data(prev => prev.map(item => item.sheetRowNo === repeat.sheetRowNo ? { ...item, ...newObj } : item));
       }
 
-      await loadSheet반복Data();
       return rpID;
     } catch (error) {
       console.error('Error saving repeat entry:', error);
@@ -122,7 +151,9 @@ export const RepeatProvider = ({ children }) => {
       const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');
       await updateSheetCell(`반복!${sheetColName}${repeat.sheetRowNo}`, timestamp);
 
-      await loadSheet반복Data();
+      // Optimistic UI Update (삭제)
+      setSheet반복Data(prev => prev.filter(item => item.sheetRowNo !== repeat.sheetRowNo));
+
       return true;
     } catch (error) {
       console.error('Error deleting repeat entry:', error);

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { fetchSheetData, updateSheetCell, appendSheetRow, updateSheetRow, createSheet, updateSheetHeaders } from '@/api/sheetApi';
+import { fetchSheetData, updateSheetCell, appendSheetRow, appendSheetRows, updateSheetRow, createSheet, updateSheetHeaders } from '@/api/sheetApi';
+import { parseAmount, calculateRepeatDates } from '@/utils/dataUtils';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
 import dayjs from 'dayjs';
@@ -46,7 +47,7 @@ export const YYYYProvider = ({ children }) => {
           gAcc1: row[SHEET_COL_INDEX.YYYY.gAcc1] || '',
           gAcc2: row[SHEET_COL_INDEX.YYYY.gAcc2] || '',
           gCategory: row[SHEET_COL_INDEX.YYYY.gCategory] || '',
-          gAmount: Number(String(row[SHEET_COL_INDEX.YYYY.gAmount] || '0').replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0,
+          gAmount: parseAmount(row[SHEET_COL_INDEX.YYYY.gAmount]),
           gMemo: row[SHEET_COL_INDEX.YYYY.gMemo] || '',
           gExecuted: (String(row[SHEET_COL_INDEX.YYYY.gExecuted]).toUpperCase() === 'TRUE'),
           g_rpID: row[SHEET_COL_INDEX.YYYY.g_rpID] || '',
@@ -124,25 +125,63 @@ export const YYYYProvider = ({ children }) => {
       rowValues[SHEET_COL_INDEX.YYYY.g_rpID] = formData.g_rpID || '';
       rowValues[SHEET_COL_INDEX.YYYY.gDeleted] = '';
 
+      const newObj = {
+        sheetName: newYear,
+        sheetRowNo: ledger ? ledger.sheetRowNo : 0, // will update below
+        gDate: rowValues[SHEET_COL_INDEX.YYYY.gDate],
+        gType: rowValues[SHEET_COL_INDEX.YYYY.gType],
+        gAcc1: rowValues[SHEET_COL_INDEX.YYYY.gAcc1],
+        gAcc2: rowValues[SHEET_COL_INDEX.YYYY.gAcc2],
+        gCategory: rowValues[SHEET_COL_INDEX.YYYY.gCategory],
+        gAmount: rowValues[SHEET_COL_INDEX.YYYY.gAmount],
+        gMemo: rowValues[SHEET_COL_INDEX.YYYY.gMemo],
+        gExecuted: rowValues[SHEET_COL_INDEX.YYYY.gExecuted],
+        g_rpID: rowValues[SHEET_COL_INDEX.YYYY.g_rpID],
+      };
+
       if (!ledger) {
         await ensureSheetExists(newYear);
-        await appendSheetRow(newYear, rowValues);
+        const res = await appendSheetRow(newYear, rowValues);
+        if (res && res.updates && res.updates.updatedRange) {
+          const match = res.updates.updatedRange.split(':')[0].match(/\d+/);
+          if (match) newObj.sheetRowNo = parseInt(match[0], 10);
+        }
+        
+        // Optimistic UI Update (추가)
+        setSheetYYYYData(prev => ({
+          ...prev,
+          [newYear]: [newObj, ...(prev[newYear] || [])].sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix())
+        }));
       } else {
         if (ledger.sheetName === newYear) {
           await updateSheetRow(newYear, ledger.sheetRowNo, rowValues);
+          
+          // Optimistic UI Update (수정)
+          setSheetYYYYData(prev => ({
+            ...prev,
+            [newYear]: (prev[newYear] || []).map(item => item.sheetRowNo === ledger.sheetRowNo ? { ...item, ...newObj } : item).sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix())
+          }));
         } else {
+          // 연도가 변경된 경우: 기존 연도에서 삭제 처리
           const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gDeleted);
           await updateSheetCell(`${ledger.sheetName}!${sheetColName}${ledger.sheetRowNo}`, dayjs().format('YYYY-MM-DD HH:mm:ss'));
 
           await ensureSheetExists(newYear);
-          await appendSheetRow(newYear, rowValues);
+          const res = await appendSheetRow(newYear, rowValues);
+          if (res && res.updates && res.updates.updatedRange) {
+            const match = res.updates.updatedRange.split(':')[0].match(/\d+/);
+            if (match) newObj.sheetRowNo = parseInt(match[0], 10);
+          }
+
+          // Optimistic UI Update (이동)
+          setSheetYYYYData(prev => ({
+            ...prev,
+            [ledger.sheetName]: (prev[ledger.sheetName] || []).filter(item => item.sheetRowNo !== ledger.sheetRowNo),
+            [newYear]: [newObj, ...(prev[newYear] || [])].sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix())
+          }));
         }
       }
 
-      await loadSheet연도Data(newYear);
-      if (ledger && ledger.sheetName !== newYear) {
-        await loadSheet연도Data(ledger.sheetName);
-      }
       return true;
     } catch (error) {
       console.error('Error saving ledger entry:', error);
@@ -158,37 +197,11 @@ export const YYYYProvider = ({ children }) => {
     let updatedCount = 0;
     let deletedCount = 0;
     try {
-      const { rpDateS, rpDateE, rpPeriod, rpDay, rpType, rpAcc1, rpAcc2, rpCategory, rpAmount, rpMemo } = repeat;
-      if (!rpDateS || !rpDateE || !rpPeriod || !rpDay) return { addedCount: 0, updatedCount: 0, deletedCount: 0 };
+      const { rpType, rpAcc1, rpAcc2, rpCategory, rpAmount, rpMemo } = repeat;
+      const targetDates = calculateRepeatDates(repeat);
+      if (targetDates.length === 0) return { addedCount: 0, updatedCount: 0, deletedCount: 0 };
 
-      const start = dayjs(rpDateS);
-      const end = dayjs(rpDateE);
       const today = dayjs().startOf('day');
-      const targetDates = [];
-
-      // 날짜 계산
-      if (rpPeriod === 'M') {
-        const day = parseInt(rpDay);
-        let temp = start.date(day);
-        if (temp.isBefore(start, 'day')) temp = temp.add(1, 'month');
-
-        while (temp.isBefore(end) || temp.isSame(end, 'day')) {
-          targetDates.push(temp);
-          temp = temp.add(1, 'month');
-        }
-      } else if (rpPeriod === 'W') {
-        const dayOfWeekMap = { '일': 0, '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6 };
-        const dayOfWeek = dayOfWeekMap[rpDay];
-
-        let temp = start.day(dayOfWeek);
-        if (temp.isBefore(start, 'day')) temp = temp.add(1, 'week');
-
-        while (temp.isBefore(end) || temp.isSame(end, 'day')) {
-          targetDates.push(temp);
-          temp = temp.add(1, 'week');
-        }
-      }
-
       const targetDateStrings = targetDates.map(d => d.format('YYYY-MM-DD'));
 
       // 연도별로 분류하여 처리
@@ -271,15 +284,14 @@ export const YYYYProvider = ({ children }) => {
           hasChanges = true;
         }
 
+        // 일괄 추가 (Batch Append) 적용
         if (newRows.length > 0) {
           await ensureSheetExists(year);
-          for (const row of newRows) {
-            await appendSheetRow(year, row);
-          }
+          await appendSheetRows(year, newRows);
         }
 
         if (hasChanges) {
-          await loadSheet연도Data(year);
+          await loadSheet연도Data(year); // 반복 처리는 여전히 복잡하므로 깔끔하게 재조회
         }
       }
 
@@ -300,7 +312,12 @@ export const YYYYProvider = ({ children }) => {
       const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');
       await updateSheetCell(`${ledger.sheetName}!${sheetColName}${ledger.sheetRowNo}`, timestamp);
 
-      await loadSheet연도Data(ledger.sheetName);
+      // Optimistic UI Update (삭제)
+      setSheetYYYYData(prev => ({
+        ...prev,
+        [ledger.sheetName]: (prev[ledger.sheetName] || []).filter(item => item.sheetRowNo !== ledger.sheetRowNo)
+      }));
+
       return true;
     } catch (error) {
       console.error('Error deleting ledger entry:', error);

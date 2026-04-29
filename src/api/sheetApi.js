@@ -50,6 +50,25 @@ export const appendSheetRow = async (sheetName, values) => {
   }
 };
 
+// 특정 시트의 마지막에 여러 행을 한 번에 추가합니다.
+export const appendSheetRows = async (sheetName, rowsArray) => {
+  if (!rowsArray || rowsArray.length === 0) return null;
+  try {
+    const response = await window.gapi.client.sheets.spreadsheets.values.append({
+      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
+      range: `${sheetName}!A1`,
+      valueInputOption: 'USER_ENTERED',
+      resource: {
+        values: rowsArray
+      }
+    });
+    return response.result;
+  } catch (error) {
+    console.error('Error appending sheet rows:', error);
+    throw error;
+  }
+};
+
 // 특정 행의 데이터를 업데이트합니다.
 export const updateSheetRow = async (sheetName, rowNo, values) => {
   try {
