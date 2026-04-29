@@ -1,23 +1,29 @@
 import { useAuth } from '@/context/AuthContext';
-import { Message } from '@/assets/js/PrimeReact';
+import { Message, Button, Panel } from '@/assets/js/PrimeReact';
 
 export default function AuthGuard({ children }) {
-  const { isInitialized, isSignedIn } = useAuth();
+  const { isInitialized, isSignedIn, login } = useAuth();
 
   if (!isInitialized) {
     return (
-      <div className="flex align-items-center justify-content-center h-full p-5">
+      <Panel className='isNotInitialized'>
         <i className="pi pi-spin pi-spinner mr-2" style={{ fontSize: '1.5rem' }}></i>
         <p>인증 상태 확인 중...</p>
-      </div>
+      </Panel>
     );
   }
 
   if (!isSignedIn) {
     return (
-      <div className="flex align-items-center justify-content-center h-full p-5">
+      <Panel className='isNotSignedIn'>
         <Message severity="warn" text="구글 로그인이 필요합니다." />
-      </div>
+        <Button size="large"
+          label="구글 로그인"
+          icon="pi pi-google"
+          style={{ marginTop: 'var(--padding-base)' }}
+          onClick={login}
+        />
+      </Panel>
     );
   }
 
