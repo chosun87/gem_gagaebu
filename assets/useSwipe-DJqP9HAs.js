@@ -1,0 +1,1 @@
+import{L as e,z as t}from"./jsx-runtime-tkv7Vnns.js";var n=t(e(),1),r=({onSwipeLeft:e,onSwipeRight:t,minSwipeDistance:r=50})=>{let i=(0,n.useRef)(null);return{onTouchStart:e=>{i.current=e.targetTouches[0].clientX},onTouchEnd:n=>{if(!i.current)return;let a=n.changedTouches[0].clientX,o=i.current-a;Math.abs(o)>r&&(o>0?e&&e():t&&t()),i.current=null}}};export{r as t};
