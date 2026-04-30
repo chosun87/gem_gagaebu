@@ -13,6 +13,7 @@ const Assets = lazy(() => import('@/pages/Assets'));
 // 다이얼로그 컴포넌트 다이나믹 로딩
 const DialogSettings = lazy(() => import('@/components/DialogSettings'));
 const DialogTheme = lazy(() => import('@/components/DialogTheme'));
+const Repeat = lazy(() => import('@/pages/Settings/Repeat'));
 
 import { ConfirmDialog, ProgressSpinner } from '@/assets/js/PrimeReact';
 
@@ -89,6 +90,7 @@ function App() {
               <Route path="/ledger/*" element={<Ledger />} />
               <Route path="/statistics" element={<Statistics />} />
               <Route path="/asset" element={<Assets />} />
+              <Route path="/settings/repeat" element={<Repeat />} />
 
               {/* 직접 접근 시 배경이 없을 경우를 위해 가계부를 기본으로 둠 */}
               <Route path="/settings" element={<Ledger />} />
@@ -104,7 +106,7 @@ function App() {
 
           <Suspense fallback={null}>
             <DialogSettings
-              visible={location.pathname.startsWith('/settings')}
+              visible={location.pathname === '/settings'}
               onHide={() => navigate(-1)}
             />
           </Suspense>

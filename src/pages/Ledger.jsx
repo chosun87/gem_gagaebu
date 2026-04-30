@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 const Calendar = lazy(() => import('@/pages/Ledger/Calendar'));
 const MonthlyList = lazy(() => import('@/pages/Ledger/MonthlyList'));
 const MonthlySummary = lazy(() => import('@/pages/Ledger/MonthlySummary'));
-const Repeat = lazy(() => import('@/pages/Ledger/Repeat'));
+
 
 const TabLoading = () => (
   <div className="full-page">
@@ -26,7 +26,7 @@ export default function Ledger() {
     activeIndex = 1;
   } else if (location.pathname.includes('/monthlySummary')) {
     activeIndex = 2;
-  } else if (location.pathname.includes('/repeat')) {
+  } else if (location.pathname.includes('/analysis')) {
     activeIndex = 3;
   }
 
@@ -44,7 +44,7 @@ export default function Ledger() {
         navigate(`/ledger/monthlySummary/${yearMonth}`);
         break;
       case 3:
-        navigate('/ledger/repeat');
+        navigate(`/ledger/analysis/${yearMonth}`);
         break;
       default:
         navigate(`/ledger/calendar/${yearMonth}`);
@@ -87,10 +87,11 @@ export default function Ledger() {
                 </Routes>
               </Suspense>
             </TabPanel>
-            <TabPanel header={<span className="text-lg">반복</span>} leftIcon="pi pi-clone mr-2" className="px-0">
-              <Suspense fallback={<TabLoading />}>
-                <Repeat />
-              </Suspense>
+            <TabPanel header={<span className="text-lg">지출분석</span>} leftIcon="pi pi-chart-pie mr-2" className="px-0">
+              <div className="p-4 text-center text-500">
+                <i className="pi pi-chart-pie text-6xl mb-3 opacity-30"></i>
+                <p>지출분석 서비스 준비 중입니다.</p>
+              </div>
             </TabPanel>
           </TabView>
         } />
