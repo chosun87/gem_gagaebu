@@ -143,7 +143,7 @@ export const YYYYProvider = ({ children }) => {
         await ensureSheetExists(newYear);
         const res = await appendSheetRow(newYear, rowValues);
         if (res && res.updates && res.updates.updatedRange) {
-          const match = res.updates.updatedRange.split(':')[0].match(/\d+/);
+          const match = res.updates.updatedRange.split(':')[0].match(/\d+$/);
           if (match) newObj.sheetRowNo = parseInt(match[0], 10);
         }
         
@@ -169,7 +169,7 @@ export const YYYYProvider = ({ children }) => {
           await ensureSheetExists(newYear);
           const res = await appendSheetRow(newYear, rowValues);
           if (res && res.updates && res.updates.updatedRange) {
-            const match = res.updates.updatedRange.split(':')[0].match(/\d+/);
+            const match = res.updates.updatedRange.split(':')[0].match(/\d+$/);
             if (match) newObj.sheetRowNo = parseInt(match[0], 10);
           }
 

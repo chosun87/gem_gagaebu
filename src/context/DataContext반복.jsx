@@ -121,7 +121,7 @@ export const RepeatProvider = ({ children }) => {
       if (!repeat) {
         const res = await appendSheetRow('반복', rowValues);
         if (res && res.updates && res.updates.updatedRange) {
-          const match = res.updates.updatedRange.split(':')[0].match(/\d+/);
+          const match = res.updates.updatedRange.split(':')[0].match(/\d+$/);
           if (match) newObj.sheetRowNo = parseInt(match[0], 10);
         }
 
