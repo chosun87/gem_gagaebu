@@ -1,12 +1,52 @@
+import { useRef, useCallback } from 'react';
 import { useAuth, useAuthTimer } from '@/context/AuthContext';
+import { useData } from '@/context/DataContext';
 import { Button, confirmDialog } from '@/assets/js/PrimeReact';
 import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
 import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
+
+function useLongPress(onClick, onLongPress, delay = 600) {
+  const timerRef = useRef(null);
+  const isLongPress = useRef(false);
+
+  const startPress = useCallback((e) => {
+    isLongPress.current = false;
+    timerRef.current = setTimeout(() => {
+      isLongPress.current = true;
+      onLongPress(e);
+    }, delay);
+  }, [onLongPress, delay]);
+
+  const endPress = useCallback((e) => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    if (!isLongPress.current) {
+      onClick(e);
+    }
+  }, [onClick]);
+
+  const cancelPress = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+  }, []);
+
+  return {
+    onMouseDown: startPress,
+    onMouseUp: endPress,
+    onMouseLeave: cancelPress,
+    onTouchStart: startPress,
+    onTouchEnd: endPress,
+    onContextMenu: (e) => e.preventDefault()
+  };
+}
 
 export default function Header({ onThemeClick }) {
   const { isInitialized, isSignedIn, login, logout, extendLogin } = useAuth();
   const { authRemainingTime } = useAuthTimer();
   const isFullscreen = useFullscreenStatus();
+  const { reloadData, loading } = useData();
 
   const fnLogout = () => {
     confirmDialog({
@@ -18,6 +58,27 @@ export default function Header({ onThemeClick }) {
       accept: () => logout(),
     });
   };
+
+  const fnHardReload = () => {
+    confirmDialog({
+      message: (
+        <>
+          페이지를 완전히 새로고침 하시겠습니까?<br />
+          작업 중인 내용이 초기화됩니다.
+        </>
+      ),
+      header: '완전 새로고침 확인',
+      icon: 'pi pi-refresh',
+      acceptLabel: '새로고침',
+      rejectLabel: '취소',
+      accept: () => window.location.reload(),
+    });
+  };
+
+  const refreshPressHandlers = useLongPress(
+    () => reloadData(),
+    () => fnHardReload()
+  );
 
   return (
     <header className="app-header shadow-2">
@@ -41,9 +102,10 @@ export default function Header({ onThemeClick }) {
         {isSignedIn ? (
           <>
             <Button className="refresh text-base" severity="info" rounded text raised size="small"
-              icon="pi pi-refresh"
-              disabled={!isInitialized}
-              tooltip="새로고침" tooltipOptions={{ position: 'left' }}
+              icon={loading ? "pi pi-spin pi-refresh" : "pi pi-refresh"}
+              disabled={!isInitialized || loading}
+              tooltip="새로고침 (길게 누르면 완전 새로고침)" tooltipOptions={{ position: 'left' }}
+              {...refreshPressHandlers}
             />
             <div className="flex flex-column align-items-center relative">
               {/* 인증만료까지 남은 시간 표시 (클릭 시 연장) */}

@@ -63,6 +63,17 @@ export const useData = () => {
     deleteLedgerEntry: yyyy.deleteLedgerEntry,
 
     // 로딩 상태 통합
-    loading: code.loading || asset.loading || repeat.loading || yyyy.loading
+    loading: code.loading || asset.loading || repeat.loading || yyyy.loading,
+
+    // 전체 데이터 새로고침
+    reloadData: async () => {
+      const currentYear = yyyy.selectedDate.getFullYear().toString();
+      await Promise.all([
+        code.loadSheet코드Data(),
+        asset.loadSheet자산Data(),
+        repeat.loadSheet반복Data(),
+        yyyy.loadSheet연도Data(currentYear)
+      ]);
+    }
   }), [code, asset, repeat, yyyy]);
 };
