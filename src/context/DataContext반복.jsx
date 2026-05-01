@@ -173,33 +173,36 @@ export const RepeatProvider = ({ children }) => {
     }
   }, []);
 
-  const updateRepeatEntry_rpCompleted = useCallback(async (rowData, newValue) => {
-    setSheet반복Data((prevData) =>
-      prevData.map((item) =>
-        item.sheetRowNo === rowData.sheetRowNo
-          ? { ...item, rpCompleted: newValue }
-          : item,
-      ),
-    );
-
-    try {
-      const sheetColName = String.fromCharCode(
-        'A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpCompleted,
-      );
-      await updateSheetCell(
-        `반복!${sheetColName}${rowData.sheetRowNo}`,
-        newValue,
-      );
-    } catch {
+  const updateRepeatEntry_rpCompleted = useCallback(
+    async (rowData, newValue) => {
       setSheet반복Data((prevData) =>
         prevData.map((item) =>
           item.sheetRowNo === rowData.sheetRowNo
-            ? { ...item, rpCompleted: !newValue }
+            ? { ...item, rpCompleted: newValue }
             : item,
         ),
       );
-    }
-  }, []);
+
+      try {
+        const sheetColName = String.fromCharCode(
+          'A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpCompleted,
+        );
+        await updateSheetCell(
+          `반복!${sheetColName}${rowData.sheetRowNo}`,
+          newValue,
+        );
+      } catch {
+        setSheet반복Data((prevData) =>
+          prevData.map((item) =>
+            item.sheetRowNo === rowData.sheetRowNo
+              ? { ...item, rpCompleted: !newValue }
+              : item,
+          ),
+        );
+      }
+    },
+    [],
+  );
 
   const contextValue = useMemo(
     () => ({

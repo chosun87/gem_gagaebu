@@ -151,7 +151,9 @@ export default function Repeat() {
             falseValue={true}
             tooltip="완료"
             tooltipOptions={{ position: 'top' }}
-            onChange={(e) => updateRepeatEntry_rpCompleted(item, e.target.value)}
+            onChange={(e) =>
+              updateRepeatEntry_rpCompleted(item, e.target.value)
+            }
             onClick={(e) => e.stopPropagation()}
           />
         </div>

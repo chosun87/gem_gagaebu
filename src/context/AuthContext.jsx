@@ -182,7 +182,6 @@ const AuthInternalProvider = ({ children }) => {
 };
 
 export const AuthProvider = ({ children }) => {
-
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <GoogleOAuthProvider clientId={GOOGLE_AUTH_PARAMS.CLIENT_ID}>

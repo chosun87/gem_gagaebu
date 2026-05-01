@@ -19,7 +19,8 @@ const DialogLedger = lazy(() => import('@/components/DialogLedger'));
 const DialogAI = lazy(() => import('@/components/DialogAI'));
 
 export default function MonthlyList() {
-  const { yearData, loading, selectedDate, updateLedgerEntry_gExecute } = useData();
+  const { yearData, loading, selectedDate, updateLedgerEntry_gExecute } =
+    useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
   const [showDialogAI, setShowDialogAI] = useState(false);
