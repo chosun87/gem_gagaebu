@@ -475,8 +475,7 @@ AI 입력화면
 
     - 예: /gem_gagaebu/ledger/condition/2024/5/식비
 
-- Routing URL 2. 통계 : /gem_gagaebu/statistics 3. 자산 : /gem_gagaebu/asset 4. 설정 : /gem_gagaebu/settings 5. login : /gem_gagaebu/login 6. logout : /gem_gagaebu/logout
-  7. 테마 : /gem_gagaebu/theme
+- Routing URL 2. 통계 : /gem_gagaebu/statistics 3. 자산 : /gem_gagaebu/asset 4. 설정 : /gem_gagaebu/settings 5. login : /gem_gagaebu/login 6. logout : /gem_gagaebu/logout 7. 테마 : /gem_gagaebu/theme
 
 react-router-dom을 적용하여 애플리케이션의 라우팅 구조 개편을 완료했습니다! 🎉
 
