@@ -3,12 +3,18 @@ import { REPEAT_PERIOD } from '@/assets/js/constants';
 
 /**
  * 콤마(,) 등 숫자 외의 문자가 포함된 문자열을 숫자로 파싱합니다.
- * @param {string|number} val 
+ * @param {string|number} val
  * @returns {number}
  */
 export const parseAmount = (val) => {
   if (val === undefined || val === null) return 0;
-  return Number(String(val).replace(/,/g, '').replace(/[^0-9.-]+/g, '')) || 0;
+  return (
+    Number(
+      String(val)
+        .replace(/,/g, '')
+        .replace(/[^0-9.-]+/g, ''),
+    ) || 0
+  );
 };
 
 /**
@@ -35,7 +41,7 @@ export const calculateRepeatDates = (repeat) => {
       temp = temp.add(1, 'month');
     }
   } else if (rpPeriod === REPEAT_PERIOD.WEEKLY) {
-    const dayOfWeekMap = { '일': 0, '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6 };
+    const dayOfWeekMap = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 };
     const dayOfWeek = dayOfWeekMap[rpDay];
 
     let temp = start.day(dayOfWeek);
