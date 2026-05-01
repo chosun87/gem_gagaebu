@@ -87,6 +87,8 @@ export default function Header({ onThemeClick }) {
         가계부
       </h1>
 
+      <div className="app-header-version">v.{import.meta.env.VITE_APP_VERSION}</div>
+
       <div className="app-header-buttons">
         <Button className="fullscreen text-base" severity="info" rounded text raised size="small"
           icon={isFullscreen ? "fa-solid fa-compress" : "fa-solid fa-expand"}
