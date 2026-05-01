@@ -15,6 +15,12 @@ const Calendar = lazy(() => import('@/pages/Ledger/Calendar'));
 const MonthlyList = lazy(() => import('@/pages/Ledger/MonthlyList'));
 const MonthlySummary = lazy(() => import('@/pages/Ledger/MonthlySummary'));
 
+const TabLoading = () => (
+  <div className="full-page">
+    <ProgressSpinner />
+  </div>
+);
+
 export default function Ledger() {
   const { selectedDate } = useData();
   const location = useLocation();
@@ -52,12 +58,6 @@ export default function Ledger() {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const TabLoading = () => (
-    <div className="full-page">
-      <ProgressSpinner />
-    </div>
-  );
-
   return (
     <div className="app-page ledger-page">
       <Routes>
