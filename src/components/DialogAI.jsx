@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Sidebar, Panel, Button, InputTextarea } from '@/assets/js/PrimeReact';
 
-export default function DialogAI({ visible, onHide, onParsed }) {
+export default function DialogAI({ visible, onHide }) {
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -17,8 +17,8 @@ export default function DialogAI({ visible, onHide, onParsed }) {
         // onParsed(parsedData);
         // onHide();
       }, 1000);
-    } catch (e) {
-      alert('분석에 실패했습니다.');
+    } catch (error) {
+      alert('분석에 실패했습니다. : ' + JSON.stringify(error));
       setLoading(false);
     }
   };

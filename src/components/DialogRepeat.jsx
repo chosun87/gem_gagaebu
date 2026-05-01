@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown, ToggleButton } from '@/assets/js/PrimeReact';
-import { locale, addLocale } from 'primereact/api';
+import { Button, Panel, Sidebar, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown, ToggleButton } from '@/assets/js/PrimeReact';
+// import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
 
@@ -11,36 +11,28 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
   const { saveRepeatEntry, generateLedgerFromRepeat, deleteRepeatEntry, loading: dataLoading, assetNodes, categoryOptions, defaultAssetCode, periodOptions } = useData();
 
-  const [rpType, set_rpType] = useState(repeat?.rpType || '');
-  const [rpDateS, set_rpDateS] = useState(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
-  const [rpDateE, set_rpDateE] = useState(repeat?.rpDateE ? dayjs(repeat.rpDateE).toDate() : new Date());
-  const [rpPeriod, set_rpPeriod] = useState(repeat?.rpPeriod || 'M');
-  const [rpDay, set_rpDay] = useState(repeat?.rpDay ? String(repeat.rpDay) : '1');
-  const [rpAcc1, set_rpAcc1] = useState(repeat?.rpAcc1 || '');
-  const [rpAcc2, set_rpAcc2] = useState(repeat?.rpAcc2 || '');
-  const [rpCategory, set_rpCategory] = useState(repeat?.rpCategory || '');
-  const [rpAmount, set_rpAmount] = useState(repeat?.rpAmount || 0);
-  const [rpTotalAmount, set_rpTotalAmount] = useState(repeat?.rpTotalAmount || 0);
-  const [rpMemo, set_rpMemo] = useState(repeat?.rpMemo || '');
-  const [rpCompleted, set_rpCompleted] = useState(repeat?.rpCompleted || false);
-
-  const [rpAcc1Label, set_rpAcc1Label] = useState('자산1');
-  const [rpAcc2Label, set_rpAcc2Label] = useState('자산2');
+  const [rpType, set_rpType] = useState('');
+  const [rpDateS, set_rpDateS] = useState(new Date());
+  const [rpDateE, set_rpDateE] = useState(new Date());
+  const [rpPeriod, set_rpPeriod] = useState('M');
+  const [rpDay, set_rpDay] = useState('1');
+  const [rpAcc1, set_rpAcc1] = useState('');
+  const [rpAcc2, set_rpAcc2] = useState('');
+  const [rpCategory, set_rpCategory] = useState('');
+  const [rpAmount, set_rpAmount] = useState(0);
+  const [rpTotalAmount, set_rpTotalAmount] = useState(0);
+  const [rpMemo, set_rpMemo] = useState('');
+  const [rpCompleted, set_rpCompleted] = useState(false);
   const [submitted, set_submitted] = useState(false);
 
-  // 반복일 옵션 정의
-  const monthDays = Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}일`, value: String(i + 1) }));
-  const weekDays = [
-    { label: '월요일', value: '월' },
-    { label: '화요일', value: '화' },
-    { label: '수요일', value: '수' },
-    { label: '목요일', value: '목' },
-    { label: '금요일', value: '금' },
-    { label: '토요일', value: '토' },
-    { label: '일요일', value: '일' }
-  ];
+  // 이전 프로퍼티 추적 (렌더링 중 상태 조정)
+  const [prevRepeat, set_prevRepeat] = useState(repeat);
+  const [prevVisible, set_prevVisible] = useState(visible);
 
-  useEffect(() => {
+  if (repeat !== prevRepeat || visible !== prevVisible) {
+    set_prevRepeat(repeat);
+    set_prevVisible(visible);
+
     if (visible) {
       set_rpType(repeat?.rpType || '지출');
       set_rpDateS(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
@@ -55,18 +47,8 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       set_rpMemo(repeat?.rpMemo || '');
       set_rpCompleted(repeat?.rpCompleted || false);
       set_submitted(false);
-
-      const [acc1Label, acc2Label] = _getAccLabels(repeat?.rpType || '지출');
-      set_rpAcc1Label(acc1Label);
-      set_rpAcc2Label(acc2Label);
     }
-  }, [repeat, visible, defaultAssetCode]);
-
-  useEffect(() => {
-    const [acc1Label, acc2Label] = _getAccLabels(rpType);
-    set_rpAcc1Label(acc1Label);
-    set_rpAcc2Label(acc2Label);
-  }, [rpType]);
+  }
 
   const _getAccLabels = (type) => {
     switch (type) {
@@ -76,6 +58,20 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       default: return ['자산1', '자산2']
     }
   }
+
+  // 반복일 옵션 정의
+  const monthDays = Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}일`, value: String(i + 1) }));
+  const weekDays = [
+    { label: '월요일', value: '월' },
+    { label: '화요일', value: '화' },
+    { label: '수요일', value: '수' },
+    { label: '목요일', value: '목' },
+    { label: '금요일', value: '금' },
+    { label: '토요일', value: '토' },
+    { label: '일요일', value: '일' }
+  ];
+
+  const [rpAcc1Label, rpAcc2Label] = _getAccLabels(rpType);
 
   const calculateTotalAmount = () => {
     if (!rpDateS || !rpDateE || !rpAmount || !rpPeriod || !rpDay) return;
@@ -143,7 +139,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       alert(`${addedCount}개의 내역이 신규 생성되고, ${updatedCount}개의 기존 내역이 업데이트, ${deletedCount}개의 기존 내역이 삭제 되었습니다.`);
       onHide();
     } catch (error) {
-      alert('저장 중 오류가 발생했습니다.');
+      alert('저장 중 오류가 발생했습니다. : ' + JSON.stringify(error));
     }
   };
 
@@ -160,7 +156,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           await deleteRepeatEntry(repeat);
           onHide();
         } catch (error) {
-          alert('삭제 중 오류가 발생했습니다.');
+          alert('삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error));
         }
       }
     });

@@ -16,17 +16,6 @@ export const YYYYProvider = ({ children }) => {
 
   const selectedYear = selectedDate.getFullYear().toString();
 
-  useEffect(() => {
-    if (isSignedIn) {
-      if (!loadedSheetYYYY[selectedYear]) {
-        loadSheet연도Data(selectedYear);
-      }
-    } else {
-      setSheetYYYYData({});
-      setLoadedSheetYYYY({});
-    }
-  }, [isSignedIn, selectedYear]);
-
   const loadSheet연도Data = useCallback(async (targetYear) => {
     setLoading(true);
     try {
@@ -70,6 +59,17 @@ export const YYYYProvider = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isSignedIn) {
+      if (!loadedSheetYYYY[selectedYear]) {
+        loadSheet연도Data(selectedYear);
+      }
+    } else {
+      setSheetYYYYData({});
+      setLoadedSheetYYYY({});
+    }
+  }, [isSignedIn, selectedYear, loadedSheetYYYY, loadSheet연도Data]);
+
   const handleChange_gExecute = useCallback(async (rowData, newValue) => {
     const YYYY = rowData.sheetName;
 
@@ -85,7 +85,7 @@ export const YYYYProvider = ({ children }) => {
     try {
       const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gExecuted);
       await updateSheetCell(`${rowData.sheetName}!${sheetColName}${rowData.sheetRowNo}`, newValue);
-    } catch (error) {
+    } catch {
       setSheetYYYYData(prev => ({
         ...prev,
         [YYYY]: (prev[YYYY] || []).map(item =>
@@ -100,7 +100,7 @@ export const YYYYProvider = ({ children }) => {
   const ensureSheetExists = useCallback(async (sheetName) => {
     try {
       await fetchSheetData(`${sheetName}!A1:A1`);
-    } catch (error) {
+    } catch {
       await createSheet(sheetName);
       const headers = Object.keys(SHEET_COL_INDEX.YYYY).sort((a, b) => SHEET_COL_INDEX.YYYY[a] - SHEET_COL_INDEX.YYYY[b]);
       await updateSheetHeaders(sheetName, headers);
@@ -189,7 +189,7 @@ export const YYYYProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [loadSheet연도Data, ensureSheetExists]);
+  }, [ensureSheetExists]);
 
   const generateLedgerFromRepeat = useCallback(async (repeat, rpID) => {
     setLoading(true);
@@ -232,7 +232,7 @@ export const YYYYProvider = ({ children }) => {
                 g_rpID: row[SHEET_COL_INDEX.YYYY.g_rpID]
               });
             }
-          } catch (e) {
+          } catch {
             existingEntries = [];
           }
         }
@@ -325,7 +325,7 @@ export const YYYYProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [loadSheet연도Data]);
+  }, []);
 
   const yearData = useMemo(() => sheetYYYYData[selectedYear] || [], [sheetYYYYData, selectedYear]);
 
@@ -361,4 +361,5 @@ export const YYYYProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useYYYYData = () => useContext(YYYYContext);

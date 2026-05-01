@@ -12,12 +12,6 @@ export const RepeatProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [sheet반복Data, setSheet반복Data] = useState([]);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      loadSheet반복Data();
-    }
-  }, [isSignedIn]);
-
   const loadSheet반복Data = useCallback(async () => {
     setLoading(true);
     try {
@@ -59,6 +53,12 @@ export const RepeatProvider = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isSignedIn) {
+      loadSheet반복Data();
+    }
+  }, [isSignedIn, loadSheet반복Data]);
+
   const handleChange_rpCompleted = useCallback(async (rowData, newValue) => {
     setSheet반복Data(prevData => prevData.map(item =>
       item.sheetRowNo === rowData.sheetRowNo
@@ -69,7 +69,7 @@ export const RepeatProvider = ({ children }) => {
     try {
       const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpCompleted);
       await updateSheetCell(`반복!${sheetColName}${rowData.sheetRowNo}`, newValue);
-    } catch (error) {
+    } catch {
       setSheet반복Data(prevData => prevData.map(item =>
         item.sheetRowNo === rowData.sheetRowNo
           ? { ...item, rpCompleted: !newValue }
@@ -186,4 +186,5 @@ export const RepeatProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useRepeatData = () => useContext(RepeatContext);

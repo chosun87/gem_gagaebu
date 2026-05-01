@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useMemo } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { initGoogleApi, signOut, setToken } from '@/api/googleAuth';
 import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
@@ -12,6 +12,16 @@ const AuthInternalProvider = ({ children }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [authRemainingTime, setAuthRemainingTime] = useState(0);
   const [extensionPromptShown, setExtensionPromptShown] = useState(false);
+
+  // 이전 로그인 상태 추적 (렌더링 중 상태 조정하여 cascading renders 방지)
+  const [prevIsSignedIn, setPrevIsSignedIn] = useState(isSignedIn);
+  if (isSignedIn !== prevIsSignedIn) {
+    setPrevIsSignedIn(isSignedIn);
+    if (!isSignedIn) {
+      setAuthRemainingTime(0);
+      setExtensionPromptShown(false);
+    }
+  }
 
   useEffect(() => {
     const setup = async () => {
@@ -40,6 +50,39 @@ const AuthInternalProvider = ({ children }) => {
     setup();
   }, []);
 
+  const googleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      const sessionMs = GOOGLE_AUTH_PARAMS.TOKEN_EXPIRY_MIN * 60 * 1000;
+      localStorage.setItem('gagaebu_token', tokenResponse.access_token);
+      localStorage.setItem('gagaebu_token_expiry', Date.now() + sessionMs);
+
+      setToken(tokenResponse.access_token);
+      setIsSignedIn(true);
+      setExtensionPromptShown(false);
+    },
+    onError: (error) => console.error('Login Failed:', error),
+    scope: GOOGLE_AUTH_PARAMS.SCOPES,
+  });
+
+  const login = useCallback(() => {
+    googleLogin();
+  }, [googleLogin]);
+
+  const logout = useCallback(async () => {
+    try {
+      await signOut();
+      localStorage.removeItem('gagaebu_token');
+      localStorage.removeItem('gagaebu_token_expiry');
+      setIsSignedIn(false);
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }, []);
+
+  const extendLogin = useCallback(() => {
+    googleLogin();
+  }, [googleLogin]);
+
   // 인증 만료 시 자동 로그아웃 처리 및 남은 시간 업데이트
   useEffect(() => {
     let intervalId;
@@ -67,10 +110,8 @@ const AuthInternalProvider = ({ children }) => {
           }
 
           if (remaining <= 0) {
-            // 타이머 중복 실행 방지를 위해 즉시 해제
             if (intervalId) clearInterval(intervalId);
 
-            // 이미 로그아웃 처리 중이면 중단
             const currentToken = localStorage.getItem('gagaebu_token');
             if (!currentToken) return;
 
@@ -84,15 +125,12 @@ const AuthInternalProvider = ({ children }) => {
       if (!GOOGLE_AUTH_PARAMS.DISABLED_RELOGIN) {
         intervalId = setInterval(updateRemainingTime, 1000);
       }
-    } else {
-      setAuthRemainingTime(0);
-      setExtensionPromptShown(false);
     }
 
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [isSignedIn, extensionPromptShown]);
+  }, [isSignedIn, extensionPromptShown, extendLogin, logout]);
 
   // 초 단위를 MM:SS 형식으로 변환
   const formatRemainingTime = (seconds) => {
@@ -102,50 +140,13 @@ const AuthInternalProvider = ({ children }) => {
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-
-
-
-  const googleLogin = useGoogleLogin({
-    onSuccess: (tokenResponse) => {
-      // 구글 토큰 자체의 만료 시간과 관계없이, 설정된 TOKEN_EXPIRY_MIN 분을 세션 유지 시간으로 사용
-      const sessionMs = GOOGLE_AUTH_PARAMS.TOKEN_EXPIRY_MIN * 60 * 1000;
-      localStorage.setItem('gagaebu_token', tokenResponse.access_token);
-      localStorage.setItem('gagaebu_token_expiry', Date.now() + sessionMs);
-
-      setToken(tokenResponse.access_token);
-      setIsSignedIn(true);
-      setExtensionPromptShown(false); // 토큰 갱신 시 프롬프트 상태 초기화
-    },
-    onError: (error) => console.error('Login Failed:', error),
-    scope: GOOGLE_AUTH_PARAMS.SCOPES,
-  });
-
-  const login = () => {
-    googleLogin();
-  };
-
-  const logout = async () => {
-    try {
-      await signOut();
-      localStorage.removeItem('gagaebu_token');
-      localStorage.removeItem('gagaebu_token_expiry');
-      setIsSignedIn(false);
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
-
-  const extendLogin = () => {
-    googleLogin();
-  };
-
   const authValue = useMemo(() => ({
     isInitialized,
     isSignedIn,
     login,
     logout,
     extendLogin
-  }), [isInitialized, isSignedIn]);
+  }), [isInitialized, isSignedIn, login, logout, extendLogin]);
 
   const timerValue = useMemo(() => ({
     authRemainingTime: formatRemainingTime(authRemainingTime)
@@ -171,5 +172,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuthTimer = () => useContext(AuthTimerContext);

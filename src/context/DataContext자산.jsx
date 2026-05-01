@@ -10,12 +10,6 @@ export const AssetProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [sheet자산Data, setSheet자산Data] = useState([]);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      loadSheet자산Data();
-    }
-  }, [isSignedIn]);
-
   const loadSheet자산Data = useCallback(async () => {
     setLoading(true);
     try {
@@ -48,6 +42,12 @@ export const AssetProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (isSignedIn) {
+      loadSheet자산Data();
+    }
+  }, [isSignedIn, loadSheet자산Data]);
 
   const assetNodes = useMemo(() => {
     const groups = {};
@@ -120,4 +120,5 @@ export const AssetProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAssetData = () => useContext(AssetContext);

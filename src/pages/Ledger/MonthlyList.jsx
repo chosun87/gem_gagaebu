@@ -1,23 +1,16 @@
-import { useState, useRef, lazy, Suspense } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
-import { useSwipe } from '@/hooks/useSwipe';
 import { Badge, Calendar as PrimeCalendar, DataView, Dropdown, InputSwitch, Message, SpeedDial, Tooltip, ProgressSpinner } from '@/assets/js/PrimeReact';
-import { locale, addLocale } from 'primereact/api';
+// import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
 const DialogLedger = lazy(() => import('@/components/DialogLedger'));
 const DialogAI = lazy(() => import('@/components/DialogAI'));
 
-// 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
-import { PrimeReact_locale } from '@/assets/js/PrimeReact';
-
-addLocale('ko', PrimeReact_locale.ko.Calendar);
-locale('ko');
-
 export default function MonthlyList() {
   const { yearData, loading, selectedDate, handleChange_gExecute } = useData();
-  const { handleMonthChange, handleViewDateChange, moveMonth } = useMonthSync('/ledger/monthlyList');
+  const { handleMonthChange, handleViewDateChange } = useMonthSync('/ledger/monthlyList');
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
   const [showDialogAI, setShowDialogAI] = useState(false);
@@ -61,11 +54,6 @@ export default function MonthlyList() {
   }
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-
-  const swipeHandlers = useSwipe({
-    onSwipeLeft: () => moveMonth(1),
-    onSwipeRight: () => moveMonth(-1)
-  });
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   // Calendar 월 선택 템플릿

@@ -20,7 +20,7 @@ export function useMonthSync(basePath) {
         setSelectedDate(newDate);
       }
     }
-  }, [yearMonth]);
+  }, [yearMonth, selectedDate, setSelectedDate]);
 
   // 2. 기본 URL 진입 시 리다이렉트 (공통)
   useEffect(() => {

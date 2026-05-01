@@ -4,6 +4,7 @@ import { THEME_NODES } from '@/assets/js/PrimeReactThemes';
 
 const ThemeContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {

@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react';
+import { createContext, useMemo } from 'react';
 import { CodeProvider, useCodeData } from './DataContext코드';
 import { AssetProvider, useAssetData } from './DataContext자산';
 import { RepeatProvider, useRepeatData } from './DataContext반복';
@@ -20,6 +20,7 @@ export const DataProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useData = () => {
   const code = useCodeData();
   const asset = useAssetData();

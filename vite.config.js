@@ -1,7 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from "path";
+import path from "node:path";
+import { fileURLToPath } from 'node:url';
 import packageJson from './package.json';
+
+// ESM 환경에서도 __dirname을 사용할 수 있도록 설정 (Node.js 20+ 권장)
+// __dirname은 현재 파일의 디렉토리 경로를 나타냅니다.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({

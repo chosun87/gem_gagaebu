@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, TreeSelect, confirmDialog, Dropdown, InputSwitch, Badge, ToggleButton } from '@/assets/js/PrimeReact';
+import { Button, Panel, Sidebar, confirmDialog, Dropdown, InputSwitch, Badge, ToggleButton } from '@/assets/js/PrimeReact';
 import { Calendar as PrimeCalendar, InputNumber, InputText, SelectButton } from '@/assets/js/PrimeReact';
-import { locale, addLocale } from 'primereact/api';
+// import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
 
@@ -12,19 +12,26 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
   const { saveLedgerEntry, deleteLedgerEntry, loading: dataLoading, assetNodes, categoryOptions, defaultAssetCode } = useData();
 
-  const [gDate, set_gDate] = useState(ledger?.gDate ? dayjs(ledger.gDate).toDate() : new Date());
-  const [gType, set_gType] = useState(ledger?.gType || '');
-  const [gAcc1, set_gAcc1] = useState(ledger?.gAcc1 || '');
-  const [gAcc2, set_gAcc2] = useState(ledger?.gAcc2 || '');
-  const [gCategory, set_gCategory] = useState(ledger?.gCategory || '');
-  const [gAmount, set_gAmount] = useState(ledger?.gAmount || 0);
-  const [gMemo, set_gMemo] = useState(ledger?.gMemo || '');
-  const [gExecuted, set_gExecuted] = useState(ledger?.gExecuted || false);
-  const [gAcc1Label, set_gAcc1Label] = useState('자산1');
-  const [gAcc2Label, set_gAcc2Label] = useState('자산2');
+  const [gDate, set_gDate] = useState(new Date());
+  const [gType, set_gType] = useState('');
+  const [gAcc1, set_gAcc1] = useState('');
+  const [gAcc2, set_gAcc2] = useState('');
+  const [gCategory, set_gCategory] = useState('');
+  const [gAmount, set_gAmount] = useState(0);
+  const [gMemo, set_gMemo] = useState('');
+  const [gExecuted, set_gExecuted] = useState(false);
   const [submitted, set_submitted] = useState(false);
 
-  useEffect(() => {
+  // 이전 프로퍼티 추적 (React 추천 패턴: 렌더링 중 상태 조정)
+  const [prevLedger, set_prevLedger] = useState(ledger);
+  const [prevVisible, set_prevVisible] = useState(visible);
+  const [prevParams, set_prevParams] = useState(params);
+
+  if (ledger !== prevLedger || visible !== prevVisible || params !== prevParams) {
+    set_prevLedger(ledger);
+    set_prevVisible(visible);
+    set_prevParams(params);
+
     if (visible) {
       set_gDate(ledger?.gDate ? dayjs(ledger.gDate).toDate() : (params?.date ? dayjs(params.date).toDate() : new Date()));
       set_gType(ledger?.gType || params?.type || '지출');
@@ -35,27 +42,17 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       set_gMemo(ledger?.gMemo || '');
       set_gExecuted(ledger?.gExecuted || false);
       set_submitted(false);
-
-      const [acc1Label, acc2Label] = _getAccLabels(ledger?.gType || params?.type || '지출');
-      set_gAcc1Label(acc1Label);
-      set_gAcc2Label(acc2Label);
     }
-  }, [ledger, visible, defaultAssetCode, params]);
+  }
 
-  useEffect(() => {
-    const [acc1Label, acc2Label] = _getAccLabels(gType);
-    set_gAcc1Label(acc1Label);
-    set_gAcc2Label(acc2Label);
-  }, [gType]);
-
-  // 신규 입력일 때 날짜에 따라 실행 여부 자동 설정
-  useEffect(() => {
-    if (!ledger && gDate) {
-      const today = dayjs().startOf('day');
-      const selectedDate = dayjs(gDate).startOf('day');
-      set_gExecuted(!selectedDate.isAfter(today));
-    }
-  }, [gDate, ledger]);
+  // 신규 입력일 때 날짜에 따라 실행 여부 자동 설정 (이것도 렌더링 중에 조정 가능)
+  const [prevGDate, set_prevGDate] = useState(gDate);
+  if (!ledger && gDate !== prevGDate) {
+    set_prevGDate(gDate);
+    const today = dayjs().startOf('day');
+    const selectedDate = dayjs(gDate).startOf('day');
+    set_gExecuted(!selectedDate.isAfter(today));
+  }
 
   const _getAccLabels = (type) => {
     switch (type) {
@@ -65,6 +62,8 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       default: return ['자산1', '자산2']
     }
   }
+
+  const [gAcc1Label, gAcc2Label] = _getAccLabels(gType);
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const onSave = async () => {
@@ -92,7 +91,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       await saveLedgerEntry(ledger, formData);
       onHide();
     } catch (error) {
-      alert('저장 중 오류가 발생했습니다.');
+      alert('저장 중 오류가 발생했습니다. : ' + JSON.stringify(error));
     }
   };
 
@@ -109,7 +108,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
           await deleteLedgerEntry(ledger);
           onHide();
         } catch (error) {
-          alert('삭제 중 오류가 발생했습니다.');
+          alert('삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error));
         }
       }
     });

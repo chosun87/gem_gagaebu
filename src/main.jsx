@@ -6,8 +6,8 @@ import App from './App.jsx';
 import '@/assets/css/all.scss';
 
 // PrimeReact Configuration
-import { PrimeReactProvider, addLocale } from 'primereact/api';
 import PrimeReact from 'primereact/api';
+import { PrimeReactProvider, addLocale } from 'primereact/api';
 import { PrimeReact_locale } from '@/assets/js/PrimeReact';
 
 addLocale('ko', PrimeReact_locale.ko.Calendar);

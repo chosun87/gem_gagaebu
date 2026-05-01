@@ -1,7 +1,7 @@
 import { Chart as ChartJS, registerables } from 'chart.js';
 ChartJS.register(...registerables);
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
 import { Dropdown, Calendar as PrimeCalendar, DataTable, Column } from '@/assets/js/PrimeReact';

@@ -11,12 +11,6 @@ export const CodeProvider = ({ children }) => {
   const [periodOptions, setPeriodOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      loadSheet코드Data();
-    }
-  }, [isSignedIn]);
-
   const loadSheet코드Data = useCallback(async () => {
     setLoading(true);
     try {
@@ -63,6 +57,12 @@ export const CodeProvider = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isSignedIn) {
+      loadSheet코드Data();
+    }
+  }, [isSignedIn, loadSheet코드Data]);
+
   // 추후 CRUD를 위한 스텁 (Stub for future CRUD)
   const saveCodeEntry = useCallback(async (entry) => {
     console.log('saveCodeEntry stub', entry);
@@ -97,4 +97,5 @@ export const CodeProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCodeData = () => useContext(CodeContext);

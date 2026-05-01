@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, InputSwitch, DataView, Message, Tag, Menu, Panel, ProgressSpinner } from '@/assets/js/PrimeReact';
+import { Badge, Button, InputSwitch, DataView, Message, Menu, Panel, ProgressSpinner } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 import { REPEAT_PERIOD } from '@/assets/js/constants';
 
@@ -8,7 +8,7 @@ const DialogRepeat = lazy(() => import('@/components/DialogRepeat'));
 const DialogList = lazy(() => import('@/components/DialogList'));
 
 export default function Repeat() {
-  const { sheet반복Data, sheetYYYYData, loading, handleChange_rpCompleted } = useData();
+  const { sheet반복Data, loading, handleChange_rpCompleted } = useData();
   const [repeat, setRepeat] = useState(null);
   const [showDialogRepeat, setShowDialogRepeat] = useState(false);
 
