@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useMemo, useCallback } from 'react';
 import {
   Routes,
   Route,
@@ -26,43 +26,58 @@ export default function Ledger() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  let activeIndex = 0;
-  if (location.pathname.includes('/monthlyList')) {
-    activeIndex = 1;
-  } else if (location.pathname.includes('/monthlySummary')) {
-    activeIndex = 2;
-  } else if (location.pathname.includes('/analysis')) {
-    activeIndex = 3;
-  }
+  const tabs = useMemo(
+    () => [
+      {
+        path: 'calendar',
+        header: '달력',
+        icon: 'pi pi-calendar mr-2',
+        element: <Calendar />,
+      },
+      {
+        path: 'monthlyList',
+        header: '목록',
+        icon: 'pi pi-list-check mr-2',
+        element: <MonthlyList />,
+      },
+      {
+        path: 'monthlySummary',
+        header: '그래프',
+        icon: 'pi pi-chart-bar mr-2',
+        element: <MonthlySummary monthLength={4} />,
+      },
+      {
+        path: 'analysis',
+        header: '지출분석',
+        icon: 'pi pi-chart-pie mr-2',
+        isReady: false,
+      },
+    ],
+    [],
+  );
+
+  const activeIndex = useMemo(() => {
+    const index = tabs.findIndex((tab) =>
+      location.pathname.includes(`/${tab.path}`),
+    );
+    return index === -1 ? 0 : index;
+  }, [location.pathname, tabs]);
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-  const handleTabChange = (e) => {
-    const yearMonth = dayjs(selectedDate).format('YYYYMM');
-
-    switch (e.index) {
-      case 0:
-        navigate(`/ledger/calendar/${yearMonth}`);
-        break;
-      case 1:
-        navigate(`/ledger/monthlyList/${yearMonth}`);
-        break;
-      case 2:
-        navigate(`/ledger/monthlySummary/${yearMonth}`);
-        break;
-      case 3:
-        navigate(`/ledger/analysis/${yearMonth}`);
-        break;
-      default:
-        navigate(`/ledger/calendar/${yearMonth}`);
-    }
-  };
+  const handleTabChange = useCallback(
+    (e) => {
+      const yearMonth = dayjs(selectedDate).format('YYYYMM');
+      const targetPath = tabs[e.index].path;
+      navigate(`/ledger/${targetPath}/${yearMonth}`);
+    },
+    [navigate, selectedDate, tabs],
+  );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <div className="app-page ledger-page">
       <Routes>
         <Route path="/" element={<Navigate to="/ledger/calendar" replace />} />
-
         <Route
           path="*"
           element={
@@ -71,69 +86,34 @@ export default function Ledger() {
               activeIndex={activeIndex}
               onTabChange={handleTabChange}
             >
-              <TabPanel
-                header={<span className="text-lg">달력</span>}
-                leftIcon="pi pi-calendar mr-2"
-              >
-                <Suspense fallback={<TabLoading />}>
-                  <Routes>
-                    <Route path="calendar/:yearMonth" element={<Calendar />} />
-                    <Route path="calendar" element={<Calendar />} />
-                    <Route path="*" element={<Calendar />} />
-                  </Routes>
-                </Suspense>
-              </TabPanel>
-              <TabPanel
-                header={<span className="text-lg">목록</span>}
-                leftIcon="pi pi-list-check mr-2"
-                className="px-0"
-              >
-                <Suspense fallback={<TabLoading />}>
-                  <Routes>
-                    <Route
-                      path="monthlyList/:yearMonth"
-                      element={<MonthlyList />}
-                    />
-                    <Route path="monthlyList" element={<MonthlyList />} />
-                    <Route path="*" element={<MonthlyList />} />
-                  </Routes>
-                </Suspense>
-              </TabPanel>
-              <TabPanel
-                header={<span className="text-lg">그래프</span>}
-                leftIcon="pi pi-chart-bar mr-2"
-              >
-                <Suspense fallback={<TabLoading />}>
-                  <Routes>
-                    <Route
-                      path="monthlySummary/:yearMonth/:months"
-                      element={<MonthlySummary monthLength={4} />}
-                    />
-                    <Route
-                      path="monthlySummary/:yearMonth"
-                      element={<MonthlySummary monthLength={4} />}
-                    />
-                    <Route
-                      path="monthlySummary"
-                      element={<MonthlySummary monthLength={4} />}
-                    />
-                    <Route
-                      path="*"
-                      element={<MonthlySummary monthLength={4} />}
-                    />
-                  </Routes>
-                </Suspense>
-              </TabPanel>
-              <TabPanel
-                header={<span className="text-lg">지출분석</span>}
-                leftIcon="pi pi-chart-pie mr-2"
-                className="px-0"
-              >
-                <div className="p-4 text-center text-500">
-                  <i className="pi pi-chart-pie text-6xl mb-3 opacity-30"></i>
-                  <p>지출분석 서비스 준비 중입니다.</p>
-                </div>
-              </TabPanel>
+              {tabs.map((tab, idx) => (
+                <TabPanel
+                  key={tab.path}
+                  header={<span className="text-lg">{tab.header}</span>}
+                  leftIcon={tab.icon}
+                  className={idx === 1 || idx === 3 ? 'px-0' : ''}
+                >
+                  {tab.isReady !== false ? (
+                    <Suspense fallback={<TabLoading />}>
+                      <Routes>
+                        <Route
+                          path={`${tab.path}/:yearMonth/*`}
+                          element={tab.element}
+                        />
+                        <Route path={`${tab.path}/*`} element={tab.element} />
+                        <Route path="*" element={tab.element} />
+                      </Routes>
+                    </Suspense>
+                  ) : (
+                    <div className="p-4 text-center text-500">
+                      <i
+                        className={`${tab.icon.split(' ')[0]} text-6xl mb-3 opacity-30`}
+                      ></i>
+                      <p>{tab.header} 서비스 준비 중입니다.</p>
+                    </div>
+                  )}
+                </TabPanel>
+              ))}
             </TabView>
           }
         />

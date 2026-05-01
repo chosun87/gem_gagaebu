@@ -12,9 +12,9 @@ import {
   appendSheetRow,
   updateSheetRow,
 } from '@/api/sheetApi';
-import { parseAmount } from '@/utils/dataUtils';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
+import { parseAmount } from '@/assets/js/dataUtils';
 import dayjs from 'dayjs';
 
 const RepeatContext = createContext(null);

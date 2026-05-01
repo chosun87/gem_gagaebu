@@ -36,12 +36,6 @@ export function useMonthSync(basePath) {
     navigate(`${basePath}/${dayjs(dateObj).format('YYYYMM')}`);
   };
 
-  // 스와이프 등에서 쓸 수 있는 월 이동 함수
-  const moveMonth = (offset) => {
-    const newDate = dayjs(selectedDate).add(offset, 'month').toDate();
-    navigateToMonth(newDate);
-  };
-
   const handleMonthChange = (e) => {
     if (!e.year || !e.month) return;
     const newDate = new Date(e.year, e.month - 1, 1);
@@ -52,6 +46,12 @@ export function useMonthSync(basePath) {
     if (e.value instanceof Date) {
       navigateToMonth(e.value);
     }
+  };
+
+  // 스와이프 등에서 쓸 수 있는 월 이동 함수
+  const moveMonth = (offset) => {
+    const newDate = dayjs(selectedDate).add(offset, 'month').toDate();
+    navigateToMonth(newDate);
   };
 
   return {

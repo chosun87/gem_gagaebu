@@ -2,19 +2,16 @@ import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
 import { useSwipe } from '@/hooks/useSwipe';
-import { Calendar as PrimeCalendar, Dropdown } from '@/assets/js/PrimeReact';
-// import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
 
+import MonthNavigator from '@/components/MonthNavigator';
+import LedgerSummary from '@/components/LedgerSummary';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-const DialogList = lazy(() => import('@/components/DialogList'));
-import LedgerSummary from '@/components/LedgerSummary';
 
-// 한글 로케일 전역 설정 (언어만 바꿔도 달력이 한글로 렌더링 됨)
-// import { PrimeReact_locale } from '@/assets/js/PrimeReact';
+const DialogList = lazy(() => import('@/components/DialogList'));
 
 export default function Calendar() {
   const { yearData, selectedDate } = useData();
@@ -142,28 +139,6 @@ export default function Calendar() {
   });
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  // Calendar 월 선택 템플릿
-  const templateMonthNavigator = (e) => {
-    return (
-      <Dropdown
-        className="month-dropdown"
-        value={e.value}
-        options={e.options}
-        onChange={(event) => e.onChange(event.originalEvent, event.value)}
-      />
-    );
-  };
-  // Calendar 연도 선택 템플릿
-  const templateYearNavigator = (e) => {
-    return (
-      <Dropdown
-        className="year-dropdown"
-        value={e.value}
-        options={e.options}
-        onChange={(event) => e.onChange(event.originalEvent, event.value)}
-      />
-    );
-  };
 
   const templateDayCell = (arg) => {
     const day = arg.date.getDate();
@@ -217,15 +192,8 @@ export default function Calendar() {
 
   return (
     <div className="panel-inner calendar-page">
-      <PrimeCalendar
-        className="month-calendar"
-        inline
-        locale="ko"
-        yearNavigator
-        yearNavigatorTemplate={templateYearNavigator}
-        monthNavigator
-        monthNavigatorTemplate={templateMonthNavigator}
-        value={selectedDate}
+      <MonthNavigator
+        selectedDate={selectedDate}
         onMonthChange={handleMonthChange}
         onViewDateChange={handleViewDateChange}
       />

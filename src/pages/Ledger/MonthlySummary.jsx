@@ -1,19 +1,16 @@
 import { Chart as ChartJS, registerables } from 'chart.js';
-ChartJS.register(...registerables);
-
 import { useMemo, useEffect, useRef } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
-import {
-  Dropdown,
-  Calendar as PrimeCalendar,
-  DataTable,
-  Column,
-} from '@/assets/js/PrimeReact';
+import { DataTable, Column } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
+
+import MonthNavigator from '@/components/MonthNavigator';
 import MonthlySummaryChart from '@/components/MonthlySummaryChart';
 
 const MONTH_LENGTH = 6;
+
+ChartJS.register(...registerables);
 
 export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   const { sheetYYYYData, loadedSheetYYYY, loadSheet연도Data, selectedDate } =
@@ -76,46 +73,21 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
     });
   }, [requiredYears, loadedSheetYYYY, loadSheet연도Data]);
 
+  const templateAmountBody = (rowData, field) => {
+    return <>{(rowData[field] || 0).toLocaleString()}</>;
+  };
+
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const { handleMonthChange, handleViewDateChange } = useMonthSync(
     '/ledger/monthlySummary',
   );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  // 금액 포맷팅 템플릿
-  const templateAmountBody = (rowData, field) => {
-    return <>{(rowData[field] || 0).toLocaleString()}</>;
-  };
-
-  // Calendar 월 선택 템플릿
-  const templateMonthNavigator = (e) => (
-    <Dropdown
-      className="month-dropdown"
-      value={e.value}
-      options={e.options}
-      onChange={(event) => e.onChange(event.originalEvent, event.value)}
-    />
-  );
-  const templateYearNavigator = (e) => (
-    <Dropdown
-      className="year-dropdown"
-      value={e.value}
-      options={e.options}
-      onChange={(event) => e.onChange(event.originalEvent, event.value)}
-    />
-  );
 
   return (
     <div className="panel-inner summary-page">
-      <PrimeCalendar
-        className="month-calendar"
-        inline
-        locale="ko"
-        yearNavigator
-        yearNavigatorTemplate={templateYearNavigator}
-        monthNavigator
-        monthNavigatorTemplate={templateMonthNavigator}
-        value={selectedDate}
+      <MonthNavigator
+        selectedDate={selectedDate}
         onMonthChange={handleMonthChange}
         onViewDateChange={handleViewDateChange}
       />

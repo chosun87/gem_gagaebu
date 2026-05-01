@@ -1,19 +1,18 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState, lazy, Suspense, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
 import {
   Badge,
-  Calendar as PrimeCalendar,
   DataView,
-  Dropdown,
   InputSwitch,
   Message,
   SpeedDial,
   Tooltip,
   ProgressSpinner,
 } from '@/assets/js/PrimeReact';
-// import { locale, addLocale } from 'primereact/api';
 import dayjs from 'dayjs';
+
+import MonthNavigator from '@/components/MonthNavigator';
 
 const DialogLedger = lazy(() => import('@/components/DialogLedger'));
 const DialogAI = lazy(() => import('@/components/DialogAI'));
@@ -46,15 +45,17 @@ export default function MonthlyList() {
   ];
 
   // yearData에서 현재 선택된 달의 데이터만 필터링
-  const currentMonthNum = selectedDate.getMonth() + 1;
-  const monthData = yearData.filter((item) => {
-    const dateParts = item.gDate.split(/[-./\s]+/);
-    if (dateParts.length >= 2) {
-      const rowMonthNum = parseInt(dateParts[1], 10);
-      return rowMonthNum === currentMonthNum;
-    }
-    return false;
-  });
+  const monthData = useMemo(() => {
+    const currentMonthNum = selectedDate.getMonth() + 1;
+    return yearData.filter((item) => {
+      const dateParts = item.gDate.split(/[-./\s]+/);
+      if (dateParts.length >= 2) {
+        const rowMonthNum = parseInt(dateParts[1], 10);
+        return rowMonthNum === currentMonthNum;
+      }
+      return false;
+    });
+  }, [yearData, selectedDate]);
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogLedger = (ledger) => {
@@ -72,28 +73,6 @@ export default function MonthlyList() {
   );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  // Calendar 월 선택 템플릿
-  const templateMonthNavigator = (e) => {
-    return (
-      <Dropdown
-        className="month-dropdown"
-        value={e.value}
-        options={e.options}
-        onChange={(event) => e.onChange(event.originalEvent, event.value)}
-      />
-    );
-  };
-  // Calendar 연도 선택 템플릿
-  const templateYearNavigator = (e) => {
-    return (
-      <Dropdown
-        className="year-dropdown"
-        value={e.value}
-        options={e.options}
-        onChange={(event) => e.onChange(event.originalEvent, event.value)}
-      />
-    );
-  };
 
   // 아이템 템플릿 (DialogList.jsx의 템플릿과 동일하게 구성)
   const templateDateViewItem = (item) => {
@@ -145,15 +124,8 @@ export default function MonthlyList() {
   return (
     <>
       <div className="panel-inner list-page">
-        <PrimeCalendar
-          className="month-calendar"
-          inline
-          locale="ko"
-          yearNavigator
-          yearNavigatorTemplate={templateYearNavigator}
-          monthNavigator
-          monthNavigatorTemplate={templateMonthNavigator}
-          value={selectedDate}
+        <MonthNavigator
+          selectedDate={selectedDate}
           onMonthChange={handleMonthChange}
           onViewDateChange={handleViewDateChange}
         />
