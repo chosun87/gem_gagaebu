@@ -35,12 +35,12 @@
   --color-수입: var(--blue-500);
   --color-지출: var(--pink-500);
   --color-이체: var(--green-500);
-  --bg-수입: var(--blue-50);
-  --bg-지출: var(--pink-50);
-  --bg-이체: var(--green-50);
-  --bg-수입-100: var(--blue-100);
-  --bg-지출-100: var(--pink-100);
-  --bg-이체-100: var(--green-100);
+  --bg-수입: color-mix(in srgb, var(--blue-100), transparent 50%);
+  --bg-지출: color-mix(in srgb, var(--pink-100), transparent 50%);
+  --bg-이체: color-mix(in srgb, var(--green-100), transparent 50%);
+  --bg-수입-100: var(--blue-200);
+  --bg-지출-100: var(--pink-200);
+  --bg-이체-100: var(--green-200);
   // z-index
 
   // 애니메이션
@@ -53,9 +53,9 @@
   --color-수입: var(--blue-500);
   --color-지출: var(--pink-500);
   --color-이체: var(--green-500);
-  --bg-수입: var(--blue-800);
-  --bg-지출: var(--pink-800);
-  --bg-이체: var(--green-800);
+  --bg-수입: color-mix(in srgb, var(--blue-800), transparent 50%);
+  --bg-지출: color-mix(in srgb, var(--pink-800), transparent 50%);
+  --bg-이체: color-mix(in srgb, var(--green-800), transparent 50%);
   --bg-수입-100: var(--blue-700);
   --bg-지출-100: var(--pink-700);
   --bg-이체-100: var(--green-700);
