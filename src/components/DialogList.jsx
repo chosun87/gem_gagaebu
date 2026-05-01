@@ -202,7 +202,7 @@ export default function DialogList({ visible, onHide, params }) {
           severity="secondary"
           size="large"
           outlined
-          label="취소"
+          label="닫기"
           onClick={onHide}
           disabled={dataLoading}
         />

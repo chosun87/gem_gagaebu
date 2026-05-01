@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
 import {
   Routes,
   Route,
@@ -37,8 +37,6 @@ function App() {
   // 배경이 될 위치 (다이얼로그가 떠도 뒤에 깔릴 화면)
   const background = location.state && location.state.background;
 
-  const [isThemeOpen, setIsThemeOpen] = useState(false);
-
   useEffect(() => {
     if (location.pathname === '/logout') {
       logout();
@@ -46,38 +44,34 @@ function App() {
     }
   }, [location.pathname, logout, navigate]);
 
-  // Footer 메뉴 인덱스 매칭
-  let activeIndex = 0;
-  if (location.pathname.startsWith('/statistics')) {
-    activeIndex = 1;
-  } else if (location.pathname.startsWith('/asset')) {
-    activeIndex = 2;
-  } else if (location.pathname.startsWith('/settings')) {
-    activeIndex = 3;
-  } else {
-    activeIndex = 0;
-  }
+  const menuItems = useMemo(
+    () => [
+      { path: '/ledger', label: '가계부' },
+      { path: '/statistics', label: '통계' },
+      { path: '/asset', label: '자산' },
+      { path: '/settings', label: '설정' },
+    ],
+    [],
+  );
 
-  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-  const handleMenuChange = (menuIndex) => {
-    switch (menuIndex) {
-      case 0:
-        navigate('/ledger');
-        break;
-      case 1:
-        navigate('/statistics');
-        break;
-      case 2:
-        navigate('/asset');
-        break;
-      case 3:
-        // 현재 위치를 배경으로 전달하며 설정으로 이동
-        navigate('/settings', { state: { background: location } });
-        break;
-      default:
-        navigate('/ledger');
-    }
-  };
+  const activeIndex = useMemo(() => {
+    const index = menuItems.findIndex((item) =>
+      location.pathname.startsWith(item.path),
+    );
+    return index === -1 ? 0 : index;
+  }, [location.pathname, menuItems]);
+
+  const handleMenuChange = useCallback(
+    (index) => {
+      const item = menuItems[index];
+      if (item.path === '/settings') {
+        navigate(item.path, { state: { background: location } });
+      } else {
+        navigate(item.path);
+      }
+    },
+    [navigate, location, menuItems],
+  );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -130,9 +124,8 @@ function App() {
 
       <Suspense fallback={null}>
         <DialogTheme
-          visible={location.pathname.startsWith('/theme') || isThemeOpen}
+          visible={location.pathname.startsWith('/theme')}
           onHide={() => {
-            setIsThemeOpen(false);
             if (location.pathname.startsWith('/theme')) navigate(-1);
           }}
         />

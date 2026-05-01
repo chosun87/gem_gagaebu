@@ -207,7 +207,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
           severity="secondary"
           size="large"
           outlined
-          label="취소"
+          label="닫기"
           onClick={onHide}
           disabled={dataLoading}
         />
@@ -272,7 +272,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                 onFocus={() => setDateFocused(true)}
                 onBlur={() => setDateFocused(false)}
               />
-              <div className="flex flex-nowrap ml-auto">
+              <div className="flex align-items-center flex-nowrap ml-auto">
                 <Badge
                   severity={gExecuted ? 'info' : 'secondary'}
                   className="mr-2 text-base"

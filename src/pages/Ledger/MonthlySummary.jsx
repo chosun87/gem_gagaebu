@@ -73,16 +73,15 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
     });
   }, [requiredYears, loadedSheetYYYY, loadSheet연도Data]);
 
-  const templateAmountBody = (rowData, field) => {
-    return <>{(rowData[field] || 0).toLocaleString()}</>;
-  };
-
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const { handleMonthChange, handleViewDateChange } = useMonthSync(
     '/ledger/monthlySummary',
   );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const templateAmountBody = (rowData, field) => {
+    return <>{(rowData[field] || 0).toLocaleString()}</>;
+  };
 
   return (
     <div className="panel-inner summary-page">

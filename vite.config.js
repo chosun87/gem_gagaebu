@@ -22,11 +22,17 @@ export default defineConfig({
     port: 3000, // 원하는 포트 번호
     strictPort: true, // 선택: 포트가 이미 사용 중이면 에러 발생
     open: true, // 서버 실행 시 브라우저 자동 열기 (선택 사항)
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    },
   },
   preview: {
     port: 4000,
     strictPort: true, // 선택: 포트가 이미 사용 중이면 에러 발생
     open: true, // 서버 실행 시 브라우저 자동 열기 (선택 사항)
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    },
   },
   resolve: {
     alias: [

@@ -433,10 +433,17 @@ export const YYYYProvider = ({ children }) => {
         loadSheet연도Data(selectedYear);
       }
     } else {
-      setSheetYYYYData({});
-      setLoadedSheetYYYY({});
+      // 로그아웃 상태일 때 데이터 초기화 (이미 초기화된 경우 무한 루프 방지를 위해 체크)
+      if (Object.keys(sheetYYYYData).length > 0) setSheetYYYYData({});
+      if (Object.keys(loadedSheetYYYY).length > 0) setLoadedSheetYYYY({});
     }
-  }, [isSignedIn, selectedYear, loadedSheetYYYY, loadSheet연도Data]);
+  }, [
+    isSignedIn,
+    selectedYear,
+    loadedSheetYYYY,
+    loadSheet연도Data,
+    sheetYYYYData,
+  ]);
 
   return (
     <YYYYContext.Provider value={contextValue}>{children}</YYYYContext.Provider>

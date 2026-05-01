@@ -30,7 +30,7 @@ export default function DialogAI({ visible, onHide }) {
           severity="secondary"
           size="large"
           outlined
-          label="취소"
+          label="닫기"
           onClick={onHide}
           disabled={loading}
         />
