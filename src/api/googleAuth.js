@@ -11,7 +11,7 @@ export const initGoogleApi = () => {
       try {
         await window.gapi.client.init({
           discoveryDocs: GOOGLE_AUTH_PARAMS.DISCOVERY_DOCS,
-          plugin_name: "gagaebu"
+          plugin_name: 'gagaebu',
         });
         resolve();
       } catch (error) {

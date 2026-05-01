@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { initGoogleApi, signOut, setToken } from '@/api/googleAuth';
 import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
@@ -15,6 +22,7 @@ const AuthInternalProvider = ({ children }) => {
 
   // 이전 로그인 상태 추적 (렌더링 중 상태 조정하여 cascading renders 방지)
   const [prevIsSignedIn, setPrevIsSignedIn] = useState(isSignedIn);
+
   if (isSignedIn !== prevIsSignedIn) {
     setPrevIsSignedIn(isSignedIn);
     if (!isSignedIn) {
@@ -91,7 +99,10 @@ const AuthInternalProvider = ({ children }) => {
       const updateRemainingTime = () => {
         const tokenExpiry = localStorage.getItem('gagaebu_token_expiry');
         if (tokenExpiry) {
-          const remaining = Math.max(0, Math.floor((Number(tokenExpiry) - Date.now()) / 1000));
+          const remaining = Math.max(
+            0,
+            Math.floor((Number(tokenExpiry) - Date.now()) / 1000),
+          );
           setAuthRemainingTime(remaining);
 
           // 3분(180초) 남았을 때 연장 여부 확인
@@ -105,7 +116,7 @@ const AuthInternalProvider = ({ children }) => {
               rejectLabel: '나중에',
               accept: () => {
                 extendLogin();
-              }
+              },
             });
           }
 
@@ -115,7 +126,9 @@ const AuthInternalProvider = ({ children }) => {
             const currentToken = localStorage.getItem('gagaebu_token');
             if (!currentToken) return;
 
-            alert('인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.\n다시 로그인해 주세요.');
+            alert(
+              '인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.\n다시 로그인해 주세요.',
+            );
             logout();
           }
         }
@@ -140,17 +153,23 @@ const AuthInternalProvider = ({ children }) => {
     return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
-  const authValue = useMemo(() => ({
-    isInitialized,
-    isSignedIn,
-    login,
-    logout,
-    extendLogin
-  }), [isInitialized, isSignedIn, login, logout, extendLogin]);
+  const authValue = useMemo(
+    () => ({
+      isInitialized,
+      isSignedIn,
+      login,
+      logout,
+      extendLogin,
+    }),
+    [isInitialized, isSignedIn, login, logout, extendLogin],
+  );
 
-  const timerValue = useMemo(() => ({
-    authRemainingTime: formatRemainingTime(authRemainingTime)
-  }), [authRemainingTime]);
+  const timerValue = useMemo(
+    () => ({
+      authRemainingTime: formatRemainingTime(authRemainingTime),
+    }),
+    [authRemainingTime],
+  );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -163,16 +182,14 @@ const AuthInternalProvider = ({ children }) => {
 };
 
 export const AuthProvider = ({ children }) => {
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <GoogleOAuthProvider clientId={GOOGLE_AUTH_PARAMS.CLIENT_ID}>
-      <AuthInternalProvider>
-        {children}
-      </AuthInternalProvider>
+      <AuthInternalProvider>{children}</AuthInternalProvider>
     </GoogleOAuthProvider>
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuthTimer = () => useContext(AuthTimerContext);

@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import { fetchSheetData } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -27,10 +34,14 @@ export const AssetProvider = ({ children }) => {
           accCode: row[SHEET_COL_INDEX.ASSET.accCode] || '',
           accLabel: row[SHEET_COL_INDEX.ASSET.accLabel] || '',
           accIcon: row[SHEET_COL_INDEX.ASSET.accIcon] || '',
-          accDefault: (String(row[SHEET_COL_INDEX.ASSET.accDefault]).toUpperCase() === 'TRUE'),
+          accDefault:
+            String(row[SHEET_COL_INDEX.ASSET.accDefault]).toUpperCase() ===
+            'TRUE',
           accOrder: Number(row[SHEET_COL_INDEX.ASSET.accOrder]) || 0,
           accMemo: row[SHEET_COL_INDEX.ASSET.accMemo] || '',
-          accDeleted: (String(row[SHEET_COL_INDEX.ASSET.accDeleted]).toUpperCase() === 'TRUE')
+          accDeleted:
+            String(row[SHEET_COL_INDEX.ASSET.accDeleted]).toUpperCase() ===
+            'TRUE',
         });
       }
 
@@ -43,11 +54,16 @@ export const AssetProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      loadSheet자산Data();
-    }
-  }, [isSignedIn, loadSheet자산Data]);
+  // 추후 CRUD를 위한 스텁 (Stub for future CRUD)
+  const saveAssetEntry = useCallback(async (entry) => {
+    console.log('saveAssetEntry stub', entry);
+    return true;
+  }, []);
+
+  const deleteAssetEntry = useCallback(async (entry) => {
+    console.log('deleteAssetEntry stub', entry);
+    return true;
+  }, []);
 
   const assetNodes = useMemo(() => {
     const groups = {};
@@ -58,12 +74,12 @@ export const AssetProvider = ({ children }) => {
       return a.accOrder - b.accOrder;
     });
 
-    sortedData.forEach(item => {
+    sortedData.forEach((item) => {
       if (!groups[item.accType]) {
         groups[item.accType] = {
           accType: item.accType,
           selectable: false,
-          children: []
+          children: [],
         };
       }
       groups[item.accType].children.push({
@@ -80,39 +96,38 @@ export const AssetProvider = ({ children }) => {
   }, [sheet자산Data]);
 
   const defaultAssetCode = useMemo(() => {
-    const defaultItem = sheet자산Data.find(item => item.accDefault);
+    const defaultItem = sheet자산Data.find((item) => item.accDefault);
     return defaultItem ? defaultItem.accCode : '';
   }, [sheet자산Data]);
 
-  // 추후 CRUD를 위한 스텁 (Stub for future CRUD)
-  const saveAssetEntry = useCallback(async (entry) => {
-    console.log('saveAssetEntry stub', entry);
-    return true;
-  }, []);
+  const contextValue = useMemo(
+    () => ({
+      sheet자산Data,
+      assetNodes,
+      defaultAssetCode,
+      loading,
+      loadSheet자산Data,
+      saveAssetEntry,
+      deleteAssetEntry,
+    }),
+    [
+      sheet자산Data,
+      assetNodes,
+      defaultAssetCode,
+      loading,
+      loadSheet자산Data,
+      saveAssetEntry,
+      deleteAssetEntry,
+    ],
+  );
 
-  const deleteAssetEntry = useCallback(async (entry) => {
-    console.log('deleteAssetEntry stub', entry);
-    return true;
-  }, []);
+  useEffect(() => {
+    if (isSignedIn) {
+      loadSheet자산Data();
+    }
+  }, [isSignedIn, loadSheet자산Data]);
 
-  const contextValue = useMemo(() => ({
-    sheet자산Data,
-    assetNodes,
-    defaultAssetCode,
-    loading,
-    loadSheet자산Data,
-    saveAssetEntry,
-    deleteAssetEntry
-  }), [
-    sheet자산Data,
-    assetNodes,
-    defaultAssetCode,
-    loading,
-    loadSheet자산Data,
-    saveAssetEntry,
-    deleteAssetEntry
-  ]);
-
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <AssetContext.Provider value={contextValue}>
       {children}
@@ -120,5 +135,4 @@ export const AssetProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAssetData = () => useContext(AssetContext);

@@ -25,13 +25,21 @@ export function useMonthSync(basePath) {
   // 2. 기본 URL 진입 시 리다이렉트 (공통)
   useEffect(() => {
     if (!yearMonth && location.pathname === basePath) {
-      navigate(`${basePath}/${dayjs(selectedDate).format('YYYYMM')}`, { replace: true });
+      navigate(`${basePath}/${dayjs(selectedDate).format('YYYYMM')}`, {
+        replace: true,
+      });
     }
   }, [yearMonth, location.pathname, selectedDate, navigate, basePath]);
 
   // 3. 네비게이션 헬퍼 함수 (공통 핸들러)
   const navigateToMonth = (dateObj) => {
     navigate(`${basePath}/${dayjs(dateObj).format('YYYYMM')}`);
+  };
+
+  // 스와이프 등에서 쓸 수 있는 월 이동 함수
+  const moveMonth = (offset) => {
+    const newDate = dayjs(selectedDate).add(offset, 'month').toDate();
+    navigateToMonth(newDate);
   };
 
   const handleMonthChange = (e) => {
@@ -46,15 +54,9 @@ export function useMonthSync(basePath) {
     }
   };
 
-  // 스와이프 등에서 쓸 수 있는 월 이동 함수
-  const moveMonth = (offset) => {
-    const newDate = dayjs(selectedDate).add(offset, 'month').toDate();
-    navigateToMonth(newDate);
-  };
-
-  return { 
-    handleMonthChange, 
-    handleViewDateChange, 
-    moveMonth 
+  return {
+    handleMonthChange,
+    handleViewDateChange,
+    moveMonth,
   };
 }

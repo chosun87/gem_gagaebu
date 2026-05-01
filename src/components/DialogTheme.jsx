@@ -1,19 +1,38 @@
-import { Sidebar, Button, Card, Divider, InputSwitch, SelectButton, Panel, Dropdown } from '@/assets/js/PrimeReact';
+import {
+  Sidebar,
+  Button,
+  Card,
+  Divider,
+  InputSwitch,
+  SelectButton,
+  Panel,
+  Dropdown,
+} from '@/assets/js/PrimeReact';
 import { useTheme } from '@/context/ThemeContext';
-import { THEME_NODES, INPUT_STYLE_OPTIONS, SCALES } from '@/assets/js/PrimeReactThemes';
+import {
+  THEME_NODES,
+  INPUT_STYLE_OPTIONS,
+  SCALES,
+} from '@/assets/js/PrimeReactThemes';
 
 export default function DialogTheme({ visible, onHide }) {
   const {
-    scale, set_scale,
-    inputStyle, set_inputStyle,
-    ripple, set_ripple,
-    theme, changeTheme,
-    condensed, set_condensed,
-    chartColor, set_chartColor
+    scale,
+    set_scale,
+    inputStyle,
+    set_inputStyle,
+    ripple,
+    set_ripple,
+    theme,
+    changeTheme,
+    condensed,
+    set_condensed,
+    chartColor,
+    set_chartColor,
   } = useTheme();
 
-  const allThemes = THEME_NODES.flatMap(group => group.children || []);
-  const currentThemeNode = allThemes.find(t => {
+  const allThemes = THEME_NODES.flatMap((group) => group.children || []);
+  const currentThemeNode = allThemes.find((t) => {
     const pattern = t.key.replace('{MODE}', '(light|dark)');
     const regex = new RegExp(`^${pattern}$`);
     return regex.test(theme);
@@ -26,15 +45,16 @@ export default function DialogTheme({ visible, onHide }) {
   const isMaterialTheme = theme.startsWith('md-') || theme.startsWith('mdc-');
   const supportsDarkMode = !currentThemeNode?.singleMode;
 
-  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-  const onScaleChange = (type) => {
+  // Functions -------------------------------------------------------------------------------------
+  const fnChangeScale = (type) => {
     if (type === 'plus') {
-      set_scale(prev => Math.min(prev + 1, 16));
+      set_scale((prev) => Math.min(prev + 1, 16));
     } else {
-      set_scale(prev => Math.max(prev - 1, 12));
+      set_scale((prev) => Math.max(prev - 1, 12));
     }
   };
 
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const onDarkModeToggle = (e) => {
     if (!supportsDarkMode) return;
 
@@ -66,10 +86,14 @@ export default function DialogTheme({ visible, onHide }) {
   const templateThemeGroup = (option) => {
     return (
       <div className="theme-group flex align-items-center gap-2">
-        {option.iconUrl && <img className="icon" style={{ height: '1.2rem' }}
-          src={option.iconUrl}
-          alt={option.label}
-        />}
+        {option.iconUrl && (
+          <img
+            className="icon"
+            style={{ height: '1.2rem' }}
+            src={option.iconUrl}
+            alt={option.label}
+          />
+        )}
         <span className="font-bold">{option.label}</span>
       </div>
     );
@@ -78,7 +102,9 @@ export default function DialogTheme({ visible, onHide }) {
   const templateThemeItem = (option) => {
     return (
       <div className="theme-item" style={{ backgroundColor: option.color }}>
-        {option.key === currentThemeNode?.key && <i className="pi pi-check"></i>}
+        {option.key === currentThemeNode?.key && (
+          <i className="pi pi-check"></i>
+        )}
       </div>
     );
   };
@@ -96,18 +122,29 @@ export default function DialogTheme({ visible, onHide }) {
           <Divider />
 
           <div className="formRow">
-            <label htmlFor="inputStyle" className="text-lg">글씨 크기<br></br>({scale}px)</label>
+            <label htmlFor="inputStyle" className="text-lg">
+              글씨 크기<br></br>({scale}px)
+            </label>
             <div className="inputWrap gap-2">
-              <Button icon="pi pi-minus" className="p-button-text p-button-rounded w-2rem h-2rem ml-auto" disabled={scale === 12}
-                onClick={() => onScaleChange('minus')}
+              <Button
+                icon="pi pi-minus"
+                className="p-button-text p-button-rounded w-2rem h-2rem ml-auto"
+                disabled={scale === 12}
+                onClick={() => fnChangeScale('minus')}
               />
               <div className="flex align-items-center gap-2">
                 {SCALES.map((s) => (
-                  <i key={s} className={`${s == scale ? 'pi pi-circle-fill text-primary' : 'pi pi-circle text-200'} text-normal transition-duration-200`} />
+                  <i
+                    key={s}
+                    className={`${s == scale ? 'pi pi-circle-fill text-primary' : 'pi pi-circle text-200'} text-normal transition-duration-200`}
+                  />
                 ))}
               </div>
-              <Button icon="pi pi-plus" className="p-button-text p-button-rounded w-2rem h-2rem" disabled={scale === 16}
-                onClick={() => onScaleChange('plus')}
+              <Button
+                icon="pi pi-plus"
+                className="p-button-text p-button-rounded w-2rem h-2rem"
+                disabled={scale === 16}
+                onClick={() => fnChangeScale('plus')}
               />
             </div>
           </div>
@@ -115,9 +152,12 @@ export default function DialogTheme({ visible, onHide }) {
           <Divider />
 
           <div className="formRow">
-            <label htmlFor="theme" className="text-lg mb-2">테마</label>
+            <label htmlFor="theme" className="text-lg mb-2">
+              테마
+            </label>
             <div className="inputWrap">
-              <Dropdown id="theme"
+              <Dropdown
+                id="theme"
                 className="themeSelector w-full"
                 panelClassName="themeSelectorPanel"
                 placeholder="테마를 선택하세요"
@@ -133,7 +173,10 @@ export default function DialogTheme({ visible, onHide }) {
                 onChange={(e) => {
                   let newTheme = e.value;
                   if (newTheme.includes('{MODE}')) {
-                    newTheme = newTheme.replace('{MODE}', isDarkMode ? 'dark' : 'light');
+                    newTheme = newTheme.replace(
+                      '{MODE}',
+                      isDarkMode ? 'dark' : 'light',
+                    );
                   }
                   changeTheme(newTheme);
                 }}
@@ -144,15 +187,21 @@ export default function DialogTheme({ visible, onHide }) {
           <Divider />
 
           <div className="formRow">
-            <label htmlFor="darkmode" className={!supportsDarkMode ? 'text-lg opacity-50' : 'text-lg'}>
+            <label
+              htmlFor="darkmode"
+              className={!supportsDarkMode ? 'text-lg opacity-50' : 'text-lg'}
+            >
               다크 모드 (Dark Mode)
             </label>
             <div className="inputWrap">
-              <InputSwitch id="darkmode"
+              <InputSwitch
+                id="darkmode"
                 className="ml-auto"
                 disabled={!supportsDarkMode}
-                tooltip="다크 모드" tooltipOptions={{ position: 'left' }}
-                checked={isDarkMode} onChange={onDarkModeToggle}
+                tooltip="다크 모드"
+                tooltipOptions={{ position: 'left' }}
+                checked={isDarkMode}
+                onChange={onDarkModeToggle}
               />
             </div>
           </div>
@@ -160,15 +209,21 @@ export default function DialogTheme({ visible, onHide }) {
           <Divider />
 
           <div className="formRow">
-            <label htmlFor="condensed" className={!isMaterialTheme ? 'text-lg opacity-50' : 'text-lg'}>
+            <label
+              htmlFor="condensed"
+              className={!isMaterialTheme ? 'text-lg opacity-50' : 'text-lg'}
+            >
               Condensed (Material 테마 전용)
             </label>
             <div className="inputWrap">
-              <InputSwitch id="condensed"
+              <InputSwitch
+                id="condensed"
                 className="ml-auto"
                 disabled={!isMaterialTheme}
-                tooltip="Material 테마 전용 압축 레이아웃" tooltipOptions={{ position: 'left' }}
-                checked={condensed} onChange={(e) => set_condensed(e.value)}
+                tooltip="Material 테마 전용 압축 레이아웃"
+                tooltipOptions={{ position: 'left' }}
+                checked={condensed}
+                onChange={(e) => set_condensed(e.value)}
               />
             </div>
           </div>
@@ -176,9 +231,12 @@ export default function DialogTheme({ visible, onHide }) {
           <Divider />
 
           <div className="formRow" style={{ gap: '3rem' }}>
-            <label htmlFor="inputStyle" className="text-lg">입력 스타일</label>
+            <label htmlFor="inputStyle" className="text-lg">
+              입력 스타일
+            </label>
             <div className="inputWrap gap-2">
-              <SelectButton id="inputStyle"
+              <SelectButton
+                id="inputStyle"
                 value={inputStyle}
                 onChange={(e) => set_inputStyle(e.value)}
                 options={INPUT_STYLE_OPTIONS}
@@ -189,19 +247,27 @@ export default function DialogTheme({ visible, onHide }) {
           <Divider />
 
           <div className="formRow">
-            <label htmlFor="ripple" className="text-lg">리플 효과 (Ripple Effect)</label>
+            <label htmlFor="ripple" className="text-lg">
+              리플 효과 (Ripple Effect)
+            </label>
             <div className="inputWrap">
-              <InputSwitch id="ripple"
+              <InputSwitch
+                id="ripple"
                 className="ml-auto"
-                tooltip="리플 효과" tooltipOptions={{ position: 'left' }}
-                checked={ripple} onChange={(e) => set_ripple(e.value)} />
+                tooltip="리플 효과"
+                tooltipOptions={{ position: 'left' }}
+                checked={ripple}
+                onChange={(e) => set_ripple(e.value)}
+              />
             </div>
           </div>
 
           <Divider />
 
           <div className="formRow" style={{ alignItems: 'flex-start' }}>
-            <label className="text-lg">Chart<br></br>컬러</label>
+            <label className="text-lg">
+              Chart<br></br>컬러
+            </label>
             <div className="inputWrap gap-2">
               {[
                 { name: 'blue', color: 'var(--blue-500)' },
@@ -214,15 +280,21 @@ export default function DialogTheme({ visible, onHide }) {
                 { name: 'orange', color: 'var(--orange-500)' },
                 { name: 'purple', color: 'var(--purple-500)' },
                 { name: 'red', color: 'var(--red-500)' },
-                { name: 'primary', color: 'var(--primary-color)' }
+                { name: 'primary', color: 'var(--primary-color)' },
               ].map((c) => (
                 <Button
                   key={c.name}
                   type="button"
                   rounded
                   size="small"
-                  style={{ backgroundColor: c.color, borderColor: c.color, width: '2rem', height: '2rem', padding: 0 }}
-                  icon={chartColor === c.name ? "pi pi-check" : ""}
+                  style={{
+                    backgroundColor: c.color,
+                    borderColor: c.color,
+                    width: '2rem',
+                    height: '2rem',
+                    padding: 0,
+                  }}
+                  icon={chartColor === c.name ? 'pi pi-check' : ''}
                   onClick={() => set_chartColor(c.name)}
                 />
               ))}

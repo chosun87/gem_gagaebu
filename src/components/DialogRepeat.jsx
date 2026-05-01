@@ -1,6 +1,17 @@
 import { useState } from 'react';
 import { useData } from '@/context/DataContext';
-import { Button, Panel, Sidebar, confirmDialog, Calendar as PrimeCalendar, InputNumber, InputText, SelectButton, Dropdown, ToggleButton } from '@/assets/js/PrimeReact';
+import {
+  Button,
+  Panel,
+  Sidebar,
+  confirmDialog,
+  Calendar as PrimeCalendar,
+  InputNumber,
+  InputText,
+  SelectButton,
+  Dropdown,
+  ToggleButton,
+} from '@/assets/js/PrimeReact';
 // import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
@@ -8,8 +19,16 @@ import dayjs from 'dayjs';
 import { RP_TYPE } from '@/assets/js/constants';
 
 export default function DialogRepeat({ repeat, visible, onHide }) {
-
-  const { saveRepeatEntry, generateLedgerFromRepeat, deleteRepeatEntry, loading: dataLoading, assetNodes, categoryOptions, defaultAssetCode, periodOptions } = useData();
+  const {
+    saveRepeatEntry,
+    generateLedgerFromRepeat,
+    deleteRepeatEntry,
+    loading: dataLoading,
+    assetNodes,
+    categoryOptions,
+    defaultAssetCode,
+    periodOptions,
+  } = useData();
 
   const [rpType, set_rpType] = useState('');
   const [rpDateS, set_rpDateS] = useState(new Date());
@@ -25,6 +44,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   const [rpCompleted, set_rpCompleted] = useState(false);
   const [submitted, set_submitted] = useState(false);
 
+  const [dateSFocused, setDateSFocused] = useState(false);
+  const [dateEFocused, setDateEFocused] = useState(false);
+
   // 이전 프로퍼티 추적 (렌더링 중 상태 조정)
   const [prevRepeat, set_prevRepeat] = useState(repeat);
   const [prevVisible, set_prevVisible] = useState(visible);
@@ -35,8 +57,14 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
     if (visible) {
       set_rpType(repeat?.rpType || '지출');
-      set_rpDateS(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
-      set_rpDateE(repeat?.rpDateE ? dayjs(repeat.rpDateE).toDate() : dayjs().add(1, 'year').toDate());
+      set_rpDateS(
+        repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date(),
+      );
+      set_rpDateE(
+        repeat?.rpDateE
+          ? dayjs(repeat.rpDateE).toDate()
+          : dayjs().add(1, 'year').toDate(),
+      );
       set_rpPeriod(repeat?.rpPeriod || 'M');
       set_rpDay(repeat?.rpDay ? String(repeat.rpDay) : '1');
       set_rpAcc1(repeat?.rpAcc1 || defaultAssetCode || '');
@@ -50,17 +78,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     }
   }
 
-  const _getAccLabels = (type) => {
-    switch (type) {
-      case '수입': return ['입금계좌', '']
-      case '지출': return ['출금계좌', '']
-      case '이체': return ['출금계좌', '입금계좌']
-      default: return ['자산1', '자산2']
-    }
-  }
-
+  // Functions -------------------------------------------------------------------------------------
   // 반복일 옵션 정의
-  const monthDays = Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}일`, value: String(i + 1) }));
+  const monthDays = Array.from({ length: 31 }, (_, i) => ({
+    label: `${i + 1}일`,
+    value: String(i + 1),
+  }));
   const weekDays = [
     { label: '월요일', value: '월' },
     { label: '화요일', value: '화' },
@@ -68,8 +91,21 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     { label: '목요일', value: '목' },
     { label: '금요일', value: '금' },
     { label: '토요일', value: '토' },
-    { label: '일요일', value: '일' }
+    { label: '일요일', value: '일' },
   ];
+
+  const _getAccLabels = (type) => {
+    switch (type) {
+      case '수입':
+        return ['입금계좌', ''];
+      case '지출':
+        return ['출금계좌', ''];
+      case '이체':
+        return ['출금계좌', '입금계좌'];
+      default:
+        return ['자산1', '자산2'];
+    }
+  };
 
   const [rpAcc1Label, rpAcc2Label] = _getAccLabels(rpType);
 
@@ -91,7 +127,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
         temp = temp.add(1, 'month');
       }
     } else if (rpPeriod === 'W') {
-      const dayOfWeekMap = { '일': 0, '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6 };
+      const dayOfWeekMap = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 };
       const dayOfWeek = dayOfWeekMap[rpDay];
 
       let temp = start.day(dayOfWeek);
@@ -106,12 +142,20 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     set_rpTotalAmount(count * rpAmount);
   };
 
-  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
-  const onSave = async () => {
+  const fnSave = async () => {
     set_submitted(true);
 
     // 필수 항목 검증
-    const isInvalid = !rpDateS || !rpPeriod || !rpDay || !rpType || (rpAmount === 0 || rpAmount === null) || !rpCategory || !rpAcc1 || (rpType === '이체' && !rpAcc2);
+    const isInvalid =
+      !rpDateS ||
+      !rpPeriod ||
+      !rpDay ||
+      !rpType ||
+      rpAmount === 0 ||
+      rpAmount === null ||
+      !rpCategory ||
+      !rpAcc1 ||
+      (rpType === '이체' && !rpAcc2);
     if (isInvalid) {
       return;
     }
@@ -129,21 +173,24 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       rpAmount,
       rpTotalAmount,
       rpMemo,
-      rpCompleted
+      rpCompleted,
     };
 
     try {
       const rpID = await saveRepeatEntry(repeat, formData);
-      const { addedCount, updatedCount, deletedCount } = await generateLedgerFromRepeat(formData, rpID);
+      const { addedCount, updatedCount, deletedCount } =
+        await generateLedgerFromRepeat(formData, rpID);
 
-      alert(`${addedCount}개의 내역이 신규 생성되고, ${updatedCount}개의 기존 내역이 업데이트, ${deletedCount}개의 기존 내역이 삭제 되었습니다.`);
+      alert(
+        `${addedCount}개의 내역이 신규 생성되고, ${updatedCount}개의 기존 내역이 업데이트, ${deletedCount}개의 기존 내역이 삭제 되었습니다.`,
+      );
       onHide();
     } catch (error) {
       alert('저장 중 오류가 발생했습니다. : ' + JSON.stringify(error));
     }
   };
 
-  const onDelete = () => {
+  const fnDelete = () => {
     confirmDialog({
       message: '정말로 삭제하시겠습니까?',
       header: '삭제 확인',
@@ -158,12 +205,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
         } catch (error) {
           alert('삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error));
         }
-      }
+      },
     });
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const categoryItemTemplate = (option) => {
+  const templateCategoryItem = (option) => {
     return (
       <div className="flex align-items-center">
         <i className={classNames(option.cdIcon, 'mr-2')} />
@@ -172,7 +219,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     );
   };
 
-  const categoryValueTemplate = (option, props) => {
+  const templateCategoryValue = (option, props) => {
     if (option) {
       return (
         <div className="flex align-items-center">
@@ -184,7 +231,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     return <span>{props.placeholder}</span>;
   };
 
-  const assetItemTemplate = (option) => {
+  const templateAssetItem = (option) => {
     return (
       <div className="flex align-items-center">
         <i className={classNames(option.accIcon, 'mr-2')} />
@@ -193,7 +240,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     );
   };
 
-  const assetValueTemplate = (option, props) => {
+  const templateAssetValue = (option, props) => {
     if (option) {
       return (
         <div className="flex align-items-center">
@@ -209,29 +256,34 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     return (
       <div className={options.className}>
         <Button
-          severity="secondary" size="large" outlined label="취소"
+          severity="secondary"
+          size="large"
+          outlined
+          label="취소"
           onClick={onHide}
           disabled={dataLoading}
         />
         <Button
-          severity="primary" size="large" label="저장"
-          icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-check"}
-          onClick={onSave}
+          severity="primary"
+          size="large"
+          label="저장"
+          icon={dataLoading ? 'pi pi-spin pi-spinner' : 'pi pi-check'}
+          onClick={fnSave}
           disabled={dataLoading}
         />
-        <Button className={(repeat === null) ? 'hidden' : ''}
-          severity="danger" size="large"
-          tooltip="삭제" tooltipOptions={{ position: 'top' }}
-          icon={dataLoading ? "pi pi-spin pi-spinner" : "pi pi-trash"}
-          onClick={onDelete}
+        <Button
+          className={repeat === null ? 'hidden' : ''}
+          severity="danger"
+          size="large"
+          tooltip="삭제"
+          tooltipOptions={{ position: 'top' }}
+          icon={dataLoading ? 'pi pi-spin pi-spinner' : 'pi pi-trash'}
+          onClick={fnDelete}
           disabled={dataLoading}
         />
       </div>
     );
   };
-
-  const [dateSFocused, setDateSFocused] = useState(false);
-  const [dateEFocused, setDateEFocused] = useState(false);
 
   return (
     <Sidebar
@@ -241,14 +293,16 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       visible={visible}
       onHide={onHide}
     >
-      <Panel
-        footerTemplate={templateFooter}
-      >
+      <Panel footerTemplate={templateFooter}>
         <div className="formWrap">
           <div className="formRow">
             <div className="inputWrap">
-              <SelectButton id="rpType" size="large"
-                className={"gType" + classNames({ 'p-invalid': submitted && !rpType })}
+              <SelectButton
+                id="rpType"
+                size="large"
+                className={
+                  'gType' + classNames({ 'p-invalid': submitted && !rpType })
+                }
                 options={Object.values(RP_TYPE)}
                 value={rpType}
                 onChange={(e) => set_rpType(e.target.value)}
@@ -257,9 +311,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="formRow">
-            <label htmlFor="rpDateS" className="required">기간</label>
+            <label htmlFor="rpDateS" className="required">
+              기간
+            </label>
             <div className="inputWrap flex-nowrap gap-1">
-              <PrimeCalendar id="rpDateS"
+              <PrimeCalendar
+                id="rpDateS"
                 className={classNames({ 'p-invalid': submitted && !rpDateS })}
                 locale="ko"
                 dateFormat={dateSFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
@@ -269,7 +326,8 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                 onBlur={() => setDateSFocused(false)}
               />
               <span>~</span>
-              <PrimeCalendar id="rpDateE"
+              <PrimeCalendar
+                id="rpDateE"
                 locale="ko"
                 dateFormat={dateEFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
                 value={rpDateE}
@@ -281,9 +339,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="formRow">
-            <label htmlFor="rpPeriod" className="required">반복 주기</label>
+            <label htmlFor="rpPeriod" className="required">
+              반복 주기
+            </label>
             <div className="inputWrap gap-2">
-              <SelectButton id="rpPeriod"
+              <SelectButton
+                id="rpPeriod"
                 className={classNames({ 'p-invalid': submitted && !rpPeriod })}
                 options={periodOptions}
                 optionLabel="cdLabel"
@@ -296,9 +357,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                   else if (e.value === 'W') set_rpDay('월');
                 }}
               />
-              <Dropdown id="rpDay"
-                className={classNames('w-4', { 'p-invalid': submitted && (rpDay === null || rpDay === '') })}
-                placeholder={rpPeriod === 'W' ? "요일 선택" : "날짜 선택"}
+              <Dropdown
+                id="rpDay"
+                className={classNames('w-4', {
+                  'p-invalid': submitted && (rpDay === null || rpDay === ''),
+                })}
+                placeholder={rpPeriod === 'W' ? '요일 선택' : '날짜 선택'}
                 options={rpPeriod === 'W' ? weekDays : monthDays}
                 value={rpDay}
                 onChange={(e) => set_rpDay(e.value)}
@@ -307,24 +371,34 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="formRow">
-            <label htmlFor="rpCategory" className="required">분류</label>
+            <label htmlFor="rpCategory" className="required">
+              분류
+            </label>
             <div className="inputWrap">
-              <Dropdown id="rpCategory"
-                className={classNames('w-full', { 'p-invalid': submitted && !rpCategory })}
+              <Dropdown
+                id="rpCategory"
+                className={classNames('w-full', {
+                  'p-invalid': submitted && !rpCategory,
+                })}
                 placeholder="분류 선택"
-                options={categoryOptions.find(node => node.cdGroup === rpType)?.children || []}
+                options={
+                  categoryOptions.find((node) => node.cdGroup === rpType)
+                    ?.children || []
+                }
                 optionLabel="cdLabel"
                 optionValue="cd"
                 value={rpCategory}
                 onChange={(e) => {
                   set_rpCategory(e.value);
-                  const selectedCategory = categoryOptions.find(node => node.cdGroup === rpType)?.children.find(c => c.cd === e.value);
+                  const selectedCategory = categoryOptions
+                    .find((node) => node.cdGroup === rpType)
+                    ?.children.find((c) => c.cd === e.value);
                   if (selectedCategory?.cdDefaultAcc1) {
                     set_rpAcc1(selectedCategory.cdDefaultAcc1);
                   }
                 }}
-                itemTemplate={categoryItemTemplate}
-                valueTemplate={categoryValueTemplate}
+                itemTemplate={templateCategoryItem}
+                valueTemplate={templateCategoryValue}
               />
             </div>
           </div>
@@ -332,7 +406,8 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           <div className="formRow">
             <label htmlFor="rpMemo">내용</label>
             <div className="inputWrap">
-              <InputText id="rpMemo"
+              <InputText
+                id="rpMemo"
                 value={rpMemo}
                 onChange={(e) => set_rpMemo(e.target.value)}
               />
@@ -340,10 +415,15 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </div>
 
           <div className="formRow">
-            <label htmlFor="rpAcc1" className="required">{rpAcc1Label}</label>
+            <label htmlFor="rpAcc1" className="required">
+              {rpAcc1Label}
+            </label>
             <div className="inputWrap">
-              <Dropdown id="rpAcc1"
-                className={classNames('w-full', { 'p-invalid': submitted && !rpAcc1 })}
+              <Dropdown
+                id="rpAcc1"
+                className={classNames('w-full', {
+                  'p-invalid': submitted && !rpAcc1,
+                })}
                 placeholder="자산 선택"
                 options={assetNodes}
                 optionLabel="accLabel"
@@ -352,17 +432,22 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                 optionGroupChildren="children"
                 value={rpAcc1}
                 onChange={(e) => set_rpAcc1(e.value)}
-                itemTemplate={assetItemTemplate}
-                valueTemplate={assetValueTemplate}
+                itemTemplate={templateAssetItem}
+                valueTemplate={templateAssetValue}
               />
             </div>
           </div>
 
           <div className={`formRow ${rpType !== '이체' ? 'hidden' : ''}`}>
-            <label htmlFor="rpAcc2" className="required">{rpAcc2Label}</label>
+            <label htmlFor="rpAcc2" className="required">
+              {rpAcc2Label}
+            </label>
             <div className="inputWrap">
-              <Dropdown id="rpAcc2"
-                className={classNames('w-full', { 'p-invalid': submitted && rpType === '이체' && !rpAcc2 })}
+              <Dropdown
+                id="rpAcc2"
+                className={classNames('w-full', {
+                  'p-invalid': submitted && rpType === '이체' && !rpAcc2,
+                })}
                 placeholder="자산 선택"
                 options={assetNodes}
                 optionLabel="accLabel"
@@ -371,31 +456,42 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                 optionGroupChildren="children"
                 value={rpAcc2}
                 onChange={(e) => set_rpAcc2(e.value)}
-                itemTemplate={assetItemTemplate}
-                valueTemplate={assetValueTemplate}
+                itemTemplate={templateAssetItem}
+                valueTemplate={templateAssetValue}
               />
             </div>
           </div>
 
           <div className="formRow">
-            <label htmlFor="rpAmount" className="required">회당 금액</label>
+            <label htmlFor="rpAmount" className="required">
+              회당 금액
+            </label>
             <div className="inputWrap">
               <div className="p-inputgroup w-full">
                 <ToggleButton
-                  onIcon="pi pi-minus" onLabel=""
-                  offIcon="pi pi-plus" offLabel=""
-                  tooltip="양수/음수 전환" tooltipOptions={{ position: 'top' }}
+                  onIcon="pi pi-minus"
+                  onLabel=""
+                  offIcon="pi pi-plus"
+                  offLabel=""
+                  tooltip="양수/음수 전환"
+                  tooltipOptions={{ position: 'top' }}
                   checked={rpAmount < 0}
                   onChange={(e) => {
-                    set_rpAmount(prev => {
+                    set_rpAmount((prev) => {
                       const val = Math.abs(prev || 0);
-                      return (e.value && val !== 0) ? -val : val;
+                      return e.value && val !== 0 ? -val : val;
                     });
                   }}
                 />
-                <InputNumber id="rpAmount"
-                  className={classNames({ 'p-invalid': submitted && (rpAmount === 0 || rpAmount === null) })}
-                  mode="currency" currency="KRW" locale="ko-KR"
+                <InputNumber
+                  id="rpAmount"
+                  className={classNames({
+                    'p-invalid':
+                      submitted && (rpAmount === 0 || rpAmount === null),
+                  })}
+                  mode="currency"
+                  currency="KRW"
+                  locale="ko-KR"
                   value={rpAmount}
                   onValueChange={(e) => set_rpAmount(e.target.value)}
                 />
@@ -408,27 +504,36 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             <div className="inputWrap flex-nowrap gap-2">
               <div className="p-inputgroup w-full">
                 <ToggleButton
-                  onIcon="pi pi-minus" onLabel=""
-                  offIcon="pi pi-plus" offLabel=""
-                  tooltip="양수/음수 전환" tooltipOptions={{ position: 'top' }}
+                  onIcon="pi pi-minus"
+                  onLabel=""
+                  offIcon="pi pi-plus"
+                  offLabel=""
+                  tooltip="양수/음수 전환"
+                  tooltipOptions={{ position: 'top' }}
                   checked={rpTotalAmount < 0}
                   onChange={(e) => {
-                    set_rpTotalAmount(prev => {
+                    set_rpTotalAmount((prev) => {
                       const val = Math.abs(prev || 0);
-                      return (e.value && val !== 0) ? -val : val;
+                      return e.value && val !== 0 ? -val : val;
                     });
                   }}
                 />
-                <InputNumber id="rpTotalAmount"
-                  mode="currency" currency="KRW" locale="ko-KR"
+                <InputNumber
+                  id="rpTotalAmount"
+                  mode="currency"
+                  currency="KRW"
+                  locale="ko-KR"
                   placeholder="전체 계약 금액 또는 목표 금액"
                   value={rpTotalAmount}
                   onValueChange={(e) => set_rpTotalAmount(e.target.value)}
                 />
               </div>
-              <Button severity="info" outlined
+              <Button
+                severity="info"
+                outlined
                 icon="pi pi-calculator"
-                tooltip="기간/주기 기반 자동 계산" tooltipOptions={{ position: 'left' }}
+                tooltip="기간/주기 기반 자동 계산"
+                tooltipOptions={{ position: 'left' }}
                 onClick={calculateTotalAmount}
               />
             </div>

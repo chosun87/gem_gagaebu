@@ -87,7 +87,6 @@
         }
 
         &:first-child {
-
           th,
           td {
             padding-top: 0.5rem;
@@ -112,15 +111,15 @@
 
 .fc {
   .gType-수입 {
-    color: color-mix(in srgb, var(--color-수입), transparent 67%)
+    color: color-mix(in srgb, var(--color-수입), transparent 67%);
   }
 
   .gType-지출 {
-    color: color-mix(in srgb, var(--color-지출), transparent 67%)
+    color: color-mix(in srgb, var(--color-지출), transparent 67%);
   }
 
   .gType-이체 {
-    color: color-mix(in srgb, var(--color-이체), transparent 67%)
+    color: color-mix(in srgb, var(--color-이체), transparent 67%);
   }
 
   .custom-day-content {
@@ -210,15 +209,14 @@
 
 // 제미나이 아이콘 적용
 .icon-gemini {
-
   .pi::before,
   .p-speeddial-action-icon::before,
   .p-button-icon::before {
-    content: "";
+    content: '';
     display: block;
     width: 1.5rem;
     height: 1.5rem;
-    background-image: url("@/assets/images/Google_Gemini_icon_2025.svg");
+    background-image: url('@/assets/images/Google_Gemini_icon_2025.svg');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

@@ -17,14 +17,16 @@ export const fetchSheetData = async (range) => {
 // 특정 셀의 데이터를 업데이트합니다. (ex: range='2026!A3', value=TRUE)
 export const updateSheetCell = async (range, value) => {
   try {
-    const response = await window.gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
-      range: range,
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: [[value]]
-      }
-    });
+    const response = await window.gapi.client.sheets.spreadsheets.values.update(
+      {
+        spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
+        range: range,
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+          values: [[value]],
+        },
+      },
+    );
     return response.result;
   } catch (error) {
     console.error('Error updating sheet cell:', error);
@@ -35,14 +37,16 @@ export const updateSheetCell = async (range, value) => {
 // 특정 시트의 마지막에 행을 추가합니다.
 export const appendSheetRow = async (sheetName, values) => {
   try {
-    const response = await window.gapi.client.sheets.spreadsheets.values.append({
-      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
-      range: `${sheetName}!A1`,
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: [values]
-      }
-    });
+    const response = await window.gapi.client.sheets.spreadsheets.values.append(
+      {
+        spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
+        range: `${sheetName}!A1`,
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+          values: [values],
+        },
+      },
+    );
     return response.result;
   } catch (error) {
     console.error('Error appending sheet row:', error);
@@ -54,14 +58,16 @@ export const appendSheetRow = async (sheetName, values) => {
 export const appendSheetRows = async (sheetName, rowsArray) => {
   if (!rowsArray || rowsArray.length === 0) return null;
   try {
-    const response = await window.gapi.client.sheets.spreadsheets.values.append({
-      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
-      range: `${sheetName}!A1`,
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: rowsArray
-      }
-    });
+    const response = await window.gapi.client.sheets.spreadsheets.values.append(
+      {
+        spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
+        range: `${sheetName}!A1`,
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+          values: rowsArray,
+        },
+      },
+    );
     return response.result;
   } catch (error) {
     console.error('Error appending sheet rows:', error);
@@ -72,14 +78,16 @@ export const appendSheetRows = async (sheetName, rowsArray) => {
 // 특정 행의 데이터를 업데이트합니다.
 export const updateSheetRow = async (sheetName, rowNo, values) => {
   try {
-    const response = await window.gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
-      range: `${sheetName}!A${rowNo}`,
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: [values]
-      }
-    });
+    const response = await window.gapi.client.sheets.spreadsheets.values.update(
+      {
+        spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
+        range: `${sheetName}!A${rowNo}`,
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+          values: [values],
+        },
+      },
+    );
     return response.result;
   } catch (error) {
     console.error('Error updating sheet row:', error);
@@ -97,12 +105,12 @@ export const createSheet = async (sheetName) => {
           {
             addSheet: {
               properties: {
-                title: sheetName
-              }
-            }
-          }
-        ]
-      }
+                title: sheetName,
+              },
+            },
+          },
+        ],
+      },
     });
     return response.result;
   } catch (error) {
@@ -115,18 +123,19 @@ export const createSheet = async (sheetName) => {
 // 시트의 헤더(1행)를 초기화합니다.
 export const updateSheetHeaders = async (sheetName, headers) => {
   try {
-    const response = await window.gapi.client.sheets.spreadsheets.values.update({
-      spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
-      range: `${sheetName}!1:1`,
-      valueInputOption: 'USER_ENTERED',
-      resource: {
-        values: [headers]
-      }
-    });
+    const response = await window.gapi.client.sheets.spreadsheets.values.update(
+      {
+        spreadsheetId: GOOGLE_SHEET.SPREADSHEET_ID,
+        range: `${sheetName}!1:1`,
+        valueInputOption: 'USER_ENTERED',
+        resource: {
+          values: [headers],
+        },
+      },
+    );
     return response.result;
   } catch (error) {
     console.error('Error updating sheet headers:', error);
     throw error;
   }
 };
-

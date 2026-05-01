@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react';
  * 전체화면 상태 감지 커스텀 훅
  */
 export const useFullscreenStatus = () => {
-  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
+  const [isFullscreen, setIsFullscreen] = useState(
+    !!document.fullscreenElement,
+  );
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -17,9 +19,18 @@ export const useFullscreenStatus = () => {
 
     return () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+      document.removeEventListener(
+        'webkitfullscreenchange',
+        handleFullscreenChange,
+      );
+      document.removeEventListener(
+        'mozfullscreenchange',
+        handleFullscreenChange,
+      );
+      document.removeEventListener(
+        'MSFullscreenChange',
+        handleFullscreenChange,
+      );
     };
   }, []);
 
@@ -33,18 +44,22 @@ export const toggleFullscreen = () => {
   if (!document.fullscreenElement) {
     requestFullscreen();
   } else {
-    exitFullscreen()
+    exitFullscreen();
   }
 };
 
 export const requestFullscreen = () => {
   document.documentElement.requestFullscreen().catch(() => {
-    console.warn('전체화면 전환 실패: 브라우저 보안 정책상 사용자 제스처가 필요합니다.');
+    console.warn(
+      '전체화면 전환 실패: 브라우저 보안 정책상 사용자 제스처가 필요합니다.',
+    );
   });
-}
+};
 
 export const exitFullscreen = () => {
   document.exitFullscreen().catch(() => {
-    console.warn('전체화면 해제 실패: 브라우저 보안 정책상 사용자 제스처가 필요합니다.');
+    console.warn(
+      '전체화면 해제 실패: 브라우저 보안 정책상 사용자 제스처가 필요합니다.',
+    );
   });
-}
+};

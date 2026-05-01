@@ -13,10 +13,10 @@ export default function Settings({ visible, onHide }) {
           icon: 'pi pi-clone',
           command: () => {
             navigate('/settings/repeat');
-          }
-        }
-      ]
-    }
+          },
+        },
+      ],
+    },
   ];
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------

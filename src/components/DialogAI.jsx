@@ -5,7 +5,8 @@ export default function DialogAI({ visible, onHide }) {
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onParse = async () => {
+  // Functions -------------------------------------------------------------------------------------
+  const fnParse = async () => {
     if (!text.trim()) return;
     setLoading(true);
     try {
@@ -14,8 +15,6 @@ export default function DialogAI({ visible, onHide }) {
       setTimeout(() => {
         alert('분석 준비 중입니다.');
         setLoading(false);
-        // onParsed(parsedData);
-        // onHide();
       }, 1000);
     } catch (error) {
       alert('분석에 실패했습니다. : ' + JSON.stringify(error));
@@ -23,18 +22,24 @@ export default function DialogAI({ visible, onHide }) {
     }
   };
 
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateFooter = (options) => {
     return (
       <div className={options.className}>
         <Button
-          severity="secondary" size="large" outlined label="취소"
+          severity="secondary"
+          size="large"
+          outlined
+          label="취소"
           onClick={onHide}
           disabled={loading}
         />
         <Button
-          severity="primary" size="large" label="분석"
-          icon={loading ? "pi pi-spin pi-spinner" : "pi pi-sparkles"}
-          onClick={onParse}
+          severity="primary"
+          size="large"
+          label="분석"
+          icon={loading ? 'pi pi-spin pi-spinner' : 'pi pi-sparkles'}
+          onClick={fnParse}
           disabled={loading || !text.trim()}
         />
       </div>
@@ -44,14 +49,20 @@ export default function DialogAI({ visible, onHide }) {
   return (
     <Sidebar
       className="dialog-ai shadow-7"
-      header={<h3 className="dialog-title text-2xl icon-gemini"><i className="pi pi-sparkles mr-2 text-primary" />AI 자동 입력</h3>}
+      header={
+        <h3 className="dialog-title text-2xl icon-gemini">
+          <i className="pi pi-sparkles mr-2 text-primary" />
+          AI 자동 입력
+        </h3>
+      }
       position="bottom"
       visible={visible}
       onHide={onHide}
     >
       <Panel footerTemplate={templateFooter}>
         <p className="text-secondary text-sm m-0" style={{ lineHeight: '1.5' }}>
-          은행 결제 문자(SMS), 영수증 텍스트 등을 붙여넣으세요.<br />
+          은행 결제 문자(SMS), 영수증 텍스트 등을 붙여넣으세요.
+          <br />
           AI가 내용을 분석하여 자동으로 가계부 입력 항목을 채워줍니다.
         </p>
         <div className="formWrap">

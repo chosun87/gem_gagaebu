@@ -1,6 +1,15 @@
 import { useState, useRef, useMemo, lazy, Suspense } from 'react';
 import { useData } from '@/context/DataContext';
-import { Badge, Button, InputSwitch, DataView, Message, Menu, Panel, ProgressSpinner } from '@/assets/js/PrimeReact';
+import {
+  Badge,
+  Button,
+  InputSwitch,
+  DataView,
+  Message,
+  Menu,
+  Panel,
+  ProgressSpinner,
+} from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 import { REPEAT_PERIOD } from '@/assets/js/constants';
 
@@ -8,14 +17,14 @@ const DialogRepeat = lazy(() => import('@/components/DialogRepeat'));
 const DialogList = lazy(() => import('@/components/DialogList'));
 
 export default function Repeat() {
-  const { sheet반복Data, loading, handleChange_rpCompleted } = useData();
+  const { sheet반복Data, loading, updateRepeatEntry_rpCompleted } = useData();
   const [repeat, setRepeat] = useState(null);
   const [showDialogRepeat, setShowDialogRepeat] = useState(false);
-
-  const menuLeft = useRef(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDialogList, setShowDialogList] = useState(false);
   const [dialogListParams, setDialogListParams] = useState({});
+
+  const menuLeft = useRef(null);
 
   const data = useMemo(() => {
     const list = [...(sheet반복Data || [])];
@@ -32,9 +41,11 @@ export default function Repeat() {
 
       // 3. rpDay 정렬 (높은 값 우선)
       const getDayValue = (item) => {
-        if (item.rpPeriod === REPEAT_PERIOD.MONTHLY) return parseInt(item.rpDay) || 0;
+        if (item.rpPeriod === REPEAT_PERIOD.MONTHLY) {
+          return parseInt(item.rpDay) || 0;
+        }
         if (item.rpPeriod === REPEAT_PERIOD.WEEKLY) {
-          const dayMap = { '월': 1, '화': 2, '수': 3, '목': 4, '금': 5, '토': 6, '일': 7 };
+          const dayMap = { 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6, 일: 7 };
           return dayMap[item.rpDay] || 0;
         }
         return 0;
@@ -52,42 +63,43 @@ export default function Repeat() {
     {
       label: '편집',
       icon: 'pi pi-pencil',
-      command: () => fnOpenDialogRepeat(selectedItem)
+      command: () => fnOpenDialogRepeat(selectedItem),
     },
     {
       label: '목록',
       icon: 'pi pi-list',
-      command: () => fnOpenDialogList(selectedItem)
-    }
+      command: () => fnOpenDialogList(selectedItem),
+    },
   ];
 
+  // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogRepeat = (repeat) => {
     setRepeat(repeat);
     setShowDialogRepeat(true);
-  }
+  };
 
   const fnHideDialogRepeat = () => {
     setShowDialogRepeat(false);
-  }
+  };
 
   const fnOpenDialogList = () => {
     setDialogListParams({
       rpID: selectedItem.rpID,
       header: `${selectedItem.rpCategory}-${selectedItem.rpMemo}`,
       startYear: dayjs(selectedItem.rpDateS).year(),
-      endYear: dayjs(selectedItem.rpDateE).year()
+      endYear: dayjs(selectedItem.rpDateE).year(),
     });
     setShowDialogList(true);
-  }
+  };
 
   const fnHideDialogList = () => {
     setShowDialogList(false);
-  }
+  };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDateViewItem = (item) => {
     const rpTypeClass = `rpType-${item.rpType}`;
-    const rpCompletedClass = `rpCompleted-${(item.rpCompleted) ? 'Y' : 'N'}`;
+    const rpCompletedClass = `rpCompleted-${item.rpCompleted ? 'Y' : 'N'}`;
 
     return (
       <div
@@ -104,31 +116,42 @@ export default function Repeat() {
 
         <div className="flex-grow-1 flex flex-column gap-1">
           <div className="flex align-items-center gap-1">
-            <div className="rpDate monospace">{item.rpDateS} ~ {item.rpDateE}</div>
+            <div className="rpDate monospace">
+              {item.rpDateS} ~ {item.rpDateE}
+            </div>
           </div>
           <div className="flex align-items-center column-gap-2">
             <span className="rpDay text-lg font-semibold text-nowrap">
-              {item.rpPeriod === REPEAT_PERIOD.WEEKLY ? `매주 (${item.rpDay})` : `매월 ${item.rpDay}일`}
+              {item.rpPeriod === REPEAT_PERIOD.WEEKLY
+                ? `매주 (${item.rpDay})`
+                : `매월 ${item.rpDay}일`}
             </span>
             <span className="rpMemo">{item.rpMemo}</span>
           </div>
           <div className="flex align-items-center">
-            <span className="rpAcc">{item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}</span>
+            <span className="rpAcc">
+              {item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}
+            </span>
           </div>
         </div>
 
         <div className="h-full flex flex-column align-items-end justify-content-between">
-          <div className="rpAmount monospace text-right font-bold text-lg">
-            {(item.rpAmount || 0).toLocaleString()}<span className="unit text-xs ">원</span>
+          <div className="rpAmount monospace text-right text-lg font-bold">
+            {(item.rpAmount || 0).toLocaleString()}
+            <span className="unit text-xs ">원</span>
           </div>
           {item.rpTotalAmount !== 0 && (
             <div className="rpTotalAmount monospace text-right text-xs opacity-70 mt-1">
               총 {(item.rpTotalAmount || 0).toLocaleString()}원
             </div>
           )}
-          <InputSwitch checked={item.rpCompleted} trueValue={false} falseValue={true}
-            tooltip="완료" tooltipOptions={{ position: 'top' }}
-            onChange={(e) => handleChange_rpCompleted(item, e.target.value)}
+          <InputSwitch
+            checked={item.rpCompleted}
+            trueValue={false}
+            falseValue={true}
+            tooltip="완료"
+            tooltipOptions={{ position: 'top' }}
+            onChange={(e) => updateRepeatEntry_rpCompleted(item, e.target.value)}
             onClick={(e) => e.stopPropagation()}
           />
         </div>
@@ -141,7 +164,6 @@ export default function Repeat() {
       className="app-page repeat-page"
       header={<h2 className="page-title text-3xl">반복 입출금 관리</h2>}
     >
-
       <div className="panel-inner list-page p-0">
         {loading && data.length === 0 ? (
           <div className="full-page">
@@ -161,17 +183,18 @@ export default function Repeat() {
         )}
       </div>
 
-      <Menu model={menuItems} ref={menuLeft}
-        popup popupAlignment="right"
-      />
+      <Menu model={menuItems} ref={menuLeft} popup popupAlignment="right" />
 
       {/* Floating Action Button */}
       <Button
         className="btn-floating-action btn-add-repeat shadow-7"
-        severity="secondary" size="large" rounded
+        severity="secondary"
+        size="large"
+        rounded
         icon="pi pi-plus"
         onClick={() => fnOpenDialogRepeat(null)}
-        tooltip="반복 추가" tooltipOptions={{ position: 'top' }}
+        tooltip="반복 추가"
+        tooltipOptions={{ position: 'top' }}
       />
 
       {/* 반복 입력 폼 다이얼로그 */}

@@ -1,7 +1,6 @@
 import { Panel } from '@/assets/js/PrimeReact';
 
 export default function Assets() {
-
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <Panel

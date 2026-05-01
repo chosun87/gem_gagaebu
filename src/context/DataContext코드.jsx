@@ -1,4 +1,11 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import { fetchSheetData } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -30,21 +37,26 @@ export const CodeProvider = ({ children }) => {
             cd: row[SHEET_COL_INDEX.CODE.cd],
             cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
           });
-        } else if (['지출', '이체', '수입'].includes(group) || group.includes('분류')) {
+        } else if (
+          ['지출', '이체', '수입'].includes(group) ||
+          group.includes('분류')
+        ) {
           const cdGroup = group.replace('분류', '');
           if (!categoryCds[cdGroup]) {
             categoryCds[cdGroup] = {
               cdGroup: cdGroup,
               label: cdGroup,
               selectable: false,
-              children: []
+              children: [],
             };
           }
           categoryCds[cdGroup].children.push({
             cd: row[SHEET_COL_INDEX.CODE.cd],
             cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
-            cdIcon: (row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag') + ` gType-${cdGroup}`,
-            cdDefaultAcc1: row[SHEET_COL_INDEX.CODE.cdDefaultAcc1] || ''
+            cdIcon:
+              (row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag') +
+              ` gType-${cdGroup}`,
+            cdDefaultAcc1: row[SHEET_COL_INDEX.CODE.cdDefaultAcc1] || '',
           });
         }
       }
@@ -57,12 +69,6 @@ export const CodeProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      loadSheet코드Data();
-    }
-  }, [isSignedIn, loadSheet코드Data]);
-
   // 추후 CRUD를 위한 스텁 (Stub for future CRUD)
   const saveCodeEntry = useCallback(async (entry) => {
     console.log('saveCodeEntry stub', entry);
@@ -74,28 +80,35 @@ export const CodeProvider = ({ children }) => {
     return true;
   }, []);
 
-  const contextValue = useMemo(() => ({
-    periodOptions,
-    categoryOptions,
-    loading,
-    loadSheet코드Data,
-    saveCodeEntry,
-    deleteCodeEntry
-  }), [
-    periodOptions,
-    categoryOptions,
-    loading,
-    loadSheet코드Data,
-    saveCodeEntry,
-    deleteCodeEntry
-  ]);
+  const contextValue = useMemo(
+    () => ({
+      periodOptions,
+      categoryOptions,
+      loading,
+      loadSheet코드Data,
+      saveCodeEntry,
+      deleteCodeEntry,
+    }),
+    [
+      periodOptions,
+      categoryOptions,
+      loading,
+      loadSheet코드Data,
+      saveCodeEntry,
+      deleteCodeEntry,
+    ],
+  );
 
+  useEffect(() => {
+    if (isSignedIn) {
+      loadSheet코드Data();
+    }
+  }, [isSignedIn, loadSheet코드Data]);
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
-    <CodeContext.Provider value={contextValue}>
-      {children}
-    </CodeContext.Provider>
+    <CodeContext.Provider value={contextValue}>{children}</CodeContext.Provider>
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useCodeData = () => useContext(CodeContext);

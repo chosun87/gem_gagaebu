@@ -1,9 +1,15 @@
 import { useAuth } from '@/context/AuthContext';
-import { Message, Button, Panel, ProgressSpinner } from '@/assets/js/PrimeReact';
+import {
+  Message,
+  Button,
+  Panel,
+  ProgressSpinner,
+} from '@/assets/js/PrimeReact';
 
 export default function AuthGuard({ children }) {
   const { isInitialized, isSignedIn, login } = useAuth();
 
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   if (!isInitialized) {
     return (
       <div className="full-page">
@@ -15,9 +21,10 @@ export default function AuthGuard({ children }) {
 
   if (!isSignedIn) {
     return (
-      <div className='full-page'>
+      <div className="full-page">
         <Message severity="warn" text="구글 로그인이 필요합니다." />
-        <Button size="large"
+        <Button
+          size="large"
           icon="pi pi-google"
           label="구글 로그인"
           style={{ marginTop: 'var(--padding-base)' }}

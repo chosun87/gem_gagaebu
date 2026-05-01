@@ -1,7 +1,7 @@
 /* Common commonly used style definitions */
 
 .monospace {
-  font-feature-settings: "tnum";
+  font-feature-settings: 'tnum';
   /* 최신 브라우저 권장 */
   font-variant-numeric: tabular-nums;
 }
@@ -28,7 +28,7 @@
 
 label.required {
   &::after {
-    content: "*";
+    content: '*';
     color: var(--pink-500);
     margin-left: 0.25rem;
   }

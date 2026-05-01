@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "format": "prettier --write .",
     "preview": "vite preview",
     "predeploy": "npm version patch --no-git-tag-version && npm run build",
     "deploy": "gh-pages -d dist"

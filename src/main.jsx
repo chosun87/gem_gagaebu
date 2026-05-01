@@ -26,9 +26,7 @@ createRoot(document.getElementById('root')).render(
         <AuthProvider>
           <DataProvider>
             <BrowserRouter basename="/gem_gagaebu">
-
               <App />
-
             </BrowserRouter>
           </DataProvider>
         </AuthProvider>

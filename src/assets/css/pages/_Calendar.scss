@@ -112,7 +112,6 @@
     }
 
     .fc-day-sun {
-
       .fc-col-header-cell-cushion,
       .day-number {
         color: var(--red-600);
@@ -120,7 +119,6 @@
     }
 
     .fc-day-sat {
-
       .fc-col-header-cell-cushion,
       .day-number {
         color: var(--blue-600);
@@ -154,9 +152,9 @@
       }
     }
 
-    .fc-scrollgrid-section-header>th,
+    .fc-scrollgrid-section-header > th,
     .fc-scrollgrid,
-    .fc-scrollgrid-section-body>td {
+    .fc-scrollgrid-section-body > td {
       border: 0;
     }
 

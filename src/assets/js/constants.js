@@ -1,15 +1,15 @@
 // Google Sheets 관련
 export const GOOGLE_SHEET = {
-  SPREADSHEET_ID: '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE'
-}
+  SPREADSHEET_ID: '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE',
+};
 
 // Google Sheets 시트 이름과 범위
 export const SHEET_NAME_RANGE = {
   CODE: '코드!A1:H',
   ASSET: '자산!A1:H',
   REPEAT: '반복!A1:N',
-  YEAR: 'YYYY!A1:J'
-}
+  YEAR: 'YYYY!A1:J',
+};
 
 // Google Sheets 시트 컬럼 인덱스
 export const SHEET_COL_INDEX = {
@@ -67,30 +67,30 @@ export const SHEET_COL_INDEX = {
     gExecuted: 7,
     g_rpID: 8,
     gDeleted: 9,
-  }
-}
+  },
+};
 
 export const TRANSACTION_TYPE = {
   INCOME: '수입',
   EXPENSE: '지출',
-  TRANSFER: '이체'
+  TRANSFER: '이체',
 };
 
 export const REPEAT_PERIOD = {
   MONTHLY: 'M',
-  WEEKLY: 'W'
+  WEEKLY: 'W',
 };
 
 // 거래 유형 (UI 바인딩용)
 export const G_TYPE = {
   수입: { label: '수입', value: '수입' },
   지출: { label: '지출', value: '지출' },
-  이체: { label: '이체', value: '이체' }
-}
+  이체: { label: '이체', value: '이체' },
+};
 
 // 반복 거래 유형
 export const RP_TYPE = {
   수입: { label: '수입', value: '수입' },
   지출: { label: '지출', value: '지출' },
-  이체: { label: '이체', value: '이체' }
-}
+  이체: { label: '이체', value: '이체' },
+};

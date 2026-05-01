@@ -1,5 +1,17 @@
-import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
-import { fetchSheetData, updateSheetCell, appendSheetRow, updateSheetRow } from '@/api/sheetApi';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
+import {
+  fetchSheetData,
+  updateSheetCell,
+  appendSheetRow,
+  updateSheetRow,
+} from '@/api/sheetApi';
 import { parseAmount } from '@/utils/dataUtils';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -32,7 +44,9 @@ export const RepeatProvider = ({ children }) => {
           rpDateE: row[SHEET_COL_INDEX.REPEAT.rpDateE] || '',
           rpPeriod: row[SHEET_COL_INDEX.REPEAT.rpPeriod] || '',
           rpDay: row[SHEET_COL_INDEX.REPEAT.rpDay] || '',
-          rpCompleted: (String(row[SHEET_COL_INDEX.REPEAT.rpCompleted]).toUpperCase() === 'TRUE'),
+          rpCompleted:
+            String(row[SHEET_COL_INDEX.REPEAT.rpCompleted]).toUpperCase() ===
+            'TRUE',
           rpType: row[SHEET_COL_INDEX.REPEAT.rpType] || '',
           rpAcc1: row[SHEET_COL_INDEX.REPEAT.rpAcc1] || '',
           rpAcc2: row[SHEET_COL_INDEX.REPEAT.rpAcc2] || '',
@@ -40,7 +54,9 @@ export const RepeatProvider = ({ children }) => {
           rpAmount: parseAmount(row[SHEET_COL_INDEX.REPEAT.rpAmount]),
           rpTotalAmount: parseAmount(row[SHEET_COL_INDEX.REPEAT.rpTotalAmount]),
           rpMemo: row[SHEET_COL_INDEX.REPEAT.rpMemo] || '',
-          rpDeleted: (String(row[SHEET_COL_INDEX.REPEAT.rpDeleted]).toUpperCase() === 'TRUE')
+          rpDeleted:
+            String(row[SHEET_COL_INDEX.REPEAT.rpDeleted]).toUpperCase() ===
+            'TRUE',
         });
       }
 
@@ -53,31 +69,6 @@ export const RepeatProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (isSignedIn) {
-      loadSheet반복Data();
-    }
-  }, [isSignedIn, loadSheet반복Data]);
-
-  const handleChange_rpCompleted = useCallback(async (rowData, newValue) => {
-    setSheet반복Data(prevData => prevData.map(item =>
-      item.sheetRowNo === rowData.sheetRowNo
-        ? { ...item, rpCompleted: newValue }
-        : item
-    ));
-
-    try {
-      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpCompleted);
-      await updateSheetCell(`반복!${sheetColName}${rowData.sheetRowNo}`, newValue);
-    } catch {
-      setSheet반복Data(prevData => prevData.map(item =>
-        item.sheetRowNo === rowData.sheetRowNo
-          ? { ...item, rpCompleted: !newValue }
-          : item
-      ));
-    }
-  }, []);
-
   const saveRepeatEntry = useCallback(async (repeat, formData) => {
     setLoading(true);
     try {
@@ -85,17 +76,23 @@ export const RepeatProvider = ({ children }) => {
       const rpID = repeat ? repeat.rpID : Date.now().toString();
 
       rowValues[SHEET_COL_INDEX.REPEAT.rpID] = rpID;
-      rowValues[SHEET_COL_INDEX.REPEAT.rpDateS] = formData.rpDateS ? dayjs(formData.rpDateS).format('YYYY-MM-DD') : '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpDateE] = formData.rpDateE ? dayjs(formData.rpDateE).format('YYYY-MM-DD') : '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDateS] = formData.rpDateS
+        ? dayjs(formData.rpDateS).format('YYYY-MM-DD')
+        : '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDateE] = formData.rpDateE
+        ? dayjs(formData.rpDateE).format('YYYY-MM-DD')
+        : '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpPeriod] = formData.rpPeriod || 'M';
       rowValues[SHEET_COL_INDEX.REPEAT.rpDay] = formData.rpDay || '1';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpCompleted] = formData.rpCompleted ?? false;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpCompleted] =
+        formData.rpCompleted ?? false;
       rowValues[SHEET_COL_INDEX.REPEAT.rpType] = formData.rpType || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpAcc1] = formData.rpAcc1 || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2] = formData.rpAcc2 || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpCategory] = formData.rpCategory || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpAmount] = formData.rpAmount || 0;
-      rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount] = formData.rpTotalAmount || 0;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount] =
+        formData.rpTotalAmount || 0;
       rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = formData.rpMemo || '';
       rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = '';
 
@@ -115,7 +112,7 @@ export const RepeatProvider = ({ children }) => {
         rpAmount: rowValues[SHEET_COL_INDEX.REPEAT.rpAmount],
         rpTotalAmount: rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount],
         rpMemo: rowValues[SHEET_COL_INDEX.REPEAT.rpMemo],
-        rpDeleted: false
+        rpDeleted: false,
       };
 
       if (!repeat) {
@@ -126,12 +123,18 @@ export const RepeatProvider = ({ children }) => {
         }
 
         // Optimistic UI Update (추가)
-        setSheet반복Data(prev => [newObj, ...prev]);
+        setSheet반복Data((prev) => [newObj, ...prev]);
       } else {
         await updateSheetRow('반복', repeat.sheetRowNo, rowValues);
 
         // Optimistic UI Update (수정)
-        setSheet반복Data(prev => prev.map(item => item.sheetRowNo === repeat.sheetRowNo ? { ...item, ...newObj } : item));
+        setSheet반복Data((prev) =>
+          prev.map((item) =>
+            item.sheetRowNo === repeat.sheetRowNo
+              ? { ...item, ...newObj }
+              : item,
+          ),
+        );
       }
 
       return rpID;
@@ -147,12 +150,19 @@ export const RepeatProvider = ({ children }) => {
     if (!repeat) return;
     setLoading(true);
     try {
-      const sheetColName = String.fromCharCode('A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpDeleted);
+      const sheetColName = String.fromCharCode(
+        'A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpDeleted,
+      );
       const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      await updateSheetCell(`반복!${sheetColName}${repeat.sheetRowNo}`, timestamp);
+      await updateSheetCell(
+        `반복!${sheetColName}${repeat.sheetRowNo}`,
+        timestamp,
+      );
 
       // Optimistic UI Update (삭제)
-      setSheet반복Data(prev => prev.filter(item => item.sheetRowNo !== repeat.sheetRowNo));
+      setSheet반복Data((prev) =>
+        prev.filter((item) => item.sheetRowNo !== repeat.sheetRowNo),
+      );
 
       return true;
     } catch (error) {
@@ -163,22 +173,60 @@ export const RepeatProvider = ({ children }) => {
     }
   }, []);
 
-  const contextValue = useMemo(() => ({
-    sheet반복Data,
-    loading,
-    loadSheet반복Data,
-    handleChange_rpCompleted,
-    saveRepeatEntry,
-    deleteRepeatEntry
-  }), [
-    sheet반복Data,
-    loading,
-    loadSheet반복Data,
-    handleChange_rpCompleted,
-    saveRepeatEntry,
-    deleteRepeatEntry
-  ]);
+  const updateRepeatEntry_rpCompleted = useCallback(async (rowData, newValue) => {
+    setSheet반복Data((prevData) =>
+      prevData.map((item) =>
+        item.sheetRowNo === rowData.sheetRowNo
+          ? { ...item, rpCompleted: newValue }
+          : item,
+      ),
+    );
 
+    try {
+      const sheetColName = String.fromCharCode(
+        'A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpCompleted,
+      );
+      await updateSheetCell(
+        `반복!${sheetColName}${rowData.sheetRowNo}`,
+        newValue,
+      );
+    } catch {
+      setSheet반복Data((prevData) =>
+        prevData.map((item) =>
+          item.sheetRowNo === rowData.sheetRowNo
+            ? { ...item, rpCompleted: !newValue }
+            : item,
+        ),
+      );
+    }
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      sheet반복Data,
+      loading,
+      loadSheet반복Data,
+      updateRepeatEntry_rpCompleted,
+      saveRepeatEntry,
+      deleteRepeatEntry,
+    }),
+    [
+      sheet반복Data,
+      loading,
+      loadSheet반복Data,
+      updateRepeatEntry_rpCompleted,
+      saveRepeatEntry,
+      deleteRepeatEntry,
+    ],
+  );
+
+  useEffect(() => {
+    if (isSignedIn) {
+      loadSheet반복Data();
+    }
+  }, [isSignedIn, loadSheet반복Data]);
+
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <RepeatContext.Provider value={contextValue}>
       {children}
@@ -186,5 +234,4 @@ export const RepeatProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useRepeatData = () => useContext(RepeatContext);

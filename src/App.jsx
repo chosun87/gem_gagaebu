@@ -1,5 +1,11 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -33,6 +39,13 @@ function App() {
 
   const [isThemeOpen, setIsThemeOpen] = useState(false);
 
+  useEffect(() => {
+    if (location.pathname === '/logout') {
+      logout();
+      navigate('/login', { replace: true });
+    }
+  }, [location.pathname, logout, navigate]);
+
   // Footer 메뉴 인덱스 매칭
   let activeIndex = 0;
   if (location.pathname.startsWith('/statistics')) {
@@ -45,6 +58,7 @@ function App() {
     activeIndex = 0;
   }
 
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const handleMenuChange = (menuIndex) => {
     switch (menuIndex) {
       case 0:
@@ -65,16 +79,14 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (location.pathname === '/logout') {
-      logout();
-      navigate('/login', { replace: true });
-    }
-  }, [location.pathname, logout, navigate]);
-
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <div className="app-container">
-      <Header onThemeClick={() => navigate('/theme', { state: { background: location } })} />
+      <Header
+        onThemeClick={() =>
+          navigate('/theme', { state: { background: location } })
+        }
+      />
 
       <main className="app-content">
         <AuthGuard>
@@ -84,7 +96,10 @@ function App() {
               {/* 기본 리다이렉트 */}
               <Route path="/" element={<Navigate to="/ledger" replace />} />
 
-              <Route path="/login" element={<Navigate to="/ledger" replace />} />
+              <Route
+                path="/login"
+                element={<Navigate to="/ledger" replace />}
+              />
 
               {/* 메인 라우트 */}
               <Route path="/ledger/*" element={<Ledger />} />

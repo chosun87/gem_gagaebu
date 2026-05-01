@@ -1,6 +1,6 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from "node:path";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import packageJson from './package.json';
 
@@ -19,29 +19,29 @@ export default defineConfig({
   base: '/gem_gagaebu/',
 
   server: {
-    port: 3000,           // 원하는 포트 번호
-    strictPort: true,     // 선택: 포트가 이미 사용 중이면 에러 발생
-    open: true,           // 서버 실행 시 브라우저 자동 열기 (선택 사항)
+    port: 3000, // 원하는 포트 번호
+    strictPort: true, // 선택: 포트가 이미 사용 중이면 에러 발생
+    open: true, // 서버 실행 시 브라우저 자동 열기 (선택 사항)
   },
   preview: {
     port: 4000,
-    strictPort: true,     // 선택: 포트가 이미 사용 중이면 에러 발생
-    open: true,           // 서버 실행 시 브라우저 자동 열기 (선택 사항)
+    strictPort: true, // 선택: 포트가 이미 사용 중이면 에러 발생
+    open: true, // 서버 실행 시 브라우저 자동 열기 (선택 사항)
   },
   resolve: {
     alias: [
       {
-        find: "@",
-        replacement: path.resolve(__dirname, "src")
+        find: '@',
+        replacement: path.resolve(__dirname, 'src'),
       },
       {
-        find: "@components",
-        replacement: path.resolve(__dirname, "src/components")
+        find: '@components',
+        replacement: path.resolve(__dirname, 'src/components'),
       },
     ],
   },
 
   build: {
-    chunkSizeWarningLimit: 1000
-  }
-})
+    chunkSizeWarningLimit: 1000,
+  },
+});

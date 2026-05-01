@@ -2,11 +2,15 @@ import { useRef } from 'react';
 
 /**
  * 터치 스와이프 이벤트를 처리하는 커스텀 훅
- * @param {Object} handlers - { onSwipeLeft, onSwipeRight } 
+ * @param {Object} handlers - { onSwipeLeft, onSwipeRight }
  * @param {number} minSwipeDistance - 스와이프로 인식할 최소 거리 (기본값: 50)
  * @returns {Object} 터치 이벤트 핸들러 { onTouchStart, onTouchEnd }
  */
-export const useSwipe = ({ onSwipeLeft, onSwipeRight, minSwipeDistance = 50 }) => {
+export const useSwipe = ({
+  onSwipeLeft,
+  onSwipeRight,
+  minSwipeDistance = 50,
+}) => {
   const touchStart = useRef(null);
 
   const onTouchStart = (e) => {

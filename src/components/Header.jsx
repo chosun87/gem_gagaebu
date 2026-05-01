@@ -9,22 +9,28 @@ function useLongPress(onClick, onLongPress, delay = 600) {
   const timerRef = useRef(null);
   const isLongPress = useRef(false);
 
-  const startPress = useCallback((e) => {
-    isLongPress.current = false;
-    timerRef.current = setTimeout(() => {
-      isLongPress.current = true;
-      onLongPress(e);
-    }, delay);
-  }, [onLongPress, delay]);
+  const startPress = useCallback(
+    (e) => {
+      isLongPress.current = false;
+      timerRef.current = setTimeout(() => {
+        isLongPress.current = true;
+        onLongPress(e);
+      }, delay);
+    },
+    [onLongPress, delay],
+  );
 
-  const endPress = useCallback((e) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    if (!isLongPress.current) {
-      onClick(e);
-    }
-  }, [onClick]);
+  const endPress = useCallback(
+    (e) => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      if (!isLongPress.current) {
+        onClick(e);
+      }
+    },
+    [onClick],
+  );
 
   const cancelPress = useCallback(() => {
     if (timerRef.current) {
@@ -38,7 +44,7 @@ function useLongPress(onClick, onLongPress, delay = 600) {
     onMouseLeave: cancelPress,
     onTouchStart: startPress,
     onTouchEnd: endPress,
-    onContextMenu: (e) => e.preventDefault()
+    onContextMenu: (e) => e.preventDefault(),
   };
 }
 
@@ -48,6 +54,7 @@ export default function Header({ onThemeClick }) {
   const isFullscreen = useFullscreenStatus();
   const { reloadData, loading } = useData();
 
+  // Functions -------------------------------------------------------------------------------------
   const fnLogout = () => {
     confirmDialog({
       message: '로그아웃 하시겠습니까?',
@@ -63,7 +70,8 @@ export default function Header({ onThemeClick }) {
     confirmDialog({
       message: (
         <>
-          페이지를 완전히 새로고침 하시겠습니까?<br />
+          페이지를 완전히 새로고침 하시겠습니까?
+          <br />
           작업 중인 내용이 초기화됩니다.
         </>
       ),
@@ -75,44 +83,74 @@ export default function Header({ onThemeClick }) {
     });
   };
 
-  const refreshPressHandlers = useLongPress(
+  // 이벤트 핸들러 ---------------------------------------------------------------------------------------
+  const handlersPressRefresh = useLongPress(
     () => reloadData(),
-    () => fnHardReload()
+    () => fnHardReload(),
   );
 
+  // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <header className="app-header shadow-2">
       <h1 className="app-header-title text-4xl">
-        <img className="app-header-logo" src={`${import.meta.env.BASE_URL}favicon.svg`} alt="Logo" />
+        <img
+          className="app-header-logo"
+          src={`${import.meta.env.BASE_URL}favicon.svg`}
+          alt="Logo"
+        />
         가계부
       </h1>
 
-      <div className="app-header-version">v.{import.meta.env.VITE_APP_VERSION}</div>
+      <div className="app-header-version">
+        v.{import.meta.env.VITE_APP_VERSION}
+      </div>
 
       <div className="app-header-buttons">
-        <Button className="fullscreen text-base" severity="info" rounded text raised size="small"
-          icon={isFullscreen ? "fa-solid fa-compress" : "fa-solid fa-expand"}
-          tooltip={isFullscreen ? "화면 축소" : "전체화면"} tooltipOptions={{ position: 'left' }}
+        <Button
+          className="fullscreen text-base"
+          severity="info"
+          rounded
+          text
+          raised
+          size="small"
+          icon={isFullscreen ? 'fa-solid fa-compress' : 'fa-solid fa-expand'}
+          tooltip={isFullscreen ? '화면 축소' : '전체화면'}
+          tooltipOptions={{ position: 'left' }}
           onClick={toggleFullscreen}
         />
-        <Button className="theme text-base" severity="info" rounded text raised size="small"
+        <Button
+          className="theme text-base"
+          severity="info"
+          rounded
+          text
+          raised
+          size="small"
           icon="pi pi-palette"
-          tooltip="테마" tooltipOptions={{ position: 'left' }}
+          tooltip="테마"
+          tooltipOptions={{ position: 'left' }}
           onClick={onThemeClick}
         />
 
         {isSignedIn ? (
           <>
-            <Button className="refresh text-base" severity="info" rounded text raised size="small"
-              icon={loading ? "pi pi-spin pi-refresh" : "pi pi-refresh"}
+            <Button
+              className="refresh text-base"
+              severity="info"
+              rounded
+              text
+              raised
+              size="small"
+              icon={loading ? 'pi pi-spin pi-refresh' : 'pi pi-refresh'}
               disabled={!isInitialized || loading}
-              tooltip="새로고침 (길게 누르면 완전 새로고침)" tooltipOptions={{ position: 'left' }}
-              {...refreshPressHandlers}
+              tooltip="새로고침 (길게 누르면 완전 새로고침)"
+              tooltipOptions={{ position: 'left' }}
+              {...handlersPressRefresh}
             />
             <div className="flex flex-column align-items-center relative">
               {/* 인증만료까지 남은 시간 표시 (클릭 시 연장) */}
               {!GOOGLE_AUTH_PARAMS.DISABLED_RELOGIN && (
-                <span className="auth-remaining-time text-xs monospace"
+                <span
+                  className="auth-remaining-time text-xs monospace"
                   style={{ cursor: 'pointer' }}
                   onClick={extendLogin}
                   title="인증 연장하기"
@@ -122,19 +160,33 @@ export default function Header({ onThemeClick }) {
               )}
 
               {/* 로그아웃 버튼 */}
-              <Button className="login text-base" severity="primary" rounded text raised size="small"
+              <Button
+                className="login text-base"
+                severity="primary"
+                rounded
+                text
+                raised
+                size="small"
                 icon="pi pi-sign-out"
                 disabled={!isInitialized}
-                tooltip="로그아웃" tooltipOptions={{ position: 'left' }}
+                tooltip="로그아웃"
+                tooltipOptions={{ position: 'left' }}
                 onClick={fnLogout}
               />
             </div>
           </>
         ) : (
-          <Button className="login text-base" severity="primary" rounded text raised size="small"
+          <Button
+            className="login text-base"
+            severity="primary"
+            rounded
+            text
+            raised
+            size="small"
             icon="pi pi-user"
             disabled={!isInitialized}
-            tooltip="로그인" tooltipOptions={{ position: 'left' }}
+            tooltip="로그인"
+            tooltipOptions={{ position: 'left' }}
             onClick={login}
           />
         )}
@@ -142,4 +194,3 @@ export default function Header({ onThemeClick }) {
     </header>
   );
 }
-
