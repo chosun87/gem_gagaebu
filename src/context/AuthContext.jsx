@@ -126,10 +126,11 @@ const AuthInternalProvider = ({ children }) => {
             const currentToken = localStorage.getItem('gagaebu_token');
             if (!currentToken) return;
 
+            logout();
+
             alert(
               '인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.\n다시 로그인해 주세요.',
             );
-            logout();
           }
         }
       };

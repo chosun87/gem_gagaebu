@@ -98,14 +98,14 @@
     display: flex;
     flex-direction: column;
 
-    & > .p-panel-header {
+    &>.p-panel-header {
       padding: var(--padding-base);
       border: 0;
       color: var(--text-color);
       background: transparent;
     }
 
-    & > .p-toggleable-content {
+    &>.p-toggleable-content {
       flex: 1 1 auto;
       height: 100%;
       overflow: hidden;
@@ -116,6 +116,7 @@
         height: 100%;
         padding-top: 0;
         border: 0;
+        background-color: transparent;
 
         .panel-inner {
           height: 100%;

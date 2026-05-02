@@ -21,6 +21,12 @@ const DialogSettings = lazy(() => import('@/components/DialogSettings'));
 const DialogTheme = lazy(() => import('@/components/DialogTheme'));
 const Repeat = lazy(() => import('@/pages/Settings/Repeat'));
 
+// 샘플 페이지 다이나믹 로딩
+const Blank = lazy(() => import('@/samples/pages/blank'));
+const BlankSidebarRight = lazy(() => import('@/samples/pages/blankSidebarRight'));
+const BlankSidebarBottom = lazy(() => import('@/samples/pages/blankSidebarBottom'));
+const BlankMonthly = lazy(() => import('@/samples/pages/blankMonthly'));
+
 import { ConfirmDialog, ProgressSpinner } from '@/assets/js/PrimeReact';
 
 const PageLoading = () => (
@@ -104,6 +110,19 @@ function App() {
               {/* 직접 접근 시 배경이 없을 경우를 위해 가계부를 기본으로 둠 */}
               <Route path="/settings" element={<Ledger />} />
               <Route path="/theme" element={<Ledger />} />
+
+              {/* 샘플 라우트 */}
+              <Route path="/samples/blank" element={<Blank />} />
+              <Route
+                path="/samples/blankSidebarRight"
+                element={<BlankSidebarRight />}
+              />
+              <Route
+                path="/samples/blankSidebarBottom"
+                element={<BlankSidebarBottom />}
+              />
+              <Route path="/samples/blankMonthly/:yearMonth" element={<BlankMonthly />} />
+              <Route path="/samples/blankMonthly" element={<BlankMonthly />} />
             </Routes>
           </Suspense>
         </AuthGuard>
@@ -119,6 +138,8 @@ function App() {
               onHide={() => navigate(-1)}
             />
           </Suspense>
+
+          <ConfirmDialog />
         </>
       )}
 
@@ -130,8 +151,6 @@ function App() {
           }}
         />
       </Suspense>
-
-      <ConfirmDialog />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Sidebar, Menu } from '@/assets/js/PrimeReact';
+import { Sidebar, Panel, Menu } from '@/assets/js/PrimeReact';
 import { useNavigate } from 'react-router-dom';
 
 export default function Settings({ visible, onHide }) {
@@ -17,6 +17,39 @@ export default function Settings({ visible, onHide }) {
         },
       ],
     },
+    {
+      label: '디자인 템플릿',
+      items: [
+        {
+          label: '빈 페이지 템플릿',
+          icon: 'pi pi-file',
+          command: () => {
+            navigate('/samples/blank');
+          },
+        },
+        {
+          label: '우측 사이드바 템플릿',
+          icon: 'pi pi-arrow-left',
+          command: () => {
+            navigate('/samples/blankSidebarRight');
+          },
+        },
+        {
+          label: '하단 사이드바 템플릿',
+          icon: 'pi pi-arrow-up',
+          command: () => {
+            navigate('/samples/blankSidebarBottom');
+          },
+        },
+        {
+          label: '월별 빈 페이지 템플릿',
+          icon: 'pi pi-calendar',
+          command: () => {
+            navigate('/samples/blankMonthly');
+          },
+        },
+      ],
+    },
   ];
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -28,9 +61,11 @@ export default function Settings({ visible, onHide }) {
       visible={visible}
       onHide={onHide}
     >
-      <div className="settings-content py-2">
+      <Panel
+        className="settings-content"
+      >
         <Menu model={menuItems} className="w-full border-none p-0" />
-      </div>
+      </Panel>
     </Sidebar>
   );
 }
