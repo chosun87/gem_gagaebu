@@ -91,7 +91,7 @@ export default function Header({ onThemeClick }) {
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
-    <header className="app-header shadow-2">
+    <header className="app-header">
       <h1 className="app-header-title text-4xl">
         <img
           className="app-header-logo"

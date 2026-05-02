@@ -49,6 +49,13 @@
   --padding-base: 1.5rem;
 }
 
+/* 모바일 환경 툴팁 숨김 */
+@media (max-width: 575px) {
+  :root {
+    --padding-base: 0.75rem;
+  }
+}
+
 @include dark-mode {
   --color-수입: var(--blue-500);
   --color-지출: var(--pink-500);
