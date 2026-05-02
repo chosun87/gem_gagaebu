@@ -111,7 +111,7 @@ function App() {
 
       {isSignedIn && (
         <>
-          <Footer className="shadow-8" activeIndex={activeIndex} onMenuChange={handleMenuChange} />
+          <Footer activeIndex={activeIndex} onMenuChange={handleMenuChange} />
 
           <Suspense fallback={null}>
             <DialogSettings

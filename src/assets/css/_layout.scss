@@ -98,14 +98,14 @@
     display: flex;
     flex-direction: column;
 
-    &>.p-panel-header {
+    & > .p-panel-header {
       padding: var(--padding-base);
       border: 0;
       color: var(--text-color);
       background: transparent;
     }
 
-    &>.p-toggleable-content {
+    & > .p-toggleable-content {
       flex: 1 1 auto;
       height: 100%;
       overflow: hidden;
@@ -168,7 +168,6 @@
               font-size: 1.25rem;
             }
           }
-
         }
 
         &:not(.p-highlight):not(.p-disabled):hover {
