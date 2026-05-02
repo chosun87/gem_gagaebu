@@ -27,7 +27,10 @@ export default function BlankMonthly() {
 
         <section className="panel-body">
           <div>월별 이동 기능이 포함된 빈 페이지 템플릿입니다.</div>
-          <div>현재 선택된 월 : <strong>{dayjs(selectedDate).format('YYYY-MM')}</strong></div>
+          <div>
+            현재 선택된 월 :{' '}
+            <strong>{dayjs(selectedDate).format('YYYY-MM')}</strong>
+          </div>
         </section>
       </div>
     </Panel>

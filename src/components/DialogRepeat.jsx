@@ -181,12 +181,22 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       const { addedCount, updatedCount, deletedCount } =
         await generateLedgerFromRepeat(formData, rpID);
 
-      alert(
-        `${addedCount}개의 내역이 신규 생성되고, ${updatedCount}개의 기존 내역이 업데이트, ${deletedCount}개의 기존 내역이 삭제 되었습니다.`,
-      );
-      onHide();
+      confirmDialog({
+        message: `${addedCount}개의 내역이 신규 생성되고, ${updatedCount}개의 기존 내역이 업데이트, ${deletedCount}개의 기존 내역이 삭제 되었습니다.`,
+        header: '처리 완료',
+        icon: 'pi pi-info-circle',
+        acceptLabel: '확인',
+        rejectClassName: 'hidden',
+        accept: () => onHide(),
+      });
     } catch (error) {
-      alert('저장 중 오류가 발생했습니다. : ' + JSON.stringify(error));
+      confirmDialog({
+        message: '저장 중 오류가 발생했습니다. : ' + JSON.stringify(error),
+        header: '오류 안내',
+        icon: 'pi pi-times-circle',
+        acceptLabel: '확인',
+        rejectClassName: 'hidden',
+      });
     }
   };
 
@@ -203,7 +213,13 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           await deleteRepeatEntry(repeat);
           onHide();
         } catch (error) {
-          alert('삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error));
+          confirmDialog({
+            message: '삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error),
+            header: '오류 안내',
+            icon: 'pi pi-times-circle',
+            acceptLabel: '확인',
+            rejectClassName: 'hidden',
+          });
         }
       },
     });

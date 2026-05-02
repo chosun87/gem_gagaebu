@@ -12,12 +12,7 @@ export default function DialogSampleBottom({ visible, onHide }) {
           label="Cancel"
           onClick={onHide}
         />
-        <Button
-          severity="primary"
-          size="large"
-          label="OK"
-          onClick={onHide}
-        />
+        <Button severity="primary" size="large" label="OK" onClick={onHide} />
       </div>
     );
   };

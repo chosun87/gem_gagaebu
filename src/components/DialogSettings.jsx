@@ -61,9 +61,7 @@ export default function Settings({ visible, onHide }) {
       visible={visible}
       onHide={onHide}
     >
-      <Panel
-        className="settings-content"
-      >
+      <Panel className="settings-content">
         <Menu model={menuItems} className="w-full border-none p-0" />
       </Panel>
     </Sidebar>

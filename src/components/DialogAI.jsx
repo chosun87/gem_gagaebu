@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Sidebar, Panel, Button, InputTextarea } from '@/assets/js/PrimeReact';
+import {
+  Sidebar,
+  Panel,
+  Button,
+  InputTextarea,
+  confirmDialog,
+} from '@/assets/js/PrimeReact';
 
 export default function DialogAI({ visible, onHide }) {
   const [text, setText] = useState('');
@@ -13,12 +19,24 @@ export default function DialogAI({ visible, onHide }) {
       // TODO: 실제 AI 분석 로직 추가
       // 임시로 성공 처리
       setTimeout(() => {
-        alert('분석 준비 중입니다.');
-        setLoading(false);
+        confirmDialog({
+          message: '분석 준비 중입니다.',
+          header: 'AI 분석',
+          icon: 'pi pi-sparkles',
+          acceptLabel: '확인',
+          rejectClassName: 'hidden',
+          accept: () => setLoading(false),
+        });
       }, 1000);
     } catch (error) {
-      alert('분석에 실패했습니다. : ' + JSON.stringify(error));
-      setLoading(false);
+      confirmDialog({
+        message: '분석에 실패했습니다. : ' + JSON.stringify(error),
+        header: '오류 안내',
+        icon: 'pi pi-times-circle',
+        acceptLabel: '확인',
+        rejectClassName: 'hidden',
+        accept: () => setLoading(false),
+      });
     }
   };
 

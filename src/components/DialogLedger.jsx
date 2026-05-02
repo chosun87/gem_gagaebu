@@ -134,7 +134,13 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       await saveLedgerEntry(ledger, formData);
       onHide();
     } catch (error) {
-      alert('저장 중 오류가 발생했습니다. : ' + JSON.stringify(error));
+      confirmDialog({
+        message: '저장 중 오류가 발생했습니다. : ' + JSON.stringify(error),
+        header: '오류 안내',
+        icon: 'pi pi-times-circle',
+        acceptLabel: '확인',
+        rejectClassName: 'hidden',
+      });
     }
   };
 
@@ -151,7 +157,13 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
           await deleteLedgerEntry(ledger);
           onHide();
         } catch (error) {
-          alert('삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error));
+          confirmDialog({
+            message: '삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error),
+            header: '오류 안내',
+            icon: 'pi pi-times-circle',
+            acceptLabel: '확인',
+            rejectClassName: 'hidden',
+          });
         }
       },
     });

@@ -23,8 +23,12 @@ const Repeat = lazy(() => import('@/pages/Settings/Repeat'));
 
 // 샘플 페이지 다이나믹 로딩
 const Blank = lazy(() => import('@/samples/pages/blank'));
-const BlankSidebarRight = lazy(() => import('@/samples/pages/blankSidebarRight'));
-const BlankSidebarBottom = lazy(() => import('@/samples/pages/blankSidebarBottom'));
+const BlankSidebarRight = lazy(
+  () => import('@/samples/pages/blankSidebarRight'),
+);
+const BlankSidebarBottom = lazy(
+  () => import('@/samples/pages/blankSidebarBottom'),
+);
 const BlankMonthly = lazy(() => import('@/samples/pages/blankMonthly'));
 
 import { ConfirmDialog, ProgressSpinner } from '@/assets/js/PrimeReact';
@@ -121,7 +125,10 @@ function App() {
                 path="/samples/blankSidebarBottom"
                 element={<BlankSidebarBottom />}
               />
-              <Route path="/samples/blankMonthly/:yearMonth" element={<BlankMonthly />} />
+              <Route
+                path="/samples/blankMonthly/:yearMonth"
+                element={<BlankMonthly />}
+              />
               <Route path="/samples/blankMonthly" element={<BlankMonthly />} />
             </Routes>
           </Suspense>
@@ -138,8 +145,6 @@ function App() {
               onHide={() => navigate(-1)}
             />
           </Suspense>
-
-          <ConfirmDialog />
         </>
       )}
 
@@ -151,6 +156,8 @@ function App() {
           }}
         />
       </Suspense>
+
+      <ConfirmDialog />
     </div>
   );
 }

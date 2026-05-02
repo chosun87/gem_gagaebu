@@ -128,9 +128,14 @@ const AuthInternalProvider = ({ children }) => {
 
             logout();
 
-            alert(
-              '인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.\n다시 로그인해 주세요.',
-            );
+            confirmDialog({
+              message:
+                '인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.\n다시 로그인해 주세요.',
+              header: '자동 로그아웃 안내',
+              icon: 'pi pi-info-circle',
+              acceptLabel: '확인',
+              rejectClassName: 'hidden',
+            });
           }
         }
       };

@@ -574,18 +574,14 @@ react-router-dom을 적용하여 애플리케이션의 라우팅 구조 개편�
 
 전반적으로 프론트엔드 최신 모범 사례(Best Practices)에 맞춰 소스코드가 아주 탄탄해졌습니다! 가계부 앱 구동이나 조작 시 혹시라도 어색한 부분이 있으면 알려주세요.
 
-
-
-* 페이지 템플릿
+- 페이지 템플릿
   - src/samples/pages에 아래와 같이 파일들을 만들 것.
-    * blank.jsx : 빈 페이지 템플릿
+    - blank.jsx : 빈 페이지 템플릿
       - Assets.jsx 참고
-    * blankSidebarLeft.jsx : sidebar가 좌측에 있는 빈 페이지 템플릿
+    - blankSidebarLeft.jsx : sidebar가 좌측에 있는 빈 페이지 템플릿
       - DialogSettings.jsx 참고
-    * blankSidebarBottom.jsx : sidebar가 하단에 있는 빈 페이지 템플릿
+    - blankSidebarBottom.jsx : sidebar가 하단에 있는 빈 페이지 템플릿
       - DialogAI.jsx 참고. Footer 버튼에 'Cancel', 'OK' 버튼 배치
-    * blankMonthly.jsx : blank.jsx + MonthNavigator 템플릿
+    - blankMonthly.jsx : blank.jsx + MonthNavigator 템플릿
       - MonthlySummary.jsx 참고
   - 이 화면들을 볼 수 있는 메뉴는 Settings.jsx에 추가로 만들고, 패널제목은 "디자인 템플릿" 으로 할 것. Settings.jsx의 menuItems 참고.
-    
-    
