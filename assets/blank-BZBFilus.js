@@ -1,0 +1,1 @@
+import{d as e,t}from"./jsx-runtime-bQus-5Dq.js";var n=t();function r(){return(0,n.jsx)(e,{className:`app-page`,header:(0,n.jsx)(`h2`,{className:`page-title text-3xl`,children:`빈 페이지`}),children:(0,n.jsx)(`div`,{children:`빈 페이지 템플릿입니다.`})})}export{r as default};
