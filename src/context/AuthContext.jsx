@@ -121,7 +121,8 @@ const AuthInternalProvider = ({ children }) => {
               header: '로그인 연장 알림',
               message: (
                 <>
-                  인증 만료 {GOOGLE_AUTH_PARAMS.EXTENSION_THRESHOLD_SEC / 60}분 전입니다.
+                  인증 만료 {GOOGLE_AUTH_PARAMS.EXTENSION_THRESHOLD_SEC / 60}분
+                  전입니다.
                   <br />
                   로그인을 연장하시겠습니까?
                 </>

@@ -8,7 +8,7 @@ export const showNotice = ({
   icon = 'pi pi-info-circle',
   message,
   acceptLabel = '확인',
-  accept = () => { },
+  accept = () => {},
   ...props
 }) => {
   confirmDialog({
@@ -31,8 +31,8 @@ export const showConfirm = ({
   message,
   acceptLabel = '확인',
   rejectLabel = '취소',
-  accept = () => { },
-  reject = () => { },
+  accept = () => {},
+  reject = () => {},
   ...props
 }) => {
   confirmDialog({
@@ -52,9 +52,7 @@ export const showConfirm = ({
  */
 export const showError = (error, header = '오류 안내') => {
   const message =
-    typeof error === 'string'
-      ? error
-      : (error?.message || JSON.stringify(error));
+    typeof error === 'string' ? error : error?.message || JSON.stringify(error);
 
   showNotice({
     header,
