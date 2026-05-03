@@ -9,7 +9,7 @@ import {
 import { GoogleOAuthProvider, useGoogleLogin } from '@react-oauth/google';
 import { initGoogleApi, signOut, setToken } from '@/api/googleAuth';
 import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
-import { confirmDialog } from '@/assets/js/PrimeReact';
+import { showNotice, showConfirm } from '@/assets/js/dialogUtils';
 
 const AuthContext = createContext(null);
 const AuthTimerContext = createContext(null);
@@ -37,15 +37,15 @@ const AuthInternalProvider = ({ children }) => {
         // GAPI 초기화 (index.html에서 로드됨)
         await initGoogleApi();
 
-        const storedToken = localStorage.getItem('gagaebu_token');
-        const tokenExpiry = localStorage.getItem('gagaebu_token_expiry');
+        const storedToken = localStorage.getItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
+        const tokenExpiry = localStorage.getItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
 
         if (storedToken && tokenExpiry && Date.now() < Number(tokenExpiry)) {
           setToken(storedToken);
           setIsSignedIn(true);
         } else {
-          localStorage.removeItem('gagaebu_token');
-          localStorage.removeItem('gagaebu_token_expiry');
+          localStorage.removeItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
+          localStorage.removeItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
         }
 
         setIsInitialized(true);
@@ -61,8 +61,14 @@ const AuthInternalProvider = ({ children }) => {
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       const sessionMs = GOOGLE_AUTH_PARAMS.TOKEN_EXPIRY_MIN * 60 * 1000;
-      localStorage.setItem('gagaebu_token', tokenResponse.access_token);
-      localStorage.setItem('gagaebu_token_expiry', Date.now() + sessionMs);
+      localStorage.setItem(
+        GOOGLE_AUTH_PARAMS.TOKEN_KEY,
+        tokenResponse.access_token,
+      );
+      localStorage.setItem(
+        GOOGLE_AUTH_PARAMS.EXPIRY_KEY,
+        Date.now() + sessionMs,
+      );
 
       setToken(tokenResponse.access_token);
       setIsSignedIn(true);
@@ -79,8 +85,8 @@ const AuthInternalProvider = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       await signOut();
-      localStorage.removeItem('gagaebu_token');
-      localStorage.removeItem('gagaebu_token_expiry');
+      localStorage.removeItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
+      localStorage.removeItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
       setIsSignedIn(false);
     } catch (error) {
       console.error('Logout failed:', error);
@@ -97,7 +103,7 @@ const AuthInternalProvider = ({ children }) => {
 
     if (isSignedIn) {
       const updateRemainingTime = () => {
-        const tokenExpiry = localStorage.getItem('gagaebu_token_expiry');
+        const tokenExpiry = localStorage.getItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
         if (tokenExpiry) {
           const remaining = Math.max(
             0,
@@ -105,15 +111,23 @@ const AuthInternalProvider = ({ children }) => {
           );
           setAuthRemainingTime(remaining);
 
-          // 3분(180초) 남았을 때 연장 여부 확인
-          if (remaining === 180 && !extensionPromptShown) {
+          // 연장 여부 확인 (3분 전)
+          if (
+            remaining === GOOGLE_AUTH_PARAMS.EXTENSION_THRESHOLD_SEC &&
+            !extensionPromptShown
+          ) {
             setExtensionPromptShown(true);
-            confirmDialog({
-              message: '인증 만료 3분 전입니다. 로그인을 연장하시겠습니까?',
+            showConfirm({
               header: '로그인 연장 알림',
-              icon: 'pi pi-exclamation-triangle',
-              acceptLabel: '연장하기',
+              message: (
+                <>
+                  인증 만료 {GOOGLE_AUTH_PARAMS.EXTENSION_THRESHOLD_SEC / 60}분 전입니다.
+                  <br />
+                  로그인을 연장하시겠습니까?
+                </>
+              ),
               rejectLabel: '나중에',
+              acceptLabel: '연장하기',
               accept: () => {
                 extendLogin();
               },
@@ -123,18 +137,22 @@ const AuthInternalProvider = ({ children }) => {
           if (remaining <= 0) {
             if (intervalId) clearInterval(intervalId);
 
-            const currentToken = localStorage.getItem('gagaebu_token');
+            const currentToken = localStorage.getItem(
+              GOOGLE_AUTH_PARAMS.TOKEN_KEY,
+            );
             if (!currentToken) return;
 
             logout();
 
-            confirmDialog({
-              message:
-                '인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.\n다시 로그인해 주세요.',
+            showNotice({
               header: '자동 로그아웃 안내',
-              icon: 'pi pi-info-circle',
-              acceptLabel: '확인',
-              rejectClassName: 'hidden',
+              message: (
+                <>
+                  인증 기간이 만료되어 자동으로 로그아웃 처리되었습니다.
+                  <br />
+                  다시 로그인해 주세요.
+                </>
+              ),
             });
           }
         }

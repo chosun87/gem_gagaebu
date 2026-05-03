@@ -4,7 +4,6 @@ import {
   Button,
   Panel,
   Sidebar,
-  confirmDialog,
   Calendar as PrimeCalendar,
   InputNumber,
   InputText,
@@ -12,9 +11,17 @@ import {
   Dropdown,
   ToggleButton,
 } from '@/assets/js/PrimeReact';
+import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils';
 // import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
+
+import {
+  templateCategoryItem,
+  templateCategoryValue,
+  templateAssetItem,
+  templateAssetValue,
+} from '@/components/common/SelectTemplates';
 
 import { RP_TYPE } from '@/assets/js/constants';
 
@@ -181,92 +188,42 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       const { addedCount, updatedCount, deletedCount } =
         await generateLedgerFromRepeat(formData, rpID);
 
-      confirmDialog({
-        message: `${addedCount}개의 내역이 신규 생성되고, ${updatedCount}개의 기존 내역이 업데이트, ${deletedCount}개의 기존 내역이 삭제 되었습니다.`,
+      showNotice({
         header: '처리 완료',
-        icon: 'pi pi-info-circle',
-        acceptLabel: '확인',
-        rejectClassName: 'hidden',
+        message: (
+          <>
+            {addedCount}개의 내역이 신규 생성되고,
+            <br />
+            {updatedCount}개의 기존 내역이 업데이트,
+            <br />
+            {deletedCount}개의 기존 내역이 삭제 되었습니다.
+          </>
+        ),
         accept: () => onHide(),
       });
     } catch (error) {
-      confirmDialog({
-        message: '저장 중 오류가 발생했습니다. : ' + JSON.stringify(error),
-        header: '오류 안내',
-        icon: 'pi pi-times-circle',
-        acceptLabel: '확인',
-        rejectClassName: 'hidden',
-      });
+      showError(error, '저장 오류');
     }
   };
 
   const fnDelete = () => {
-    confirmDialog({
-      message: '정말로 삭제하시겠습니까?',
+    showConfirm({
       header: '삭제 확인',
-      icon: 'pi pi-exclamation-triangle',
+      message: '정말로 삭제하시겠습니까?',
       acceptLabel: '삭제',
-      rejectLabel: '취소',
       acceptClassName: 'p-button-danger',
       accept: async () => {
         try {
           await deleteRepeatEntry(repeat);
           onHide();
         } catch (error) {
-          confirmDialog({
-            message: '삭제 중 오류가 발생했습니다. : ' + JSON.stringify(error),
-            header: '오류 안내',
-            icon: 'pi pi-times-circle',
-            acceptLabel: '확인',
-            rejectClassName: 'hidden',
-          });
+          showError(error, '삭제 오류');
         }
       },
     });
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const templateCategoryItem = (option) => {
-    return (
-      <div className="flex align-items-center">
-        <i className={classNames(option.cdIcon, 'mr-2')} />
-        <span>{option.cdLabel}</span>
-      </div>
-    );
-  };
-
-  const templateCategoryValue = (option, props) => {
-    if (option) {
-      return (
-        <div className="flex align-items-center">
-          <i className={classNames(option.cdIcon, 'mr-2')} />
-          <span>{option.cdLabel}</span>
-        </div>
-      );
-    }
-    return <span>{props.placeholder}</span>;
-  };
-
-  const templateAssetItem = (option) => {
-    return (
-      <div className="flex align-items-center">
-        <i className={classNames(option.accIcon, 'mr-2')} />
-        <span>{option.accLabel}</span>
-      </div>
-    );
-  };
-
-  const templateAssetValue = (option, props) => {
-    if (option) {
-      return (
-        <div className="flex align-items-center">
-          <i className={classNames(option.accIcon, 'mr-2')} />
-          <span>{option.accLabel}</span>
-        </div>
-      );
-    }
-    return <span>{props.placeholder}</span>;
-  };
 
   const templateFooter = (options) => {
     return (

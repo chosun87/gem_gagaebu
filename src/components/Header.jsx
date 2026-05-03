@@ -1,52 +1,10 @@
-import { useRef, useCallback } from 'react';
 import { useAuth, useAuthTimer } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
-import { Button, confirmDialog } from '@/assets/js/PrimeReact';
+import { Button } from '@/assets/js/PrimeReact';
 import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
 import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
-
-function useLongPress(onClick, onLongPress, delay = 600) {
-  const timerRef = useRef(null);
-  const isLongPress = useRef(false);
-
-  const startPress = useCallback(
-    (e) => {
-      isLongPress.current = false;
-      timerRef.current = setTimeout(() => {
-        isLongPress.current = true;
-        onLongPress(e);
-      }, delay);
-    },
-    [onLongPress, delay],
-  );
-
-  const endPress = useCallback(
-    (e) => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
-      }
-      if (!isLongPress.current) {
-        onClick(e);
-      }
-    },
-    [onClick],
-  );
-
-  const cancelPress = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-  }, []);
-
-  return {
-    onMouseDown: startPress,
-    onMouseUp: endPress,
-    onMouseLeave: cancelPress,
-    onTouchStart: startPress,
-    onTouchEnd: endPress,
-    onContextMenu: (e) => e.preventDefault(),
-  };
-}
+import useLongPress from '@/hooks/useLongPress';
+import { showConfirm } from '@/assets/js/dialogUtils';
 
 export default function Header({ onThemeClick }) {
   const { isInitialized, isSignedIn, login, logout, extendLogin } = useAuth();
@@ -56,18 +14,18 @@ export default function Header({ onThemeClick }) {
 
   // Functions -------------------------------------------------------------------------------------
   const fnLogout = () => {
-    confirmDialog({
-      message: '로그아웃 하시겠습니까?',
+    showConfirm({
       header: '로그아웃 확인',
-      icon: 'pi pi-exclamation-triangle',
+      message: '로그아웃 하시겠습니까?',
       acceptLabel: '로그아웃',
-      rejectLabel: '취소',
       accept: () => logout(),
     });
   };
 
   const fnHardReload = () => {
-    confirmDialog({
+    showConfirm({
+      header: '완전 새로고침 확인',
+      icon: 'pi pi-refresh',
       message: (
         <>
           페이지를 완전히 새로고침 하시겠습니까?
@@ -75,10 +33,7 @@ export default function Header({ onThemeClick }) {
           작업 중인 내용이 초기화됩니다.
         </>
       ),
-      header: '완전 새로고침 확인',
-      icon: 'pi pi-refresh',
       acceptLabel: '새로고침',
-      rejectLabel: '취소',
       accept: () => window.location.reload(),
     });
   };
