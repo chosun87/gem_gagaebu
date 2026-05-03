@@ -126,12 +126,12 @@ export default function Repeat() {
                 ? `매주 (${item.rpDay})`
                 : `매월 ${item.rpDay}일`}
             </span>
-            <span className="rpMemo">{item.rpMemo}</span>
-          </div>
-          <div className="flex align-items-center">
-            <span className="rpAcc">
+            <span className="rpAcc text-secondary text-sm">
               {item.rpAcc2 ? `${item.rpAcc1} → ${item.rpAcc2}` : item.rpAcc1}
             </span>
+          </div>
+          <div className="flex align-items-center">
+            <span className="rpMemo">{item.rpMemo}</span>
           </div>
         </div>
 

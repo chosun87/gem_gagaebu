@@ -2,17 +2,15 @@ import { useState, lazy, Suspense, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
 import {
-  Badge,
   DataView,
-  InputSwitch,
   Message,
   SpeedDial,
   Tooltip,
   ProgressSpinner,
 } from '@/assets/js/PrimeReact';
-import dayjs from 'dayjs';
 
 import MonthNavigator from '@/components/MonthNavigator';
+import LedgerListItem from '@/components/common/LedgerListItem';
 
 const DialogLedger = lazy(() => import('@/components/DialogLedger'));
 const DialogAI = lazy(() => import('@/components/DialogAI'));
@@ -73,53 +71,15 @@ export default function MonthlyList() {
   );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const templateDateViewItem = (item) => (
+    <LedgerListItem
+      item={item}
+      dateFormat="DD일"
+      onClick={() => fnOpenDialogLedger(item)}
+      onExecuteChange={updateLedgerEntry_gExecute}
+    />
+  );
 
-  // 아이템 템플릿 (DialogList.jsx의 템플릿과 동일하게 구성)
-  const templateDateViewItem = (item) => {
-    const gTypeClass = `gType-${item.gType}`;
-    const gExecutedClass = `gExecuted-${item.gExecuted ? 'Y' : 'N'}`;
-
-    return (
-      <div
-        className={`list-item ${gTypeClass} ${gExecutedClass} col-12`}
-        onClick={() => fnOpenDialogLedger(item)}
-      >
-        <Badge
-          className={`gType-${item.gType} text-base`}
-          value={item.gCategory}
-        />
-
-        <div className="flex-grow-1 flex flex-column gap-1">
-          <div className="flex align-items-center column-gap-2">
-            <span className="gDate text-lg font-semibold">
-              {dayjs(item.gDate).format('DD일')}
-            </span>
-            <span className="gMemo">{item.gMemo}</span>
-          </div>
-          <div className="flex align-items-center gap-1">
-            <span className="gAcc">
-              {item.gAcc2 ? `${item.gAcc1} → ${item.gAcc2}` : item.gAcc1}
-            </span>
-          </div>
-        </div>
-
-        <div className="gAmount monospace text-right text-lg font-bold">
-          {(item?.gAmount || 0).toLocaleString()}
-          <span className="unit text-xs">원</span>
-        </div>
-
-        <InputSwitch
-          checked={item.gExecuted}
-          trueValue={false}
-          falseValue={true}
-          tooltip="실행"
-          tooltipOptions={{ position: 'top' }}
-          onChange={(e) => updateLedgerEntry_gExecute(item, e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-    );
-  };
 
   return (
     <>
@@ -130,9 +90,6 @@ export default function MonthlyList() {
           onViewDateChange={handleViewDateChange}
         />
 
-        {/* <div className="list-swipe-wrapper flex flex-column flex-grow-1 overflow-hidden"
-            {...swipeHandlers}
-          > */}
         {loading ? (
           <div className="full-page">
             <ProgressSpinner />
@@ -149,7 +106,6 @@ export default function MonthlyList() {
             itemTemplate={templateDateViewItem}
           />
         )}
-        {/* </div> */}
       </div>
 
       {/* Floating Action Button -> SpeedDial */}

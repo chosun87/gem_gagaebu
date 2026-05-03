@@ -14,6 +14,7 @@ import {
   updateSheetRow,
   createSheet,
   updateSheetHeaders,
+  markSheetRowDeleted,
 } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -129,31 +130,32 @@ export const YYYYProvider = ({ children }) => {
         const gDate = dayjs(formData.gDate);
         const newYear = gDate.format('YYYY');
 
-        const rowValues = [];
-        rowValues[SHEET_COL_INDEX.YYYY.gDate] = gDate.format('YYYY-MM-DD');
-        rowValues[SHEET_COL_INDEX.YYYY.gType] = formData.gType || '';
-        rowValues[SHEET_COL_INDEX.YYYY.gAcc1] = formData.gAcc1 || '';
-        rowValues[SHEET_COL_INDEX.YYYY.gAcc2] = formData.gAcc2 || '';
-        rowValues[SHEET_COL_INDEX.YYYY.gCategory] = formData.gCategory || '';
-        rowValues[SHEET_COL_INDEX.YYYY.gAmount] = formData.gAmount || 0;
-        rowValues[SHEET_COL_INDEX.YYYY.gMemo] = formData.gMemo || '';
-        rowValues[SHEET_COL_INDEX.YYYY.gExecuted] = formData.gExecuted ?? false;
-        rowValues[SHEET_COL_INDEX.YYYY.g_rpID] = formData.g_rpID || '';
-        rowValues[SHEET_COL_INDEX.YYYY.gDeleted] = '';
-
+        // 저장할 객체를 먼저 구성한 뒤, 시트용 배열로 변환
         const newObj = {
           sheetName: newYear,
-          sheetRowNo: ledger ? ledger.sheetRowNo : 0, // will update below
-          gDate: rowValues[SHEET_COL_INDEX.YYYY.gDate],
-          gType: rowValues[SHEET_COL_INDEX.YYYY.gType],
-          gAcc1: rowValues[SHEET_COL_INDEX.YYYY.gAcc1],
-          gAcc2: rowValues[SHEET_COL_INDEX.YYYY.gAcc2],
-          gCategory: rowValues[SHEET_COL_INDEX.YYYY.gCategory],
-          gAmount: rowValues[SHEET_COL_INDEX.YYYY.gAmount],
-          gMemo: rowValues[SHEET_COL_INDEX.YYYY.gMemo],
-          gExecuted: rowValues[SHEET_COL_INDEX.YYYY.gExecuted],
-          g_rpID: rowValues[SHEET_COL_INDEX.YYYY.g_rpID],
+          sheetRowNo: ledger ? ledger.sheetRowNo : 0,
+          gDate: gDate.format('YYYY-MM-DD'),
+          gType: formData.gType || '',
+          gAcc1: formData.gAcc1 || '',
+          gAcc2: formData.gAcc2 || '',
+          gCategory: formData.gCategory || '',
+          gAmount: formData.gAmount || 0,
+          gMemo: formData.gMemo || '',
+          gExecuted: formData.gExecuted ?? false,
+          g_rpID: formData.g_rpID || '',
         };
+
+        const rowValues = [];
+        rowValues[SHEET_COL_INDEX.YYYY.gDate] = newObj.gDate;
+        rowValues[SHEET_COL_INDEX.YYYY.gType] = newObj.gType;
+        rowValues[SHEET_COL_INDEX.YYYY.gAcc1] = newObj.gAcc1;
+        rowValues[SHEET_COL_INDEX.YYYY.gAcc2] = newObj.gAcc2;
+        rowValues[SHEET_COL_INDEX.YYYY.gCategory] = newObj.gCategory;
+        rowValues[SHEET_COL_INDEX.YYYY.gAmount] = newObj.gAmount;
+        rowValues[SHEET_COL_INDEX.YYYY.gMemo] = newObj.gMemo;
+        rowValues[SHEET_COL_INDEX.YYYY.gExecuted] = newObj.gExecuted;
+        rowValues[SHEET_COL_INDEX.YYYY.g_rpID] = newObj.g_rpID;
+        rowValues[SHEET_COL_INDEX.YYYY.gDeleted] = '';
 
         if (!ledger) {
           await ensureSheetExists(newYear);
@@ -186,13 +188,11 @@ export const YYYYProvider = ({ children }) => {
                 .sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix()),
             }));
           } else {
-            // 연도가 변경된 경우: 기존 연도에서 삭제 처리
-            const sheetColName = String.fromCharCode(
-              'A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gDeleted,
-            );
-            await updateSheetCell(
-              `${ledger.sheetName}!${sheetColName}${ledger.sheetRowNo}`,
-              dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            // 연도가 변경된 경우: 기존 연도에서 삭제 마킹 후 새 연도에 추가
+            await markSheetRowDeleted(
+              ledger.sheetName,
+              ledger.sheetRowNo,
+              SHEET_COL_INDEX.YYYY.gDeleted,
             );
 
             await ensureSheetExists(newYear);
@@ -232,15 +232,6 @@ export const YYYYProvider = ({ children }) => {
     if (!ledger) return;
     setLoading(true);
     try {
-      const sheetColName = String.fromCharCode(
-        'A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gDeleted,
-      );
-      const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      await updateSheetCell(
-        `${ledger.sheetName}!${sheetColName}${ledger.sheetRowNo}`,
-        timestamp,
-      );
-
       // Optimistic UI Update (삭제)
       setSheetYYYYData((prev) => ({
         ...prev,
@@ -248,6 +239,12 @@ export const YYYYProvider = ({ children }) => {
           (item) => item.sheetRowNo !== ledger.sheetRowNo,
         ),
       }));
+
+      await markSheetRowDeleted(
+        ledger.sheetName,
+        ledger.sheetRowNo,
+        SHEET_COL_INDEX.YYYY.gDeleted,
+      );
 
       return true;
     } catch (error) {
@@ -361,12 +358,10 @@ export const YYYYProvider = ({ children }) => {
           );
 
           for (const entry of outsideEntries) {
-            const sheetColName = String.fromCharCode(
-              'A'.charCodeAt(0) + SHEET_COL_INDEX.YYYY.gDeleted,
-            );
-            await updateSheetCell(
-              `${year}!${sheetColName}${entry.sheetRowNo}`,
-              dayjs().format('YYYY-MM-DD HH:mm:ss'),
+            await markSheetRowDeleted(
+              year,
+              entry.sheetRowNo,
+              SHEET_COL_INDEX.YYYY.gDeleted,
             );
             deletedCount++;
             hasChanges = true;

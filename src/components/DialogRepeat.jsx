@@ -12,7 +12,6 @@ import {
   ToggleButton,
 } from '@/assets/js/PrimeReact';
 import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils';
-// import { locale, addLocale } from 'primereact/api';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
 

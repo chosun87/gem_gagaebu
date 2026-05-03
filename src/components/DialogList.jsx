@@ -3,14 +3,13 @@ import {
   Sidebar,
   Panel,
   DataView,
-  Badge,
-  InputSwitch,
   Button,
   Message,
   ProgressSpinner,
 } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
+import LedgerListItem from '@/components/common/LedgerListItem';
 const DialogLedger = lazy(() => import('@/components/DialogLedger'));
 import LedgerSummary from '@/components/LedgerSummary';
 const DialogAI = lazy(() => import('@/components/DialogAI'));
@@ -22,8 +21,8 @@ export default function DialogList({ visible, onHide, params }) {
     loadSheet연도Data,
     loadedSheetYYYY,
     updateLedgerEntry_gExecute,
+    loading: dataLoading,
   } = useData();
-  const { loading: dataLoading } = useData();
   const [ledger, setLedger] = useState(null);
   const [showDialogLedger, setShowDialogLedger] = useState(false);
   const [showDialogAI, setShowDialogAI] = useState(false);
@@ -146,54 +145,14 @@ export default function DialogList({ visible, onHide, params }) {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  // MonthlyList.jsx에서 복사한 아이템 템플릿 (UI 일관성 유지)
-  const templateDateViewItem = (item) => {
-    const gTypeClass = `gType-${item.gType}`;
-    const gExecutedClass = `gExecuted-${item.gExecuted ? 'Y' : 'N'}`;
-
-    return (
-      <div
-        className={`list-item ${gTypeClass} ${gExecutedClass} col-12`}
-        onClick={() => fnOpenDialogLedger(item)}
-      >
-        <Badge
-          className={`gType-${item.gType} text-base`}
-          value={item.gCategory}
-        />
-
-        <div className="flex-grow-1 flex flex-column gap-1">
-          <div className="flex align-items-center column-gap-2">
-            {!params.date && (
-              <span className="gDate text-lg font-semibold monospace">
-                {dayjs(item.gDate).format('YY-MM-DD')}
-              </span>
-            )}
-            <span className="gMemo">{item.gMemo}</span>
-          </div>
-          <div className="flex align-items-center gap-1">
-            <span className="gAcc">
-              {item.gAcc2 ? `${item.gAcc1} → ${item.gAcc2}` : item.gAcc1}
-            </span>
-          </div>
-        </div>
-
-        <div className="gAmount monospace text-right text-lg font-bold">
-          {(item?.gAmount || 0).toLocaleString()}
-          <span className="unit text-xs">원</span>
-        </div>
-
-        <InputSwitch
-          checked={item.gExecuted}
-          trueValue={false}
-          falseValue={true}
-          tooltip="실행"
-          tooltipOptions={{ position: 'top' }}
-          onChange={(e) => updateLedgerEntry_gExecute(item, e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      </div>
-    );
-  };
+  const templateDateViewItem = (item) => (
+    <LedgerListItem
+      item={item}
+      showDate={!params.date}
+      onClick={() => fnOpenDialogLedger(item)}
+      onExecuteChange={updateLedgerEntry_gExecute}
+    />
+  );
 
   const templateFooter = (options) => {
     return (

@@ -11,6 +11,7 @@ import {
   updateSheetCell,
   appendSheetRow,
   updateSheetRow,
+  markSheetRowDeleted,
 } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
 import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
@@ -72,48 +73,47 @@ export const RepeatProvider = ({ children }) => {
   const saveRepeatEntry = useCallback(async (repeat, formData) => {
     setLoading(true);
     try {
-      const rowValues = [];
       const rpID = repeat ? repeat.rpID : Date.now().toString();
 
-      rowValues[SHEET_COL_INDEX.REPEAT.rpID] = rpID;
-      rowValues[SHEET_COL_INDEX.REPEAT.rpDateS] = formData.rpDateS
-        ? dayjs(formData.rpDateS).format('YYYY-MM-DD')
-        : '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpDateE] = formData.rpDateE
-        ? dayjs(formData.rpDateE).format('YYYY-MM-DD')
-        : '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpPeriod] = formData.rpPeriod || 'M';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpDay] = formData.rpDay || '1';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpCompleted] =
-        formData.rpCompleted ?? false;
-      rowValues[SHEET_COL_INDEX.REPEAT.rpType] = formData.rpType || '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpAcc1] = formData.rpAcc1 || '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2] = formData.rpAcc2 || '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpCategory] = formData.rpCategory || '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpAmount] = formData.rpAmount || 0;
-      rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount] =
-        formData.rpTotalAmount || 0;
-      rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = formData.rpMemo || '';
-      rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = '';
-
+      // 저장할 객체를 먼저 구성한 뒤, 시트용 배열로 변환
       const newObj = {
         sheetName: '반복',
-        sheetRowNo: repeat ? repeat.sheetRowNo : 0, // updated below
-        rpID: rowValues[SHEET_COL_INDEX.REPEAT.rpID],
-        rpDateS: rowValues[SHEET_COL_INDEX.REPEAT.rpDateS],
-        rpDateE: rowValues[SHEET_COL_INDEX.REPEAT.rpDateE],
-        rpPeriod: rowValues[SHEET_COL_INDEX.REPEAT.rpPeriod],
-        rpDay: rowValues[SHEET_COL_INDEX.REPEAT.rpDay],
-        rpCompleted: rowValues[SHEET_COL_INDEX.REPEAT.rpCompleted],
-        rpType: rowValues[SHEET_COL_INDEX.REPEAT.rpType],
-        rpAcc1: rowValues[SHEET_COL_INDEX.REPEAT.rpAcc1],
-        rpAcc2: rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2],
-        rpCategory: rowValues[SHEET_COL_INDEX.REPEAT.rpCategory],
-        rpAmount: rowValues[SHEET_COL_INDEX.REPEAT.rpAmount],
-        rpTotalAmount: rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount],
-        rpMemo: rowValues[SHEET_COL_INDEX.REPEAT.rpMemo],
+        sheetRowNo: repeat ? repeat.sheetRowNo : 0,
+        rpID,
+        rpDateS: formData.rpDateS
+          ? dayjs(formData.rpDateS).format('YYYY-MM-DD')
+          : '',
+        rpDateE: formData.rpDateE
+          ? dayjs(formData.rpDateE).format('YYYY-MM-DD')
+          : '',
+        rpPeriod: formData.rpPeriod || 'M',
+        rpDay: formData.rpDay || '1',
+        rpCompleted: formData.rpCompleted ?? false,
+        rpType: formData.rpType || '',
+        rpAcc1: formData.rpAcc1 || '',
+        rpAcc2: formData.rpAcc2 || '',
+        rpCategory: formData.rpCategory || '',
+        rpAmount: formData.rpAmount || 0,
+        rpTotalAmount: formData.rpTotalAmount || 0,
+        rpMemo: formData.rpMemo || '',
         rpDeleted: false,
       };
+
+      const rowValues = [];
+      rowValues[SHEET_COL_INDEX.REPEAT.rpID] = newObj.rpID;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDateS] = newObj.rpDateS;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDateE] = newObj.rpDateE;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpPeriod] = newObj.rpPeriod;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDay] = newObj.rpDay;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpCompleted] = newObj.rpCompleted;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpType] = newObj.rpType;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpAcc1] = newObj.rpAcc1;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpAcc2] = newObj.rpAcc2;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpCategory] = newObj.rpCategory;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpAmount] = newObj.rpAmount;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount] = newObj.rpTotalAmount;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = newObj.rpMemo;
+      rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = '';
 
       if (!repeat) {
         const res = await appendSheetRow('반복', rowValues);
@@ -150,18 +150,15 @@ export const RepeatProvider = ({ children }) => {
     if (!repeat) return;
     setLoading(true);
     try {
-      const sheetColName = String.fromCharCode(
-        'A'.charCodeAt(0) + SHEET_COL_INDEX.REPEAT.rpDeleted,
-      );
-      const timestamp = dayjs().format('YYYY-MM-DD HH:mm:ss');
-      await updateSheetCell(
-        `반복!${sheetColName}${repeat.sheetRowNo}`,
-        timestamp,
-      );
-
       // Optimistic UI Update (삭제)
       setSheet반복Data((prev) =>
         prev.filter((item) => item.sheetRowNo !== repeat.sheetRowNo),
+      );
+
+      await markSheetRowDeleted(
+        '반복',
+        repeat.sheetRowNo,
+        SHEET_COL_INDEX.REPEAT.rpDeleted,
       );
 
       return true;
