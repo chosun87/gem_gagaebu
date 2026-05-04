@@ -45,6 +45,9 @@ export default function MonthlySummaryChart({ months, rawData }) {
           color: rootStyle.getPropertyValue('--text-color') || '#495057',
         },
       },
+      datalabels: {
+        display: false,
+      },
     },
     scales: {
       x: {
