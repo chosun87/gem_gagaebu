@@ -52,8 +52,9 @@ export const appendSheetRow = async (sheetName, values) => {
   try {
     const response = await getSheets().values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${sheetName}!A1`,
+      range: sheetName,
       valueInputOption: 'USER_ENTERED',
+      insertDataOption: 'INSERT_ROWS',
       resource: { values: [values] },
     });
     return response.result;
@@ -69,8 +70,9 @@ export const appendSheetRows = async (sheetName, rowsArray) => {
   try {
     const response = await getSheets().values.append({
       spreadsheetId: SPREADSHEET_ID,
-      range: `${sheetName}!A1`,
+      range: sheetName,
       valueInputOption: 'USER_ENTERED',
+      insertDataOption: 'INSERT_ROWS',
       resource: { values: rowsArray },
     });
     return response.result;

@@ -1,6 +1,10 @@
 // Google Sheets 관련
+const SPREADSHEET_ID_PROD = '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE';
+// const SPREADSHEET_ID_DEV = '1KVzAd_xC6ksMq4Bqy1NtL8XKP_JiF1Tf405Eca4quFY';
+const SPREADSHEET_ID_DEV = '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE';
+
 export const GOOGLE_SHEET = {
-  SPREADSHEET_ID: '1LsFDmpmPaPCPXPBl1FS8CXx56UqGE0WQ5eFccwYeWcE',
+  SPREADSHEET_ID: import.meta.env.DEV ? SPREADSHEET_ID_DEV : SPREADSHEET_ID_PROD,
 };
 
 // Google Sheets 시트 이름과 범위
@@ -8,7 +12,7 @@ export const SHEET_NAME_RANGE = {
   CODE: '코드!A1:H',
   ASSET: '자산!A1:H',
   REPEAT: '반복!A1:N',
-  YEAR: 'YYYY!A1:J',
+  YEAR: 'YYYY!A1:K',
 };
 
 // Google Sheets 시트 컬럼 인덱스
@@ -67,6 +71,7 @@ export const SHEET_COL_INDEX = {
     gExecuted: 7,
     g_rpID: 8,
     gDeleted: 9,
+    gTimestamp: 10,
   },
 };
 

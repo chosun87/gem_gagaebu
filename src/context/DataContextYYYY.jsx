@@ -60,6 +60,7 @@ export const YYYYProvider = ({ children }) => {
             String(row[SHEET_COL_INDEX.YYYY.gExecuted]).toUpperCase() ===
             'TRUE',
           g_rpID: row[SHEET_COL_INDEX.YYYY.g_rpID] || '',
+          gTimestamp: row[SHEET_COL_INDEX.YYYY.gTimestamp] || '',
         });
       }
 
@@ -113,7 +114,13 @@ export const YYYYProvider = ({ children }) => {
 
   const ensureSheetExists = useCallback(async (sheetName) => {
     try {
-      await fetchSheetData(`${sheetName}!A1:A1`);
+      const data = await fetchSheetData(`${sheetName}!A1:A1`);
+      if (!data || data.length === 0) {
+        const headers = Object.keys(SHEET_COL_INDEX.YYYY).sort(
+          (a, b) => SHEET_COL_INDEX.YYYY[a] - SHEET_COL_INDEX.YYYY[b],
+        );
+        await updateSheetHeaders(sheetName, headers);
+      }
     } catch {
       await createSheet(sheetName);
       const headers = Object.keys(SHEET_COL_INDEX.YYYY).sort(
@@ -143,6 +150,7 @@ export const YYYYProvider = ({ children }) => {
           gMemo: formData.gMemo || '',
           gExecuted: formData.gExecuted ?? false,
           g_rpID: formData.g_rpID || '',
+          gTimestamp: Date.now(),
         };
 
         const rowValues = [];
@@ -156,6 +164,7 @@ export const YYYYProvider = ({ children }) => {
         rowValues[SHEET_COL_INDEX.YYYY.gExecuted] = newObj.gExecuted;
         rowValues[SHEET_COL_INDEX.YYYY.g_rpID] = newObj.g_rpID;
         rowValues[SHEET_COL_INDEX.YYYY.gDeleted] = '';
+        rowValues[SHEET_COL_INDEX.YYYY.gTimestamp] = newObj.gTimestamp;
 
         if (!ledger) {
           await ensureSheetExists(newYear);
@@ -336,6 +345,7 @@ export const YYYYProvider = ({ children }) => {
                 date.isBefore(today) || date.isSame(today, 'day');
               rowValues[SHEET_COL_INDEX.YYYY.g_rpID] = rpID;
               rowValues[SHEET_COL_INDEX.YYYY.gDeleted] = '';
+              rowValues[SHEET_COL_INDEX.YYYY.gTimestamp] = Date.now();
 
               if (!match) {
                 newRows.push(rowValues);
