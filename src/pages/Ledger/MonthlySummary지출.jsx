@@ -147,7 +147,7 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
             footer={summaryData.rawData[m].total.toLocaleString()}
             className="amount"
           />,
-          <Column key={m + '_fpct'} footer="" className="percentage" />,
+          <Column key={m + '_fpct'} footer="" className="percentage-sm" />,
         ])}
       </Row>
     </ColumnGroup>

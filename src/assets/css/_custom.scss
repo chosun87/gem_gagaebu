@@ -186,6 +186,10 @@
       }
     }
   }
+
+  .p-datatable-tfoot > tr > td {
+    background-color: var(--highlight-bg);
+  }
 }
 
 .p-inputgroup {
