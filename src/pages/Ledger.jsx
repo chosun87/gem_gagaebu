@@ -14,7 +14,9 @@ import dayjs from 'dayjs';
 const Calendar = lazy(() => import('@/pages/Ledger/Calendar'));
 const MonthlyList = lazy(() => import('@/pages/Ledger/MonthlyList'));
 const MonthlySummary = lazy(() => import('@/pages/Ledger/MonthlySummary'));
-const MonthlySummary지출 = lazy(() => import('@/pages/Ledger/MonthlySummary지출'));
+const MonthlySummary지출 = lazy(
+  () => import('@/pages/Ledger/MonthlySummary지출'),
+);
 
 const TabLoading = () => (
   <div className="full-page">

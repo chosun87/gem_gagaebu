@@ -80,7 +80,6 @@ export default function MonthlyList() {
     />
   );
 
-
   return (
     <>
       <div className="panel-content list-page">
