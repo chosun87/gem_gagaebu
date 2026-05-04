@@ -17,6 +17,7 @@ export const CodeProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [periodOptions, setPeriodOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [categoryMap, setCategoryMap] = useState({});
 
   const loadSheet코드Data = useCallback(async () => {
     setLoading(true);
@@ -24,6 +25,7 @@ export const CodeProvider = ({ children }) => {
       const rawData = await fetchSheetData(SHEET_NAME_RANGE.CODE);
       const periodCds = [];
       const categoryCds = {};
+      const catMap = {};
 
       for (let i = 1; i < rawData.length; i++) {
         const row = rawData[i];
@@ -50,18 +52,22 @@ export const CodeProvider = ({ children }) => {
               children: [],
             };
           }
-          categoryCds[cdGroup].children.push({
+          const catInfo = {
             cd: row[SHEET_COL_INDEX.CODE.cd],
             cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
             cdIcon:
               (row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag') +
               ` gType-${cdGroup}`,
             cdDefaultAcc1: row[SHEET_COL_INDEX.CODE.cdDefaultAcc1] || '',
-          });
+            cdAddSum: row[SHEET_COL_INDEX.CODE.cdAddSum] !== 'FALSE', // 기본값은 true (FALSE가 아닐 때)
+          };
+          categoryCds[cdGroup].children.push(catInfo);
+          catMap[catInfo.cd] = catInfo;
         }
       }
       setPeriodOptions(periodCds);
       setCategoryOptions(Object.values(categoryCds));
+      setCategoryMap(catMap);
     } catch (error) {
       console.error('Code data loading error', error);
     } finally {
@@ -84,6 +90,7 @@ export const CodeProvider = ({ children }) => {
     () => ({
       periodOptions,
       categoryOptions,
+      categoryMap,
       loading,
       loadSheet코드Data,
       saveCodeEntry,
@@ -92,6 +99,7 @@ export const CodeProvider = ({ children }) => {
     [
       periodOptions,
       categoryOptions,
+      categoryMap,
       loading,
       loadSheet코드Data,
       saveCodeEntry,

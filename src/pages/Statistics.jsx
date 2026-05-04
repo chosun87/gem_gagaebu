@@ -4,14 +4,24 @@ import { Chart, TabView, TabPanel, Button } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 
 export default function Statistics() {
-  const { yearData, selectedDate, setSelectedDate, categoryOptions } =
-    useData();
+  const {
+    yearData,
+    selectedDate,
+    setSelectedDate,
+    categoryOptions,
+    categoryMap,
+  } = useData();
   const [activeIndex, setActiveIndex] = useState(1); // 0: 주간, 1: 월간, 2: 연간
 
   const { chartData, chartOptions, listData, totalAmount } = useMemo(() => {
     // 1. 선택된 달의 지출 데이터만 필터링
     const monthData = (yearData || []).filter((item) => {
       if (item.gDeleted || item.gType !== '지출') return false;
+
+      // 합계 제외 카테고리 체크
+      const catInfo = categoryMap[item.gCategory];
+      if (catInfo && catInfo.cdAddSum === false) return false;
+
       const d = dayjs(item.gDate);
       return (
         d.year() === selectedDate.getFullYear() &&
@@ -104,7 +114,7 @@ export default function Statistics() {
       listData: sortedCategories,
       totalAmount: totalExpense,
     };
-  }, [yearData, selectedDate, categoryOptions]);
+  }, [yearData, selectedDate, categoryOptions, categoryMap]);
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const handlePrev = () => {

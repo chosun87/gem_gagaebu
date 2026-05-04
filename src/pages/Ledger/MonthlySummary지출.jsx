@@ -13,8 +13,13 @@ const MONTH_LENGTH = 3;
 ChartJS.register(...registerables);
 
 export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
-  const { sheetYYYYData, loadedSheetYYYY, loadSheet연도Data, selectedDate } =
-    useData();
+  const {
+    sheetYYYYData,
+    loadedSheetYYYY,
+    loadSheet연도Data,
+    selectedDate,
+    categoryMap,
+  } = useData();
   const fetchingYears = useRef(new Set());
 
   // 데이터 가공 ---------------------------------------------------------------------------------------
@@ -47,6 +52,11 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
 
     allData.forEach((item) => {
       if (item.gDeleted) return;
+
+      // 합계 제외 카테고리 체크
+      const catInfo = categoryMap[item.gCategory];
+      if (catInfo && catInfo.cdAddSum === false) return;
+
       const m = dayjs(item.gDate).format('YYYY-MM');
       if (rawData[m]) {
         rawData[m][item.gType] += item.gAmount;
@@ -60,7 +70,7 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
     }));
 
     return { months, tableData, rawData };
-  }, [sheetYYYYData, months, requiredYears]);
+  }, [sheetYYYYData, months, requiredYears, categoryMap]);
 
   useEffect(() => {
     requiredYears.forEach((year) => {

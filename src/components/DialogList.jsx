@@ -21,6 +21,7 @@ export default function DialogList({ visible, onHide, params }) {
     loadSheet연도Data,
     loadedSheetYYYY,
     updateLedgerEntry_gExecute,
+    categoryMap,
     loading: dataLoading,
   } = useData();
   const [ledger, setLedger] = useState(null);
@@ -92,6 +93,10 @@ export default function DialogList({ visible, onHide, params }) {
     };
 
     filteredData.forEach((item) => {
+      // 합계 제외 카테고리 체크
+      const catInfo = categoryMap[item.gCategory];
+      if (catInfo && catInfo.cdAddSum === false) return;
+
       const amount = Number(item.gAmount) || 0;
       if (!item.gExecuted) {
         if (item.gType === '수입') total.income0 += amount;
@@ -109,7 +114,7 @@ export default function DialogList({ visible, onHide, params }) {
     total.transferA = total.transfer0 + total.transfer1;
 
     return total;
-  }, [filteredData]);
+  }, [filteredData, categoryMap]);
 
   // 반복 내역 전체 조회를 위한 연도별 데이터 로드
   useEffect(() => {

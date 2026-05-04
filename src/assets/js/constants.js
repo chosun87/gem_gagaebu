@@ -11,7 +11,7 @@ export const GOOGLE_SHEET = {
 
 // Google Sheets 시트 이름과 범위
 export const SHEET_NAME_RANGE = {
-  CODE: '코드!A1:H',
+  CODE: '코드!A1:I',
   ASSET: '자산!A1:H',
   REPEAT: '반복!A1:N',
   YEAR: 'YYYY!A1:K',
@@ -28,7 +28,8 @@ export const SHEET_COL_INDEX = {
     cdOrder: 4,
     cdMemo: 5,
     cdDefaultAcc1: 6,
-    cdDeleted: 7,
+    cdAddSum: 7,
+    cdDeleted: 8,
   },
 
   // 자산 시트 컬럼 인덱스

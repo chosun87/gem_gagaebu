@@ -197,3 +197,23 @@
 .p-dataview .p-dataview-content {
   padding: 0;
 }
+
+.p-dialog {
+  min-width: 25rem;
+
+  .p-dialog-footer {
+    padding: var(--padding-base);
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+
+    button {
+      margin: 0;
+      flex: 1;
+    }
+  }
+}
+
+.p-confirm-dialog .p-dialog-content {
+  justify-content: center;
+}

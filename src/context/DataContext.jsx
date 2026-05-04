@@ -30,6 +30,7 @@ export const useData = () => {
       // 코드 데이터
       periodOptions: code.periodOptions,
       categoryOptions: code.categoryOptions,
+      categoryMap: code.categoryMap,
       loadSheet코드Data: code.loadSheet코드Data,
       saveCodeEntry: code.saveCodeEntry,
       deleteCodeEntry: code.deleteCodeEntry,

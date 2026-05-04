@@ -14,7 +14,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 const DialogList = lazy(() => import('@/components/DialogList'));
 
 export default function Calendar() {
-  const { yearData, selectedDate } = useData();
+  const { yearData, selectedDate, categoryMap } = useData();
   const [showDialogList, setShowDialogList] = useState(false);
   const [dialogParams, setDialogParams] = useState({});
   const fcRef = useRef(null);
@@ -24,6 +24,10 @@ export default function Calendar() {
     const summary = {};
     (yearData || []).forEach((item) => {
       if (item.gDeleted) return;
+
+      // 합계 제외 카테고리 체크
+      const catInfo = categoryMap[item.gCategory];
+      if (catInfo && catInfo.cdAddSum === false) return;
 
       // 날짜 포맷 표준화 (YYYY-MM-DD)
       const dateStr = dayjs(item.gDate).format('YYYY-MM-DD');
@@ -64,11 +68,10 @@ export default function Calendar() {
           ++summary[dateStr].length1;
         }
       }
-      // console.log(dateStr, summary[dateStr]);
     });
 
     return summary;
-  }, [yearData]);
+  }, [yearData, categoryMap]);
 
   // 월별 합계 계산
   const monthTotal = useMemo(() => {
