@@ -47,13 +47,13 @@ export default function Ledger() {
         path: 'monthlySummary',
         header: '그래프',
         icon: 'pi pi-chart-bar mr-2',
-        element: <MonthlySummary monthLength={4} />,
+        element: <MonthlySummary monthLength={6} />,
       },
       {
-        path: 'analysis',
+        path: 'monthlySummaryExpenses',
         header: '지출분석',
         icon: 'pi pi-chart-pie mr-2',
-        element: <MonthlySummary지출 monthLength={4} />,
+        element: <MonthlySummary지출 monthLength={3} />,
         // isReady: false,
       },
     ],
@@ -61,9 +61,8 @@ export default function Ledger() {
   );
 
   const activeIndex = useMemo(() => {
-    const index = tabs.findIndex((tab) =>
-      location.pathname.includes(`/${tab.path}`),
-    );
+    const segments = location.pathname.split('/');
+    const index = tabs.findIndex((tab) => segments.includes(tab.path));
     return index === -1 ? 0 : index;
   }, [location.pathname, tabs]);
 
@@ -90,12 +89,11 @@ export default function Ledger() {
               activeIndex={activeIndex}
               onTabChange={handleTabChange}
             >
-              {tabs.map((tab, idx) => (
+              {tabs.map((tab) => (
                 <TabPanel
                   key={tab.path}
                   header={<span className="text-lg">{tab.header}</span>}
                   leftIcon={tab.icon}
-                  className={idx === 1 || idx === 3 ? 'px-0' : ''}
                 >
                   {tab.isReady !== false ? (
                     <Suspense fallback={<TabLoading />}>

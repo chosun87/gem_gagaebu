@@ -8,11 +8,11 @@ import dayjs from 'dayjs';
 import MonthNavigator from '@/components/MonthNavigator';
 import MonthlySummaryChart from '@/components/MonthlySummaryChart';
 
-const MONTH_LENGTH = 6;
+const MONTH_LENGTH = 3;
 
 ChartJS.register(...registerables);
 
-export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
+export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
   const { sheetYYYYData, loadedSheetYYYY, loadSheet연도Data, selectedDate } =
     useData();
   const fetchingYears = useRef(new Set());
@@ -20,7 +20,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   // 데이터 가공 ---------------------------------------------------------------------------------------
   const months = useMemo(() => {
     const arr = [];
-    for (let i = monthLength + 1; i >= 0; i--) {
+    for (let i = monthLength - 1; i >= 0; i--) {
       arr.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
     }
     return arr;
@@ -75,7 +75,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const { handleMonthChange, handleViewDateChange } = useMonthSync(
-    '/ledger/monthlySummary',
+    '/ledger/monthlySummaryExpenses',
   );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------

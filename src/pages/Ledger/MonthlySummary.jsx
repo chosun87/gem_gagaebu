@@ -20,7 +20,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   // 데이터 가공 ---------------------------------------------------------------------------------------
   const months = useMemo(() => {
     const arr = [];
-    for (let i = monthLength + 1; i >= 0; i--) {
+    for (let i = monthLength - 1; i >= 0; i--) {
       arr.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
     }
     return arr;
