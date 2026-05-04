@@ -120,7 +120,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               alignHeader="center"
               align="right"
               bodyClassName="px-0 monospace gType-수입"
-              body={(data) => templateAmountBody(data, '수입')}
+              body={(rowData) => templateAmountBody(rowData, '수입')}
               style={{ width: '30%' }}
             />
             <Column
@@ -129,7 +129,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               alignHeader="center"
               align="right"
               bodyClassName="px-0 monospace gType-지출"
-              body={(data) => templateAmountBody(data, '지출')}
+              body={(rowData) => templateAmountBody(rowData, '지출')}
               style={{ width: '30%' }}
             />
             <Column
@@ -138,7 +138,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               alignHeader="center"
               align="right"
               bodyClassName="px-0 monospace gType-이체"
-              body={(data) => templateAmountBody(data, '이체')}
+              body={(rowData) => templateAmountBody(rowData, '이체')}
               style={{ width: '30%' }}
             />
           </DataTable>

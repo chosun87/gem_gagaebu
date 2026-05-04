@@ -102,7 +102,6 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
         />
 
         <div className="summary-table-container">
-          {/* <h3 className="text-center mb-3">최근 3개월 합계</h3> */}
           <DataTable
             stripedRows
             responsiveLayout="scroll"
