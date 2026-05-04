@@ -166,7 +166,7 @@ export default function Repeat() {
       className="app-page repeat-page"
       header={<h2 className="page-title text-3xl">반복 입출금 관리</h2>}
     >
-      <div className="panel-inner list-page p-0">
+      <div className="panel-content list-page p-0">
         {loading && data.length === 0 ? (
           <div className="full-page">
             <ProgressSpinner />
@@ -178,7 +178,7 @@ export default function Repeat() {
           </div>
         ) : (
           <DataView
-            className="list-dataview"
+            className="list-dataview with-btn-floating-action"
             value={data}
             itemTemplate={templateDateViewItem}
           />

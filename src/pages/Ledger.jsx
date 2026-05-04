@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 const Calendar = lazy(() => import('@/pages/Ledger/Calendar'));
 const MonthlyList = lazy(() => import('@/pages/Ledger/MonthlyList'));
 const MonthlySummary = lazy(() => import('@/pages/Ledger/MonthlySummary'));
+const MonthlySummary지출 = lazy(() => import('@/pages/Ledger/MonthlySummary지출'));
 
 const TabLoading = () => (
   <div className="full-page">
@@ -50,7 +51,8 @@ export default function Ledger() {
         path: 'analysis',
         header: '지출분석',
         icon: 'pi pi-chart-pie mr-2',
-        isReady: false,
+        element: <MonthlySummary지출 monthLength={4} />,
+        // isReady: false,
       },
     ],
     [],

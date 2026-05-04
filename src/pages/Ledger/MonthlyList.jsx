@@ -83,7 +83,7 @@ export default function MonthlyList() {
 
   return (
     <>
-      <div className="panel-inner list-page">
+      <div className="panel-content list-page">
         <MonthNavigator
           selectedDate={selectedDate}
           onMonthChange={handleMonthChange}
@@ -101,7 +101,7 @@ export default function MonthlyList() {
           </div>
         ) : (
           <DataView
-            className="list-dataview"
+            className="list-dataview with-btn-floating-action"
             value={monthData}
             itemTemplate={templateDateViewItem}
           />

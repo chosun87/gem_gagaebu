@@ -1,70 +1,64 @@
-export default function LedgerSummary({ symmary }) {
-  // if (!symmary) return null;
-  // if (!(symmary?.incomeA === 0 || symmary?.expenseA === 0 && symmary?.transferA === 0)) return
+import { DataTable, Column } from '@/assets/js/PrimeReact';
+
+export default function LedgerSummary({ summary }) {
+  const summaryA = []
+
+  if (!(summary?.income0 === 0 && summary?.income1 === 0 && summary?.incomeA === 0)) {
+    summaryA.push({ gType: "수입", 실행전: summary?.income0 || 0, 실행후: summary?.income1 || 0, 합계: summary?.incomeA || 0 })
+  }
+  if (!(summary?.expense0 === 0 && summary?.expense1 === 0 && summary?.expenseA === 0)) {
+    summaryA.push({ gType: "지출", 실행전: summary?.expense0 || 0, 실행후: summary?.expense1 || 0, 합계: summary?.expenseA || 0 })
+  }
+  if (!(summary?.transfer0 === 0 && summary?.transfer1 === 0 && summary?.transferA === 0)) {
+    summaryA.push({ gType: "이체", 실행전: summary?.transfer0 || 0, 실행후: summary?.transfer1 || 0, 합계: summary?.transferA || 0 })
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
+  const templateAmountBody = (rowData, field) => {
+    return <>{(rowData[field] || 0).toLocaleString()}</>;
+  };
+
   return (
-    <div className="ledger-summary-wrap monospace">
-      <table>
-        <colgroup>
-          <col style={{ width: '10%', minWidth: '3.5rem' }} />
-          <col style={{ width: '30%' }} />
-          <col style={{ width: '30%' }} />
-          <col style={{ width: '30%' }} />
-        </colgroup>
-        <thead>
-          <tr>
-            <th className="text-left">구분</th>
-            <th className="text-right">실행 전</th>
-            <th className="text-right">실행 완료</th>
-            <th className="text-right">합계</th>
-          </tr>
-        </thead>
-        <tbody>
-          {symmary?.incomeA !== 0 && (
-            <tr>
-              <th className="text-left">수입</th>
-              <td className="text-right">
-                {(symmary?.income0 || 0).toLocaleString()}
-              </td>
-              <td className="text-right">
-                {(symmary?.income1 || 0).toLocaleString()}
-              </td>
-              <td className="text-right">
-                {(symmary?.incomeA || 0).toLocaleString()}
-              </td>
-            </tr>
-          )}
-          {symmary?.expenseA !== 0 && (
-            <tr>
-              <th className="text-left">지출</th>
-              <td className="text-right">
-                {(symmary?.expense0 || 0).toLocaleString()}
-              </td>
-              <td className="text-right">
-                {(symmary?.expense1 || 0).toLocaleString()}
-              </td>
-              <td className="text-right">
-                {(symmary?.expenseA || 0).toLocaleString()}
-              </td>
-            </tr>
-          )}
-          {symmary?.transferA !== 0 && (
-            <tr>
-              <th className="text-left">이체</th>
-              <td className="text-right">
-                {(symmary?.transfer0 || 0).toLocaleString()}
-              </td>
-              <td className="text-right">
-                {(symmary?.transfer1 || 0).toLocaleString()}
-              </td>
-              <td className="text-right">
-                {(symmary?.transferA || 0).toLocaleString()}
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
+    (summaryA.length > 0) &&
+    <DataTable
+      className="p-datatable-sm"
+      responsiveLayout="scroll"
+      value={summaryA}
+    >
+      <Column
+        field="gType"
+        header="연월"
+        align="center"
+        bodyClassName={(rowData) => `px-0 font-bold gType-${rowData.gType}`}
+        style={{ width: '10%', minWidth: '4rem' }}
+      />
+      <Column
+        field="실행전"
+        header="실행전"
+        alignHeader="center"
+        align="right"
+        bodyClassName={(rowData) => `px-0 monospace gType-${rowData.gType}`}
+        body={(rowData) => templateAmountBody(rowData, '실행전')}
+        style={{ width: '30%' }}
+      />
+      <Column
+        field="실행후"
+        header="실행후"
+        alignHeader="center"
+        align="right"
+        bodyClassName={(rowData) => `px-0 monospace gType-${rowData.gType}`}
+        body={(rowData) => templateAmountBody(rowData, '실행후')}
+        style={{ width: '30%' }}
+      />
+      <Column
+        field="합계"
+        header="합계"
+        alignHeader="center"
+        align="right"
+        bodyClassName={(rowData) => `px-0 monospace gType-${rowData.gType}`}
+        body={(rowData) => templateAmountBody(rowData, '합계')}
+        style={{ width: '30%' }}
+      />
+    </DataTable>
+  )
 }

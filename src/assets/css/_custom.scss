@@ -27,14 +27,15 @@
 /* 일요일 (첫 번째 열) 색상 설정 */
 .p-datepicker {
   table {
+
     /* 헤더(요일) */
-    th:nth-child(1) > span {
+    th:nth-child(1)>span {
       color: var(--red-500);
       /* 빨간색 계열 */
     }
 
     /* 날짜 */
-    td:nth-child(1):not(.p-datepicker-other-month) > span {
+    td:nth-child(1):not(.p-datepicker-other-month)>span {
       color: var(--red-500);
     }
   }
@@ -52,14 +53,15 @@
 /* 토요일 (일곱 번째 열) 색상 설정 */
 .p-datepicker {
   table {
+
     /* 헤더(요일) */
-    th:nth-child(7) > span {
+    th:nth-child(7)>span {
       color: var(--blue-500);
       /* 파란색 계열 */
     }
 
     /* 날짜 */
-    td:nth-child(7):not(.p-datepicker-other-month) > span {
+    td:nth-child(7):not(.p-datepicker-other-month)>span {
       color: var(--blue-500);
     }
   }
@@ -178,8 +180,8 @@
 
 .p-datatable {
   .p-datatable-thead {
-    & > tr {
-      & > th {
+    &>tr {
+      &>th {
         background: var(--highlight-bg);
         color: var(--highlight-text-color);
         font-weight: bold;
@@ -192,4 +194,8 @@
   .p-togglebutton .p-button {
     border-radius: 6px 0 0 6px;
   }
+}
+
+.p-dataview .p-dataview-content {
+  padding: 0;
 }

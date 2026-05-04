@@ -24,10 +24,10 @@ export default function AuthGuard({ children }) {
       <div className="full-page">
         <Message severity="warn" text="구글 로그인이 필요합니다." />
         <Button
+          className="btn-login"
           size="large"
           icon="pi pi-google"
           label="구글 로그인"
-          style={{ marginTop: 'var(--padding-base)' }}
           onClick={login}
         />
       </div>

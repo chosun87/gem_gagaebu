@@ -18,7 +18,7 @@ export default function BlankMonthly() {
       className="app-page"
       header={<h2 className="page-title text-3xl">빈 페이지</h2>}
     >
-      <div className="panel-inner p-0">
+      <div className="panel-content p-0">
         <MonthNavigator
           selectedDate={selectedDate}
           onMonthChange={handleMonthChange}

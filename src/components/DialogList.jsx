@@ -196,7 +196,7 @@ export default function DialogList({ visible, onHide, params }) {
       onHide={onHide}
     >
       <Panel footerTemplate={templateFooter}>
-        <LedgerSummary symmary={listTotal} />
+        <LedgerSummary summary={listTotal} />
 
         <div className="list-page">
           {dataLoading ? (

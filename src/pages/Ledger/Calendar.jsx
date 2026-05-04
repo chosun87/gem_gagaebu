@@ -191,14 +191,14 @@ export default function Calendar() {
   };
 
   return (
-    <div className="panel-inner calendar-page">
+    <div className="panel-content calendar-page">
       <MonthNavigator
         selectedDate={selectedDate}
         onMonthChange={handleMonthChange}
         onViewDateChange={handleViewDateChange}
       />
 
-      <LedgerSummary symmary={monthTotal} />
+      <LedgerSummary summary={monthTotal} />
 
       <div className="fc-swipe-wrapper" {...swipeHandlers}>
         <FullCalendar

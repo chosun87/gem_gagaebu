@@ -27,7 +27,7 @@
         height: 100%;
         width: 100%;
 
-        .panel-inner {
+        .panel-content {
           height: 100%;
           padding: var(--padding-base);
 
@@ -88,6 +88,7 @@
         }
 
         &:first-child {
+
           th,
           td {
             padding-top: 0.5rem;
@@ -210,6 +211,7 @@
 
 // 제미나이 아이콘 적용
 .icon-gemini {
+
   .pi::before,
   .p-speeddial-action-icon::before,
   .p-button-icon::before {
