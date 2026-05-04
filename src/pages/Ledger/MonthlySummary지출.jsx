@@ -2,11 +2,12 @@ import { Chart as ChartJS, registerables } from 'chart.js';
 import { useMemo, useEffect, useRef } from 'react';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
-import { DataTable, Column } from '@/assets/js/PrimeReact';
+import { DataTable, Column, Row, ColumnGroup } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 import MonthNavigator from '@/components/MonthNavigator';
-import MonthlySummaryChart from '@/components/MonthlySummaryChart';
+import MonthlySummaryChart지출 from '@/components/MonthlySummaryChart지출';
 
 const MONTH_LENGTH = 3;
 
@@ -18,6 +19,7 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
     loadedSheetYYYY,
     loadSheet연도Data,
     selectedDate,
+    categoryOptions,
     categoryMap,
   } = useData();
   const fetchingYears = useRef(new Set());
@@ -38,11 +40,21 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
   }, [months]);
 
   const summaryData = useMemo(() => {
+    // 1. 지출 카테고리 목록 가져오기
+    const categoryList =
+      categoryOptions.find((node) => node.cdGroup === TRANSACTION_TYPE.EXPENSE)
+        ?.children || [];
+
+    // 2. 데이터 초기화 (월별, 카테고리별)
     const rawData = {};
     months.forEach((m) => {
-      rawData[m] = { month: m, 수입: 0, 지출: 0, 이체: 0 };
+      rawData[m] = { month: m, total: 0, 지출: 0 };
+      categoryList.forEach((category) => {
+        rawData[m][category.cd] = 0;
+      });
     });
 
+    // 3. 전체 데이터 합산
     const allData = [];
     requiredYears.forEach((year) => {
       if (sheetYYYYData[year]) {
@@ -51,26 +63,41 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
     });
 
     allData.forEach((item) => {
-      if (item.gDeleted) return;
+      if (item.gDeleted || item.gType !== TRANSACTION_TYPE.EXPENSE) return;
 
       // 합계 제외 카테고리 체크
       const catInfo = categoryMap[item.gCategory];
       if (catInfo && catInfo.cdAddSum === false) return;
 
       const m = dayjs(item.gDate).format('YYYY-MM');
-      if (rawData[m]) {
-        rawData[m][item.gType] += item.gAmount;
+      if (rawData[m] && rawData[m][item.gCategory] !== undefined) {
+        rawData[m][item.gCategory] += item.gAmount;
+        rawData[m].total += item.gAmount;
+        rawData[m][TRANSACTION_TYPE.EXPENSE] = rawData[m].total; // 차트 호환성 유지
       }
     });
 
-    // DataTable용 리스트 (최신순)
-    const tableData = [...months].reverse().map((m) => ({
-      monthLabel: dayjs(m).format('YYYY-MM'),
-      ...rawData[m],
-    }));
+    // 4. 테이블용 데이터 변환 (카테고리별 행 구성)
+    const tableData = categoryList
+      .map((cat) => {
+        const row = {
+          categoryCode: cat.cd,
+          categoryLabel: cat.cdLabel,
+          categoryIcon: cat.cdIcon,
+          categoryOrder: cat.cdOrder,
+        };
+        months.forEach((m) => {
+          row[m] = rawData[m][cat.cd] || 0;
+        });
+        // 전체 합계
+        row.sum = months.reduce((acc, m) => acc + row[m], 0);
+        return row;
+      })
+      .filter((row) => row.sum > 0) // 지출이 있는 카테고리만
+      .sort((a, b) => a.categoryOrder - b.categoryOrder);
 
-    return { months, tableData, rawData };
-  }, [sheetYYYYData, months, requiredYears, categoryMap]);
+    return { months, tableData, rawData, categoryList };
+  }, [sheetYYYYData, months, requiredYears, categoryOptions, categoryMap]);
 
   useEffect(() => {
     requiredYears.forEach((year) => {
@@ -93,6 +120,39 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
     return <>{(rowData[field] || 0).toLocaleString()}</>;
   };
 
+  const headerGroup = (
+    <ColumnGroup>
+      <Row>
+        <Column header="분류" style={{ width: '20%', minWidth: '7rem' }} />
+        {summaryData.months.map((m) => (
+          <Column
+            key={m}
+            header={dayjs(m).format('YYYY-MM')}
+            colSpan={2}
+            alignHeader="center"
+            style={{ width: `${80 / summaryData.months.length}%` }}
+          />
+        ))}
+      </Row>
+    </ColumnGroup>
+  );
+
+  const footerGroup = (
+    <ColumnGroup>
+      <Row>
+        <Column footer="합계" align="center" />
+        {summaryData.months.map((m) => [
+          <Column
+            key={m + '_famt'}
+            footer={summaryData.rawData[m].total.toLocaleString()}
+            className="amount"
+          />,
+          <Column key={m + '_fpct'} footer="" className="percentage" />,
+        ])}
+      </Row>
+    </ColumnGroup>
+  );
+
   return (
     <div className="panel-content summary-page">
       <MonthNavigator
@@ -106,7 +166,7 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
           최근 {summaryData.months.length}개월 비교
         </h3>
 
-        <MonthlySummaryChart
+        <MonthlySummaryChart지출
           months={summaryData.months}
           rawData={summaryData.rawData}
         />
@@ -116,40 +176,37 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
             stripedRows
             responsiveLayout="scroll"
             value={summaryData.tableData}
+            headerColumnGroup={headerGroup}
+            footerColumnGroup={footerGroup}
           >
             <Column
-              field="monthLabel"
-              header="연월"
+              field="categoryLabel"
               bodyClassName="px-0 font-bold"
-              style={{ width: '10%', minWidth: '5rem' }}
+              body={(rowData) => (
+                <span>
+                  <i className={rowData.categoryIcon}></i>{' '}
+                  {rowData.categoryLabel}
+                </span>
+              )}
             />
-            <Column
-              field="수입"
-              header="수입"
-              alignHeader="center"
-              align="right"
-              bodyClassName="px-0 monospace gType-수입"
-              body={(data) => templateAmountBody(data, '수입')}
-              style={{ width: '30%' }}
-            />
-            <Column
-              field="지출"
-              header="지출"
-              alignHeader="center"
-              align="right"
-              bodyClassName="px-0 monospace gType-지출"
-              body={(data) => templateAmountBody(data, '지출')}
-              style={{ width: '30%' }}
-            />
-            <Column
-              field="이체"
-              header="이체"
-              alignHeader="center"
-              align="right"
-              bodyClassName="px-0 monospace gType-이체"
-              body={(data) => templateAmountBody(data, '이체')}
-              style={{ width: '30%' }}
-            />
+            {summaryData.months.flatMap((m) => [
+              <Column
+                key={m}
+                field={m}
+                bodyClassName="amount"
+                body={(rowData) => templateAmountBody(rowData, m)}
+              />,
+              <Column
+                key={m + '_pct'}
+                bodyClassName="percentage-sm"
+                body={(rowData) => {
+                  const total = summaryData.rawData[m].total;
+                  const val = rowData[m] || 0;
+                  if (!total) return '(0.0%)';
+                  return `(${((val / total) * 100).toFixed(1)}%)`;
+                }}
+              />,
+            ])}
           </DataTable>
         </div>
       </section>

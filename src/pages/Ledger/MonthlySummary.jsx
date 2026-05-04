@@ -128,8 +128,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               field="수입"
               header="수입"
               alignHeader="center"
-              align="right"
-              bodyClassName="px-0 monospace gType-수입"
+              bodyClassName="amount gType-수입"
               body={(rowData) => templateAmountBody(rowData, '수입')}
               style={{ width: '30%' }}
             />
@@ -137,8 +136,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               field="지출"
               header="지출"
               alignHeader="center"
-              align="right"
-              bodyClassName="px-0 monospace gType-지출"
+              bodyClassName="amount gType-지출"
               body={(rowData) => templateAmountBody(rowData, '지출')}
               style={{ width: '30%' }}
             />
@@ -146,8 +144,7 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               field="이체"
               header="이체"
               alignHeader="center"
-              align="right"
-              bodyClassName="px-0 monospace gType-이체"
+              bodyClassName="amount gType-이체"
               body={(rowData) => templateAmountBody(rowData, '이체')}
               style={{ width: '30%' }}
             />

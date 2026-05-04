@@ -60,6 +60,7 @@ export const CodeProvider = ({ children }) => {
               ` gType-${cdGroup}`,
             cdDefaultAcc1: row[SHEET_COL_INDEX.CODE.cdDefaultAcc1] || '',
             cdAddSum: row[SHEET_COL_INDEX.CODE.cdAddSum] !== 'FALSE', // 기본값은 true (FALSE가 아닐 때)
+            cdOrder: Number(row[SHEET_COL_INDEX.CODE.cdOrder]) || 999,
           };
           categoryCds[cdGroup].children.push(catInfo);
           catMap[catInfo.cd] = catInfo;

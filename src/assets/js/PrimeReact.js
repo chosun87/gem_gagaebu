@@ -9,6 +9,8 @@ export { Chips } from 'primereact/chips';
 export { ConfirmDialog, confirmDialog } from 'primereact/confirmdialog';
 export { DataTable } from 'primereact/datatable';
 export { Column } from 'primereact/column';
+export { ColumnGroup } from 'primereact/columngroup';
+export { Row } from 'primereact/row';
 export { DataView } from 'primereact/dataview';
 export { Divider } from 'primereact/divider';
 export { Dialog } from 'primereact/dialog';

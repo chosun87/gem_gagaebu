@@ -26,6 +26,24 @@
   // border-radius: 50%;
 }
 
+.p-datatable {
+  td.amount {
+    padding-left: 0.5rem;
+    padding-right: 0;
+    text-align: right;
+    font-feature-settings: 'tnum';
+  }
+
+  td.percentage-sm {
+    padding-left: 0.25rem;
+    padding-right: 0;
+    text-align: left;
+    font-feature-settings: 'tnum';
+    font-size: 0.75rem;
+    color: var(--text-color-secondary);
+  }
+}
+
 label.required {
   &::after {
     content: '*';

@@ -69,8 +69,7 @@ export default function LedgerSummary({ summary }) {
           field="실행전"
           header="실행전"
           alignHeader="center"
-          align="right"
-          bodyClassName={(rowData) => `px-0 monospace gType-${rowData.gType}`}
+          bodyClassName={(rowData) => `amount gType-${rowData.gType}`}
           body={(rowData) => templateAmountBody(rowData, '실행전')}
           style={{ width: '30%' }}
         />
@@ -78,8 +77,7 @@ export default function LedgerSummary({ summary }) {
           field="실행후"
           header="실행후"
           alignHeader="center"
-          align="right"
-          bodyClassName={(rowData) => `px-0 monospace gType-${rowData.gType}`}
+          bodyClassName={(rowData) => `amount gType-${rowData.gType}`}
           body={(rowData) => templateAmountBody(rowData, '실행후')}
           style={{ width: '30%' }}
         />
@@ -87,8 +85,7 @@ export default function LedgerSummary({ summary }) {
           field="합계"
           header="합계"
           alignHeader="center"
-          align="right"
-          bodyClassName={(rowData) => `px-0 monospace gType-${rowData.gType}`}
+          bodyClassName={(rowData) => `amount gType-${rowData.gType}`}
           body={(rowData) => templateAmountBody(rowData, '합계')}
           style={{ width: '30%' }}
         />
