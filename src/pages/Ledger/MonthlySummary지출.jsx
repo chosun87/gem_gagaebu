@@ -9,7 +9,7 @@ import { TRANSACTION_TYPE } from '@/assets/js/constants';
 import MonthNavigator from '@/components/MonthNavigator';
 import MonthlySummaryChart지출 from '@/components/MonthlySummaryChart지출';
 
-const MONTH_LENGTH = 3;
+const MONTH_LENGTH = 6;
 
 ChartJS.register(...registerables);
 
@@ -27,7 +27,7 @@ export default function MonthlySummaryExpenses({ monthLength = MONTH_LENGTH }) {
   // 데이터 가공 ---------------------------------------------------------------------------------------
   const months = useMemo(() => {
     const arr = [];
-    for (let i = monthLength - 1; i >= 0; i--) {
+    for (let i = 0; i < monthLength; i++) {
       arr.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
     }
     return arr;

@@ -53,7 +53,7 @@ export default function Ledger() {
         path: 'monthlySummaryExpenses',
         header: '지출분석',
         icon: 'pi pi-chart-pie mr-2',
-        element: <MonthlySummary지출 monthLength={3} />,
+        element: <MonthlySummary지출 monthLength={6} />,
         // isReady: false,
       },
     ],
