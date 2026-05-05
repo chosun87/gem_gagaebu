@@ -22,7 +22,7 @@ import {
 } from '@/components/common/SelectTemplates';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
-import { G_TYPE } from '@/assets/js/constants';
+import { TRANSACTION_TYPE, G_TYPE } from '@/assets/js/constants';
 
 export default function DialogLedger({ ledger, visible, onHide, params }) {
   const {
@@ -68,7 +68,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
             ? dayjs(params.date).toDate()
             : new Date(),
       );
-      set_gType(ledger?.gType || params?.type || '지출');
+      set_gType(ledger?.gType || params?.type || TRANSACTION_TYPE.EXPENSE);
       set_gAcc1(ledger?.gAcc1 || params?.accCode || defaultAssetCode || '');
       set_gAcc2(ledger?.gAcc2 || '');
       set_gCategory(ledger?.gCategory || params?.category || '');
@@ -91,11 +91,11 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
   // Functions -------------------------------------------------------------------------------------
   const _getAccLabels = (type) => {
     switch (type) {
-      case '수입':
+      case TRANSACTION_TYPE.INCOME:
         return ['입금계좌', ''];
-      case '지출':
+      case TRANSACTION_TYPE.EXPENSE:
         return ['출금계좌', ''];
-      case '이체':
+      case TRANSACTION_TYPE.TRANSFER:
         return ['출금계좌', '입금계좌'];
       default:
         return ['자산1', '자산2'];
@@ -115,7 +115,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       gAmount === null ||
       !gCategory ||
       !gAcc1 ||
-      (gType === '이체' && !gAcc2);
+      (gType === TRANSACTION_TYPE.TRANSFER && !gAcc2);
     if (isInvalid) {
       return;
     }
@@ -125,7 +125,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       gDate: dayjs(gDate).format('YYYY-MM-DD'),
       gType,
       gAcc1,
-      gAcc2: gType === '이체' ? gAcc2 : '',
+      gAcc2: gType === TRANSACTION_TYPE.TRANSFER ? gAcc2 : '',
       gCategory,
       gAmount,
       gMemo,
@@ -324,7 +324,9 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
             </div>
           </div>
 
-          <div className={`formRow ${gType !== '이체' ? 'hidden' : ''}`}>
+          <div
+            className={`formRow ${gType !== TRANSACTION_TYPE.TRANSFER ? 'hidden' : ''}`}
+          >
             <label htmlFor="gAcc2" className="required">
               {gAcc2Label}
             </label>
@@ -332,7 +334,8 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
               <Dropdown
                 id="gAcc2"
                 className={classNames('w-full', {
-                  'p-invalid': submitted && gType === '이체' && !gAcc2,
+                  'p-invalid':
+                    submitted && gType === TRANSACTION_TYPE.TRANSFER && !gAcc2,
                 })}
                 placeholder="자산 선택"
                 options={assetNodes}

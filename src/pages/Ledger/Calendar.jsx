@@ -3,6 +3,7 @@ import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
 import { useSwipe } from '@/hooks/useSwipe';
 import dayjs from 'dayjs';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 import MonthNavigator from '@/components/MonthNavigator';
 import LedgerSummary from '@/components/LedgerSummary';
@@ -46,24 +47,24 @@ export default function Calendar() {
 
       const amount = Number(item.gAmount) || 0;
       if (!item.gExecuted) {
-        if (item.gType === '수입') {
+        if (item.gType === TRANSACTION_TYPE.INCOME) {
           summary[dateStr].income0 += amount;
           ++summary[dateStr].length0;
-        } else if (item.gType === '지출') {
+        } else if (item.gType === TRANSACTION_TYPE.EXPENSE) {
           summary[dateStr].expense0 += amount;
           ++summary[dateStr].length0;
-        } else if (item.gType === '이체') {
+        } else if (item.gType === TRANSACTION_TYPE.TRANSFER) {
           summary[dateStr].transfer0 += amount;
           ++summary[dateStr].length0;
         }
       } else {
-        if (item.gType === '수입') {
+        if (item.gType === TRANSACTION_TYPE.INCOME) {
           summary[dateStr].income1 += amount;
           ++summary[dateStr].length1;
-        } else if (item.gType === '지출') {
+        } else if (item.gType === TRANSACTION_TYPE.EXPENSE) {
           summary[dateStr].expense1 += amount;
           ++summary[dateStr].length1;
-        } else if (item.gType === '이체') {
+        } else if (item.gType === TRANSACTION_TYPE.TRANSFER) {
           summary[dateStr].transfer1 += amount;
           ++summary[dateStr].length1;
         }

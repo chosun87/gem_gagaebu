@@ -14,6 +14,7 @@ import {
 import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils';
 import { classNames } from 'primereact/utils';
 import dayjs from 'dayjs';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 import {
   templateCategoryItem,
@@ -62,7 +63,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     set_prevVisible(visible);
 
     if (visible) {
-      set_rpType(repeat?.rpType || '지출');
+      set_rpType(repeat?.rpType || TRANSACTION_TYPE.EXPENSE);
       set_rpDateS(
         repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date(),
       );
@@ -102,11 +103,11 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
 
   const _getAccLabels = (type) => {
     switch (type) {
-      case '수입':
+      case TRANSACTION_TYPE.INCOME:
         return ['입금계좌', ''];
-      case '지출':
+      case TRANSACTION_TYPE.EXPENSE:
         return ['출금계좌', ''];
-      case '이체':
+      case TRANSACTION_TYPE.TRANSFER:
         return ['출금계좌', '입금계좌'];
       default:
         return ['자산1', '자산2'];
@@ -161,7 +162,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       rpAmount === null ||
       !rpCategory ||
       !rpAcc1 ||
-      (rpType === '이체' && !rpAcc2);
+      (rpType === TRANSACTION_TYPE.TRANSFER && !rpAcc2);
     if (isInvalid) {
       return;
     }
@@ -174,7 +175,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       rpPeriod,
       rpDay,
       rpAcc1,
-      rpAcc2: rpType === '이체' ? rpAcc2 : '',
+      rpAcc2: rpType === TRANSACTION_TYPE.TRANSFER ? rpAcc2 : '',
       rpCategory,
       rpAmount,
       rpTotalAmount,
@@ -410,7 +411,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
             </div>
           </div>
 
-          <div className={`formRow ${rpType !== '이체' ? 'hidden' : ''}`}>
+          <div
+            className={`formRow ${rpType !== TRANSACTION_TYPE.TRANSFER ? 'hidden' : ''}`}
+          >
             <label htmlFor="rpAcc2" className="required">
               {rpAcc2Label}
             </label>
@@ -418,7 +421,10 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
               <Dropdown
                 id="rpAcc2"
                 className={classNames('w-full', {
-                  'p-invalid': submitted && rpType === '이체' && !rpAcc2,
+                  'p-invalid':
+                    submitted &&
+                    rpType === TRANSACTION_TYPE.TRANSFER &&
+                    !rpAcc2,
                 })}
                 placeholder="자산 선택"
                 options={assetNodes}

@@ -91,14 +91,14 @@ export const REPEAT_PERIOD = {
 
 // 거래 유형 (UI 바인딩용)
 export const G_TYPE = {
-  수입: { label: '수입', value: '수입' },
-  지출: { label: '지출', value: '지출' },
-  이체: { label: '이체', value: '이체' },
+  수입: { label: '수입', value: TRANSACTION_TYPE.INCOME },
+  지출: { label: '지출', value: TRANSACTION_TYPE.EXPENSE },
+  이체: { label: '이체', value: TRANSACTION_TYPE.TRANSFER },
 };
 
 // 반복 거래 유형
 export const RP_TYPE = {
-  수입: { label: '수입', value: '수입' },
-  지출: { label: '지출', value: '지출' },
-  이체: { label: '이체', value: '이체' },
+  수입: { label: '수입', value: TRANSACTION_TYPE.INCOME },
+  지출: { label: '지출', value: TRANSACTION_TYPE.EXPENSE },
+  이체: { label: '이체', value: TRANSACTION_TYPE.TRANSFER },
 };

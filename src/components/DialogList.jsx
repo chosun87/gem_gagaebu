@@ -9,6 +9,7 @@ import {
 } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 import LedgerListItem from '@/components/common/LedgerListItem';
 const DialogLedger = lazy(() => import('@/components/DialogLedger'));
 import LedgerSummary from '@/components/LedgerSummary';
@@ -99,13 +100,17 @@ export default function DialogList({ visible, onHide, params }) {
 
       const amount = Number(item.gAmount) || 0;
       if (!item.gExecuted) {
-        if (item.gType === '수입') total.income0 += amount;
-        else if (item.gType === '지출') total.expense0 += amount;
-        else if (item.gType === '이체') total.transfer0 += amount;
+        if (item.gType === TRANSACTION_TYPE.INCOME) total.income0 += amount;
+        else if (item.gType === TRANSACTION_TYPE.EXPENSE)
+          total.expense0 += amount;
+        else if (item.gType === TRANSACTION_TYPE.TRANSFER)
+          total.transfer0 += amount;
       } else {
-        if (item.gType === '수입') total.income1 += amount;
-        else if (item.gType === '지출') total.expense1 += amount;
-        else if (item.gType === '이체') total.transfer1 += amount;
+        if (item.gType === TRANSACTION_TYPE.INCOME) total.income1 += amount;
+        else if (item.gType === TRANSACTION_TYPE.EXPENSE)
+          total.expense1 += amount;
+        else if (item.gType === TRANSACTION_TYPE.TRANSFER)
+          total.transfer1 += amount;
       }
     });
 

@@ -8,7 +8,11 @@ import {
 } from 'react';
 import { fetchSheetData } from '@/api/sheetApi';
 import { useAuth } from '@/context/AuthContext';
-import { SHEET_NAME_RANGE, SHEET_COL_INDEX } from '@/assets/js/constants';
+import {
+  SHEET_NAME_RANGE,
+  SHEET_COL_INDEX,
+  TRANSACTION_TYPE,
+} from '@/assets/js/constants';
 
 const CodeContext = createContext(null);
 
@@ -40,7 +44,11 @@ export const CodeProvider = ({ children }) => {
             cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
           });
         } else if (
-          ['지출', '이체', '수입'].includes(group) ||
+          [
+            TRANSACTION_TYPE.EXPENSE,
+            TRANSACTION_TYPE.TRANSFER,
+            TRANSACTION_TYPE.INCOME,
+          ].includes(group) ||
           group.includes('분류')
         ) {
           const cdGroup = group.replace('분류', '');

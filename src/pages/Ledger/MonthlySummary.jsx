@@ -4,6 +4,7 @@ import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
 import { DataTable, Column } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 import MonthNavigator from '@/components/MonthNavigator';
 import MonthlySummaryChart from '@/components/MonthlySummaryChart';
@@ -129,7 +130,9 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               header="수입"
               alignHeader="center"
               bodyClassName="amount gType-수입"
-              body={(rowData) => templateAmountBody(rowData, '수입')}
+              body={(rowData) =>
+                templateAmountBody(rowData, TRANSACTION_TYPE.INCOME)
+              }
               style={{ width: '30%' }}
             />
             <Column
@@ -137,7 +140,9 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               header="지출"
               alignHeader="center"
               bodyClassName="amount gType-지출"
-              body={(rowData) => templateAmountBody(rowData, '지출')}
+              body={(rowData) =>
+                templateAmountBody(rowData, TRANSACTION_TYPE.EXPENSE)
+              }
               style={{ width: '30%' }}
             />
             <Column
@@ -145,7 +150,9 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               header="이체"
               alignHeader="center"
               bodyClassName="amount gType-이체"
-              body={(rowData) => templateAmountBody(rowData, '이체')}
+              body={(rowData) =>
+                templateAmountBody(rowData, TRANSACTION_TYPE.TRANSFER)
+              }
               style={{ width: '30%' }}
             />
           </DataTable>

@@ -1,4 +1,5 @@
 import { DataTable, Column } from '@/assets/js/PrimeReact';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 export default function LedgerSummary({ summary }) {
   const summaryA = [];
@@ -11,7 +12,7 @@ export default function LedgerSummary({ summary }) {
     )
   ) {
     summaryA.push({
-      gType: '수입',
+      gType: TRANSACTION_TYPE.INCOME,
       실행전: summary?.income0 || 0,
       실행후: summary?.income1 || 0,
       합계: summary?.incomeA || 0,
@@ -25,7 +26,7 @@ export default function LedgerSummary({ summary }) {
     )
   ) {
     summaryA.push({
-      gType: '지출',
+      gType: TRANSACTION_TYPE.EXPENSE,
       실행전: summary?.expense0 || 0,
       실행후: summary?.expense1 || 0,
       합계: summary?.expenseA || 0,
@@ -39,7 +40,7 @@ export default function LedgerSummary({ summary }) {
     )
   ) {
     summaryA.push({
-      gType: '이체',
+      gType: TRANSACTION_TYPE.TRANSFER,
       실행전: summary?.transfer0 || 0,
       실행후: summary?.transfer1 || 0,
       합계: summary?.transferA || 0,

@@ -4,6 +4,7 @@ import { useTheme } from '@/context/ThemeContext';
 import dayjs from 'dayjs';
 import { Chart as ChartJS } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 ChartJS.register(ChartDataLabels);
 
@@ -30,7 +31,13 @@ export default function MonthlySummaryChart지출({ months, rawData }) {
     Object.keys(rawData[m]).forEach((key) => {
       if (
         rawData[m][key] > 0 &&
-        !['total', 'month', '지출', '수입', '이체'].includes(key)
+        ![
+          'total',
+          'month',
+          TRANSACTION_TYPE.EXPENSE,
+          TRANSACTION_TYPE.INCOME,
+          TRANSACTION_TYPE.TRANSFER,
+        ].includes(key)
       ) {
         presentCategories.add(key);
       }

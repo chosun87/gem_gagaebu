@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useData } from '@/context/DataContext';
 import { Chart, TabView, TabPanel, Button } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 export default function Statistics() {
   const {
@@ -16,7 +17,8 @@ export default function Statistics() {
   const { chartData, chartOptions, listData, totalAmount } = useMemo(() => {
     // 1. 선택된 달의 지출 데이터만 필터링
     const monthData = (yearData || []).filter((item) => {
-      if (item.gDeleted || item.gType !== '지출') return false;
+      if (item.gDeleted || item.gType !== TRANSACTION_TYPE.EXPENSE)
+        return false;
 
       // 합계 제외 카테고리 체크
       const catInfo = categoryMap[item.gCategory];
@@ -61,7 +63,7 @@ export default function Statistics() {
         const percent = totalExpense > 0 ? (amount / totalExpense) * 100 : 0;
 
         const catNode = categoryOptions
-          .find((group) => group.cdGroup === '지출')
+          .find((group) => group.cdGroup === TRANSACTION_TYPE.EXPENSE)
           ?.children?.find((c) => c.cd === cat);
         return {
           id: cat,

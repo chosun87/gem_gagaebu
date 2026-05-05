@@ -1,6 +1,7 @@
 import { Chart } from '@/assets/js/PrimeReact';
 import { useTheme } from '@/context/ThemeContext';
 import dayjs from 'dayjs';
+import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 export default function MonthlySummaryChart({ months, rawData }) {
   const { chartColor } = useTheme();
@@ -8,7 +9,11 @@ export default function MonthlySummaryChart({ months, rawData }) {
   // 테마 변수 가져오기
   const rootStyle = getComputedStyle(document.documentElement);
 
-  const labels = ['수입', '지출', '이체'];
+  const labels = [
+    TRANSACTION_TYPE.INCOME,
+    TRANSACTION_TYPE.EXPENSE,
+    TRANSACTION_TYPE.TRANSFER,
+  ];
 
   const chartData = {
     labels: labels,
@@ -32,7 +37,11 @@ export default function MonthlySummaryChart({ months, rawData }) {
       return {
         label: dayjs(m).format('M월'),
         backgroundColor: getThemeColor(chartColor, shade),
-        data: [rawData[m]['수입'], rawData[m]['지출'], rawData[m]['이체']],
+        data: [
+          rawData[m][TRANSACTION_TYPE.INCOME],
+          rawData[m][TRANSACTION_TYPE.EXPENSE],
+          rawData[m][TRANSACTION_TYPE.TRANSFER],
+        ],
       };
     }),
   };
