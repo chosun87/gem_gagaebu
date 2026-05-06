@@ -1,0 +1,1 @@
+import{d as e,t}from"./jsx-runtime-BsZtGEmz.js";var n=t();function r(){return(0,n.jsx)(e,{className:`app-page assets-page`,header:(0,n.jsx)(`h2`,{className:`page-title text-3xl`,children:`자산`}),children:(0,n.jsx)(`div`,{children:`자산 화면입니다.`})})}export{r as default};
