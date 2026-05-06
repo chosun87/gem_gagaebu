@@ -1,12 +1,27 @@
-import { Sidebar, Panel, Menu } from '@/assets/js/PrimeReact';
+import { Sidebar, Panel, Menu, Dropdown } from '@/assets/js/PrimeReact';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function Settings({ visible, onHide }) {
   const navigate = useNavigate();
+  const [framework, setFramework] = useState(localStorage.getItem('ui-framework') || 'primereact');
+
+  const frameworkOptions = [
+    { label: 'PrimeReact', value: 'primereact' },
+    { label: 'Material UI (MUI)', value: 'mui' }
+  ];
+
+  const handleFrameworkChange = (e) => {
+    const value = e.value;
+    setFramework(value);
+    localStorage.setItem('ui-framework', value);
+    window.location.reload();
+  };
 
   const menuItems = [
     {
       label: '데이터 관리',
+      className: "text-lg",
       items: [
         {
           label: '반복 입출금 관리',
@@ -19,6 +34,7 @@ export default function Settings({ visible, onHide }) {
     },
     {
       label: '디자인 템플릿',
+      className: "text-lg mt-3",
       items: [
         {
           label: '빈 페이지 템플릿',
@@ -62,7 +78,22 @@ export default function Settings({ visible, onHide }) {
       onHide={onHide}
     >
       <Panel className="settings-content">
-        <Menu model={menuItems} className="w-full border-none p-0" />
+        <div className="flex align-items-center justify-content-between p-3 border-bottom-1 surface-border">
+          <span className="text-lg font-bold">UI Framework</span>
+          <Dropdown
+            value={framework}
+            options={frameworkOptions}
+            onChange={handleFrameworkChange}
+            placeholder="프레임워크 선택"
+            className="w-10rem"
+          />
+        </div>
+
+        <Menu
+          className="w-full border-none p-0"
+          labelClassName="text-lg"
+          model={menuItems}
+        />
       </Panel>
     </Sidebar>
   );
