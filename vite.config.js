@@ -38,11 +38,11 @@ export default defineConfig({
     alias: [
       {
         find: '@',
-        replacement: path.resolve(__dirname, 'src'),
+        replacement: path.resolve(__dirname, 'src/primereact'),
       },
       {
         find: '@components',
-        replacement: path.resolve(__dirname, 'src/components'),
+        replacement: path.resolve(__dirname, 'src/primereact/components'),
       },
     ],
   },
