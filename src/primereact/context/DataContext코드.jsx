@@ -20,6 +20,7 @@ export const CodeProvider = ({ children }) => {
   const { isSignedIn } = useAuth();
   const [loading, setLoading] = useState(false);
   const [periodOptions, setPeriodOptions] = useState([]);
+  const [assetOptions, setAssetOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [categoryMap, setCategoryMap] = useState({});
 
@@ -28,53 +29,72 @@ export const CodeProvider = ({ children }) => {
     try {
       const rawData = await fetchSheetData(SHEET_NAME_RANGE.CODE);
       const periodCds = [];
+      const assetCds = [];
       const categoryCds = {};
       const catMap = {};
 
       for (let i = 1; i < rawData.length; i++) {
         const row = rawData[i];
-        if (!row || row.length < 3) continue;
+        if (!row || row.length < 2) continue;
 
-        if (row[SHEET_COL_INDEX.CODE.cdDeleted]) continue;
+        const getVal = (idx) =>
+          row[idx] !== undefined ? String(row[idx]).trim() : '';
 
-        const group = row[SHEET_COL_INDEX.CODE.cdGroup];
-        if (group === '반복주기') {
-          periodCds.push({
-            cd: row[SHEET_COL_INDEX.CODE.cd],
-            cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
+        // 삭제 여부 체크
+        const deletedVal = getVal(SHEET_COL_INDEX.CODE.cdDeleted);
+        const isDeleted =
+          deletedVal !== '' && deletedVal.toUpperCase() !== 'FALSE';
+
+        if (isDeleted) continue;
+
+        const cdGroup = getVal(SHEET_COL_INDEX.CODE.cdGroup);
+        const cd = getVal(SHEET_COL_INDEX.CODE.cd);
+        const cdLabel = getVal(SHEET_COL_INDEX.CODE.cdLabel);
+        const cdTimestamp = getVal(SHEET_COL_INDEX.CODE.cdTimestamp);
+
+        if (cdGroup === '반복주기') {
+          periodCds.push({ cd, cdLabel, cdTimestamp });
+        } else if (cdGroup === '자산') {
+          assetCds.push({
+            cd,
+            cdLabel,
+            cdIcon: getVal(SHEET_COL_INDEX.CODE.cdIcon) || 'pi pi-tag',
+            cdTimestamp,
           });
         } else if (
           [
             TRANSACTION_TYPE.EXPENSE,
             TRANSACTION_TYPE.TRANSFER,
             TRANSACTION_TYPE.INCOME,
-          ].includes(group) ||
-          group.includes('분류')
+          ].includes(cdGroup.replace('분류', '')) ||
+          cdGroup.includes('분류')
         ) {
-          const cdGroup = group.replace('분류', '');
-          if (!categoryCds[cdGroup]) {
-            categoryCds[cdGroup] = {
-              cdGroup: cdGroup,
-              label: cdGroup,
+          const finalGroup = cdGroup.replace('분류', '');
+          if (!categoryCds[finalGroup]) {
+            categoryCds[finalGroup] = {
+              cdGroup: finalGroup,
+              label: finalGroup,
               selectable: false,
               children: [],
             };
           }
           const catInfo = {
-            cd: row[SHEET_COL_INDEX.CODE.cd],
-            cdLabel: row[SHEET_COL_INDEX.CODE.cdLabel],
+            cd,
+            cdLabel,
             cdIcon:
-              (row[SHEET_COL_INDEX.CODE.cdIcon] || 'pi pi-fw pi-tag') +
-              ` gType-${cdGroup}`,
-            cdDefaultAcc1: row[SHEET_COL_INDEX.CODE.cdDefaultAcc1] || '',
-            cdAddSum: row[SHEET_COL_INDEX.CODE.cdAddSum] !== 'FALSE', // 기본값은 true (FALSE가 아닐 때)
-            cdOrder: Number(row[SHEET_COL_INDEX.CODE.cdOrder]) || 999,
+              (getVal(SHEET_COL_INDEX.CODE.cdIcon) || 'pi pi-fw pi-tag') +
+              ` gType-${finalGroup}`,
+            cdDefaultAcc1: getVal(SHEET_COL_INDEX.CODE.cdDefaultAcc1),
+            cdAddSum: getVal(SHEET_COL_INDEX.CODE.cdAddSum) !== 'FALSE', // 기본값은 true
+            cdOrder: Number(getVal(SHEET_COL_INDEX.CODE.cdOrder)) || 999,
+            cdTimestamp,
           };
-          categoryCds[cdGroup].children.push(catInfo);
+          categoryCds[finalGroup].children.push(catInfo);
           catMap[catInfo.cd] = catInfo;
         }
       }
       setPeriodOptions(periodCds);
+      setAssetOptions(assetCds);
       setCategoryOptions(Object.values(categoryCds));
       setCategoryMap(catMap);
     } catch (error) {
@@ -98,6 +118,7 @@ export const CodeProvider = ({ children }) => {
   const contextValue = useMemo(
     () => ({
       periodOptions,
+      assetOptions,
       categoryOptions,
       categoryMap,
       loading,
@@ -107,6 +128,7 @@ export const CodeProvider = ({ children }) => {
     }),
     [
       periodOptions,
+      assetOptions,
       categoryOptions,
       categoryMap,
       loading,

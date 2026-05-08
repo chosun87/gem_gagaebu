@@ -1,2 +1,100 @@
 .assets-page {
+  .p-tabview.assets-tabview {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    .p-tabview-nav {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(2.5rem, 1fr));
+
+      .p-tabview-nav-link {
+        padding: 0.75rem;
+
+        justify-content: center;
+      }
+    }
+
+    .p-tabview-panels {
+      flex: 1 1 auto;
+      padding: 0;
+      border: 0;
+      overflow: hidden; // 패널 내부에서 스크롤 관리하도록 변경
+
+      .p-tabview-panel {
+        position: relative;
+        height: 100%;
+        width: 100%;
+
+        .panel-content {
+          height: 100%;
+          padding: var(--padding-base);
+
+          display: flex;
+          flex-direction: column;
+          gap: calc(var(--padding-base) / 2);
+
+          section.panel-body {
+            flex: 1 1 auto;
+
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--padding-base) / 2);
+
+            width: calc(100% + var(--padding-base) * 2);
+            margin: 0 calc(var(--padding-base) * -1);
+            padding-left: calc(var(--padding-base) - 0.5rem);
+            padding-right: calc(var(--padding-base) - 0.5rem);
+            scrollbar-gutter: stable both-edges;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+          }
+        }
+      }
+    }
+  }
+}
+
+.assets-page {
+  .list-dataview {
+    img.asset-icon-svg {
+      width: calc(var(--padding-base) * 2);
+      height: calc(var(--padding-base) * 2);
+      border-radius: calc(var(--padding-base) * 2);
+      object-fit: contain;
+    }
+
+    .list-item {
+      padding-left: 0;
+      padding-right: 0;
+
+      .p-badge {
+        width: auto;
+        height: auto;
+        border-radius: 1rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+  }
+
+  .unused {
+    opacity: 0.5;
+
+    img {
+      filter: grayscale(100%);
+    }
+  }
+}
+
+.dialog-asset {
+  .p-inputgroup-addon {
+    padding: 0 8px;
+
+    img {
+      width: calc(var(--padding-base) * 1.5);
+      height: calc(var(--padding-base) * 1.5);
+      object-fit: contain;
+    }
+  }
 }

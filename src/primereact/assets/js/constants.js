@@ -11,9 +11,9 @@ export const GOOGLE_SHEET = {
 
 // Google Sheets 시트 이름과 범위
 export const SHEET_NAME_RANGE = {
-  CODE: '코드!A1:I',
-  ASSET: '자산!A1:H',
-  REPEAT: '반복!A1:N',
+  CODE: '코드!A1:J',
+  ASSET: '자산!A1:J',
+  REPEAT: '반복!A1:O',
   YEAR: 'YYYY!A1:K',
 };
 
@@ -30,6 +30,7 @@ export const SHEET_COL_INDEX = {
     cdDefaultAcc1: 6,
     cdAddSum: 7,
     cdDeleted: 8,
+    cdTimestamp: 9,
   },
 
   // 자산 시트 컬럼 인덱스
@@ -41,7 +42,9 @@ export const SHEET_COL_INDEX = {
     accDefault: 4,
     accOrder: 5,
     accMemo: 6,
-    accDeleted: 7,
+    accUnused: 7,
+    accDeleted: 8,
+    accTimestamp: 9,
   },
 
   // 반복 시트 컬럼 인덱스
@@ -60,6 +63,7 @@ export const SHEET_COL_INDEX = {
     rpTotalAmount: 11,
     rpMemo: 12,
     rpDeleted: 13,
+    rpTimestamp: 14,
   },
 
   // 연도 시트 컬럼 인덱스
@@ -91,14 +95,14 @@ export const REPEAT_PERIOD = {
 
 // 거래 유형 (UI 바인딩용)
 export const G_TYPE = {
-  수입: { label: '수입', value: TRANSACTION_TYPE.INCOME },
-  지출: { label: '지출', value: TRANSACTION_TYPE.EXPENSE },
-  이체: { label: '이체', value: TRANSACTION_TYPE.TRANSFER },
+  수입: { label: TRANSACTION_TYPE.INCOME, value: TRANSACTION_TYPE.INCOME },
+  지출: { label: TRANSACTION_TYPE.EXPENSE, value: TRANSACTION_TYPE.EXPENSE },
+  이체: { label: TRANSACTION_TYPE.TRANSFER, value: TRANSACTION_TYPE.TRANSFER },
 };
 
 // 반복 거래 유형
 export const RP_TYPE = {
-  수입: { label: '수입', value: TRANSACTION_TYPE.INCOME },
-  지출: { label: '지출', value: TRANSACTION_TYPE.EXPENSE },
-  이체: { label: '이체', value: TRANSACTION_TYPE.TRANSFER },
+  수입: { label: TRANSACTION_TYPE.INCOME, value: TRANSACTION_TYPE.INCOME },
+  지출: { label: TRANSACTION_TYPE.EXPENSE, value: TRANSACTION_TYPE.EXPENSE },
+  이체: { label: TRANSACTION_TYPE.TRANSFER, value: TRANSACTION_TYPE.TRANSFER },
 };

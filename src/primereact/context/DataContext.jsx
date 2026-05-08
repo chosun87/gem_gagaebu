@@ -29,6 +29,7 @@ export const useData = () => {
     () => ({
       // 코드 데이터
       periodOptions: code.periodOptions,
+      assetOptions: code.assetOptions,
       categoryOptions: code.categoryOptions,
       categoryMap: code.categoryMap,
       loadSheet코드Data: code.loadSheet코드Data,
@@ -42,6 +43,7 @@ export const useData = () => {
       loadSheet자산Data: asset.loadSheet자산Data,
       saveAssetEntry: asset.saveAssetEntry,
       deleteAssetEntry: asset.deleteAssetEntry,
+      saveAssetOrder: asset.saveAssetOrder,
 
       // 반복 데이터
       sheet반복Data: repeat.sheet반복Data,

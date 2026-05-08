@@ -179,24 +179,29 @@
     color: var(--text-color);
     background-color: var(--bluegray-100);
   }
+}
 
-  .p-badge {
-    border: solid 1px transparent;
-    background-color: transparent;
+.repeat-page,
+.ledger-page {
+  .list-item {
+    .p-badge {
+      border: solid 1px transparent;
+      background-color: transparent;
 
-    &.gType-수입 {
-      color: var(--color-수입);
-      border-color: var(--color-수입);
-    }
+      &.gType-수입 {
+        color: var(--color-수입);
+        border-color: var(--color-수입);
+      }
 
-    &.gType-지출 {
-      color: var(--color-지출);
-      border-color: var(--color-지출);
-    }
+      &.gType-지출 {
+        color: var(--color-지출);
+        border-color: var(--color-지출);
+      }
 
-    &.gType-이체 {
-      color: var(--color-이체);
-      border-color: var(--color-이체);
+      &.gType-이체 {
+        color: var(--color-이체);
+        border-color: var(--color-이체);
+      }
     }
   }
 }
@@ -221,5 +226,16 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+  }
+}
+
+.p-dropdown-label,
+.p-dropdown-item-label {
+  img {
+    width: calc(var(--padding-base) * 1.5);
+    height: calc(var(--padding-base) * 1.5);
+    margin-top: -0.75rem;
+    margin-bottom: -0.75rem;
+    object-fit: contain;
   }
 }

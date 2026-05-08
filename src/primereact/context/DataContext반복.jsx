@@ -33,31 +33,39 @@ export const RepeatProvider = ({ children }) => {
 
       for (let i = 1; i < rawData.length; i++) {
         const row = rawData[i];
-        if (!row || row.length < 3) continue;
+        if (!row || row.length < 2) continue;
 
-        if (row[SHEET_COL_INDEX.REPEAT.rpDeleted]) continue;
+        const getVal = (idx) =>
+          row[idx] !== undefined ? String(row[idx]).trim() : '';
+
+        // 삭제 여부 체크
+        const deletedVal = getVal(SHEET_COL_INDEX.REPEAT.rpDeleted);
+        const isDeleted =
+          deletedVal !== '' && deletedVal.toUpperCase() !== 'FALSE';
+
+        if (isDeleted) continue;
 
         parsedData.push({
           sheetName: '반복',
           sheetRowNo: i + 1,
-          rpID: row[SHEET_COL_INDEX.REPEAT.rpID] || '',
-          rpDateS: row[SHEET_COL_INDEX.REPEAT.rpDateS] || '',
-          rpDateE: row[SHEET_COL_INDEX.REPEAT.rpDateE] || '',
-          rpPeriod: row[SHEET_COL_INDEX.REPEAT.rpPeriod] || '',
-          rpDay: row[SHEET_COL_INDEX.REPEAT.rpDay] || '',
+          rpID: getVal(SHEET_COL_INDEX.REPEAT.rpID),
+          rpDateS: getVal(SHEET_COL_INDEX.REPEAT.rpDateS),
+          rpDateE: getVal(SHEET_COL_INDEX.REPEAT.rpDateE),
+          rpPeriod: getVal(SHEET_COL_INDEX.REPEAT.rpPeriod),
+          rpDay: getVal(SHEET_COL_INDEX.REPEAT.rpDay),
           rpCompleted:
-            String(row[SHEET_COL_INDEX.REPEAT.rpCompleted]).toUpperCase() ===
-            'TRUE',
-          rpType: row[SHEET_COL_INDEX.REPEAT.rpType] || '',
-          rpAcc1: row[SHEET_COL_INDEX.REPEAT.rpAcc1] || '',
-          rpAcc2: row[SHEET_COL_INDEX.REPEAT.rpAcc2] || '',
-          rpCategory: row[SHEET_COL_INDEX.REPEAT.rpCategory] || '',
-          rpAmount: parseAmount(row[SHEET_COL_INDEX.REPEAT.rpAmount]),
-          rpTotalAmount: parseAmount(row[SHEET_COL_INDEX.REPEAT.rpTotalAmount]),
-          rpMemo: row[SHEET_COL_INDEX.REPEAT.rpMemo] || '',
-          rpDeleted:
-            String(row[SHEET_COL_INDEX.REPEAT.rpDeleted]).toUpperCase() ===
-            'TRUE',
+            getVal(SHEET_COL_INDEX.REPEAT.rpCompleted).toUpperCase() === 'TRUE',
+          rpType: getVal(SHEET_COL_INDEX.REPEAT.rpType),
+          rpAcc1: getVal(SHEET_COL_INDEX.REPEAT.rpAcc1),
+          rpAcc2: getVal(SHEET_COL_INDEX.REPEAT.rpAcc2),
+          rpCategory: getVal(SHEET_COL_INDEX.REPEAT.rpCategory),
+          rpAmount: parseAmount(getVal(SHEET_COL_INDEX.REPEAT.rpAmount)),
+          rpTotalAmount: parseAmount(
+            getVal(SHEET_COL_INDEX.REPEAT.rpTotalAmount),
+          ),
+          rpMemo: getVal(SHEET_COL_INDEX.REPEAT.rpMemo),
+          rpDeleted: isDeleted,
+          rpTimestamp: getVal(SHEET_COL_INDEX.REPEAT.rpTimestamp),
         });
       }
 
@@ -97,6 +105,7 @@ export const RepeatProvider = ({ children }) => {
         rpTotalAmount: formData.rpTotalAmount || 0,
         rpMemo: formData.rpMemo || '',
         rpDeleted: false,
+        rpTimestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       };
 
       const rowValues = [];
@@ -114,6 +123,7 @@ export const RepeatProvider = ({ children }) => {
       rowValues[SHEET_COL_INDEX.REPEAT.rpTotalAmount] = newObj.rpTotalAmount;
       rowValues[SHEET_COL_INDEX.REPEAT.rpMemo] = newObj.rpMemo;
       rowValues[SHEET_COL_INDEX.REPEAT.rpDeleted] = '';
+      rowValues[SHEET_COL_INDEX.REPEAT.rpTimestamp] = newObj.rpTimestamp;
 
       if (!repeat) {
         const res = await appendSheetRow('반복', rowValues);

@@ -126,30 +126,30 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
               style={{ width: '10%', minWidth: '5rem' }}
             />
             <Column
-              field="수입"
-              header="수입"
+              field={TRANSACTION_TYPE.INCOME}
+              header={TRANSACTION_TYPE.INCOME}
               alignHeader="center"
-              bodyClassName="amount gType-수입"
+              bodyClassName={`amount gType-${TRANSACTION_TYPE.INCOME}`}
               body={(rowData) =>
                 templateAmountBody(rowData, TRANSACTION_TYPE.INCOME)
               }
               style={{ width: '30%' }}
             />
             <Column
-              field="지출"
-              header="지출"
+              field={TRANSACTION_TYPE.EXPENSE}
+              header={TRANSACTION_TYPE.EXPENSE}
               alignHeader="center"
-              bodyClassName="amount gType-지출"
+              bodyClassName={`amount gType-${TRANSACTION_TYPE.EXPENSE}`}
               body={(rowData) =>
                 templateAmountBody(rowData, TRANSACTION_TYPE.EXPENSE)
               }
               style={{ width: '30%' }}
             />
             <Column
-              field="이체"
-              header="이체"
+              field={TRANSACTION_TYPE.TRANSFER}
+              header={TRANSACTION_TYPE.TRANSFER}
               alignHeader="center"
-              bodyClassName="amount gType-이체"
+              bodyClassName={`amount gType-${TRANSACTION_TYPE.TRANSFER}`}
               body={(rowData) =>
                 templateAmountBody(rowData, TRANSACTION_TYPE.TRANSFER)
               }

@@ -1,4 +1,5 @@
 import { classNames } from 'primereact/utils';
+import AssetIcon from './AssetIcon';
 
 export const templateCategoryItem = (option) => {
   return (
@@ -24,7 +25,7 @@ export const templateCategoryValue = (option, props) => {
 export const templateAssetItem = (option) => {
   return (
     <div className="flex align-items-center">
-      <i className={classNames(option.accIcon, 'mr-2')} />
+      <AssetIcon icon={option.accIcon} className="mr-2" />
       <span>{option.accLabel}</span>
     </div>
   );
@@ -34,7 +35,7 @@ export const templateAssetValue = (option, props) => {
   if (option) {
     return (
       <div className="flex align-items-center">
-        <i className={classNames(option.accIcon, 'mr-2')} />
+        <AssetIcon icon={option.accIcon} className="mr-2" />
         <span>{option.accLabel}</span>
       </div>
     );

@@ -162,13 +162,19 @@ export default function Calendar() {
           <div className="day-number">
             {day}
             {data?.income0 !== 0 && (
-              <i className={`fa-solid fa-star gType-수입`}></i>
+              <i
+                className={`fa-solid fa-star gType-${TRANSACTION_TYPE.INCOME}`}
+              ></i>
             )}
             {data?.expense0 !== 0 && (
-              <i className={`fa-solid fa-star gType-지출`}></i>
+              <i
+                className={`fa-solid fa-star gType-${TRANSACTION_TYPE.EXPENSE}`}
+              ></i>
             )}
             {data?.transfer0 !== 0 && (
-              <i className={`fa-solid fa-star gType-이체`}></i>
+              <i
+                className={`fa-solid fa-star gType-${TRANSACTION_TYPE.TRANSFER}`}
+              ></i>
             )}
             {data?.length0 > 0 && (
               <span className="text-xs 실행전">{data?.length0}</span>

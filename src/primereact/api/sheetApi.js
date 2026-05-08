@@ -130,3 +130,22 @@ export const updateSheetHeaders = async (sheetName, headers) => {
     throw error;
   }
 };
+
+// 여러 셀/범위의 데이터를 한 번에 업데이트합니다.
+export const batchUpdateSheetValues = async (dataArray) => {
+  if (!dataArray || dataArray.length === 0) return null;
+  // dataArray 구조: [{ range: '시트!A1', values: [[값]] }, ...]
+  try {
+    const response = await getSheets().values.batchUpdate({
+      spreadsheetId: SPREADSHEET_ID,
+      resource: {
+        valueInputOption: 'USER_ENTERED',
+        data: dataArray,
+      },
+    });
+    return response.result;
+  } catch (error) {
+    console.error('Error batch updating sheet values:', error);
+    throw error;
+  }
+};

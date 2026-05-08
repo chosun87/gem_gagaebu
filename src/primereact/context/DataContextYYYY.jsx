@@ -42,25 +42,32 @@ export const YYYYProvider = ({ children }) => {
 
       for (let i = 1; i < rawData.length; i++) {
         const row = rawData[i];
-        if (!row || row.length < 3) continue;
+        if (!row || row.length < 2) continue;
 
-        if (row[SHEET_COL_INDEX.YYYY.gDeleted]) continue;
+        const getVal = (idx) =>
+          row[idx] !== undefined ? String(row[idx]).trim() : '';
+
+        // 삭제 여부 체크
+        const deletedVal = getVal(SHEET_COL_INDEX.YYYY.gDeleted);
+        const isDeleted =
+          deletedVal !== '' && deletedVal.toUpperCase() !== 'FALSE';
+
+        if (isDeleted) continue;
 
         parsedData.push({
           sheetName: targetYear,
           sheetRowNo: i + 1,
-          gDate: row[SHEET_COL_INDEX.YYYY.gDate] || '',
-          gType: row[SHEET_COL_INDEX.YYYY.gType] || '',
-          gAcc1: row[SHEET_COL_INDEX.YYYY.gAcc1] || '',
-          gAcc2: row[SHEET_COL_INDEX.YYYY.gAcc2] || '',
-          gCategory: row[SHEET_COL_INDEX.YYYY.gCategory] || '',
-          gAmount: parseAmount(row[SHEET_COL_INDEX.YYYY.gAmount]),
-          gMemo: row[SHEET_COL_INDEX.YYYY.gMemo] || '',
+          gDate: getVal(SHEET_COL_INDEX.YYYY.gDate),
+          gType: getVal(SHEET_COL_INDEX.YYYY.gType),
+          gAcc1: getVal(SHEET_COL_INDEX.YYYY.gAcc1),
+          gAcc2: getVal(SHEET_COL_INDEX.YYYY.gAcc2),
+          gCategory: getVal(SHEET_COL_INDEX.YYYY.gCategory),
+          gAmount: parseAmount(getVal(SHEET_COL_INDEX.YYYY.gAmount)),
+          gMemo: getVal(SHEET_COL_INDEX.YYYY.gMemo),
           gExecuted:
-            String(row[SHEET_COL_INDEX.YYYY.gExecuted]).toUpperCase() ===
-            'TRUE',
-          g_rpID: row[SHEET_COL_INDEX.YYYY.g_rpID] || '',
-          gTimestamp: row[SHEET_COL_INDEX.YYYY.gTimestamp] || '',
+            getVal(SHEET_COL_INDEX.YYYY.gExecuted).toUpperCase() === 'TRUE',
+          g_rpID: getVal(SHEET_COL_INDEX.YYYY.g_rpID),
+          gTimestamp: getVal(SHEET_COL_INDEX.YYYY.gTimestamp),
         });
       }
 
@@ -306,7 +313,15 @@ export const YYYYProvider = ({ children }) => {
               existingEntries = [];
               for (let i = 1; i < rawData.length; i++) {
                 const row = rawData[i];
-                if (!row || row[SHEET_COL_INDEX.YYYY.gDeleted]) continue;
+                if (!row) continue;
+
+                const deletedVal = row[SHEET_COL_INDEX.YYYY.gDeleted];
+                const isDeleted =
+                  deletedVal &&
+                  String(deletedVal).trim() !== '' &&
+                  String(deletedVal).toUpperCase() !== 'FALSE';
+                if (isDeleted) continue;
+
                 existingEntries.push({
                   sheetRowNo: i + 1,
                   gDate: row[SHEET_COL_INDEX.YYYY.gDate],

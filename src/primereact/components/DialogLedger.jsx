@@ -46,47 +46,32 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
 
   const [dateFocused, setDateFocused] = useState(false);
 
-  // 이전 프로퍼티 추적 (React 추천 패턴: 렌더링 중 상태 조정)
-  const [prevLedger, set_prevLedger] = useState(ledger);
-  const [prevVisible, set_prevVisible] = useState(visible);
-  const [prevParams, set_prevParams] = useState(params);
+  // 다이얼로그가 열릴 때 상태 초기화
+  const fnOnShow = () => {
+    const initialDate = ledger?.gDate
+      ? dayjs(ledger.gDate).toDate()
+      : params?.date
+        ? dayjs(params.date).toDate()
+        : new Date();
 
-  if (
-    ledger !== prevLedger ||
-    visible !== prevVisible ||
-    params !== prevParams
-  ) {
-    set_prevLedger(ledger);
-    set_prevVisible(visible);
-    set_prevParams(params);
-
-    if (visible) {
-      set_gDate(
-        ledger?.gDate
-          ? dayjs(ledger.gDate).toDate()
-          : params?.date
-            ? dayjs(params.date).toDate()
-            : new Date(),
-      );
-      set_gType(ledger?.gType || params?.type || TRANSACTION_TYPE.EXPENSE);
-      set_gAcc1(ledger?.gAcc1 || params?.accCode || defaultAssetCode || '');
-      set_gAcc2(ledger?.gAcc2 || '');
-      set_gCategory(ledger?.gCategory || params?.category || '');
-      set_gAmount(ledger?.gAmount || 0);
-      set_gMemo(ledger?.gMemo || '');
-      set_gExecuted(ledger?.gExecuted || false);
-      set_submitted(false);
+    set_gDate(initialDate);
+    set_gType(ledger?.gType || params?.type || TRANSACTION_TYPE.EXPENSE);
+    set_gAcc1(ledger?.gAcc1 || params?.accCode || defaultAssetCode || '');
+    set_gAcc2(ledger?.gAcc2 || '');
+    set_gCategory(ledger?.gCategory || params?.category || '');
+    set_gAmount(ledger?.gAmount || 0);
+    set_gMemo(ledger?.gMemo || '');
+    // 실행 여부 초기화
+    if (ledger) {
+      set_gExecuted(ledger.gExecuted || false);
+    } else {
+      const today = dayjs().startOf('day');
+      const selectedDate = dayjs(initialDate).startOf('day');
+      set_gExecuted(!selectedDate.isAfter(today));
     }
-  }
 
-  // 신규 입력일 때 날짜에 따라 실행 여부 자동 설정 (이것도 렌더링 중에 조정 가능)
-  const [prevGDate, set_prevGDate] = useState(gDate);
-  if (!ledger && gDate !== prevGDate) {
-    set_prevGDate(gDate);
-    const today = dayjs().startOf('day');
-    const selectedDate = dayjs(gDate).startOf('day');
-    set_gExecuted(!selectedDate.isAfter(today));
-  }
+    set_submitted(false);
+  };
 
   // Functions -------------------------------------------------------------------------------------
   const _getAccLabels = (type) => {
@@ -207,6 +192,7 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       position="bottom"
       visible={visible}
       onHide={onHide}
+      onShow={fnOnShow}
     >
       <Panel footerTemplate={templateFooter}>
         <div className="formWrap">
@@ -235,7 +221,16 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                 locale="ko"
                 dateFormat={dateFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
                 value={gDate}
-                onChange={(e) => set_gDate(e.target.value)}
+                onChange={(e) => {
+                  const newDate = e.value;
+                  set_gDate(newDate);
+                  // 신규 입력일 때만 날짜에 따라 실행 여부 자동 설정
+                  if (!ledger) {
+                    const today = dayjs().startOf('day');
+                    const selectedDate = dayjs(newDate).startOf('day');
+                    set_gExecuted(!selectedDate.isAfter(today));
+                  }
+                }}
                 onFocus={() => setDateFocused(true)}
                 onBlur={() => setDateFocused(false)}
               />

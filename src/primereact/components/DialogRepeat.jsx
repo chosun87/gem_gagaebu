@@ -54,36 +54,26 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
   const [dateSFocused, setDateSFocused] = useState(false);
   const [dateEFocused, setDateEFocused] = useState(false);
 
-  // 이전 프로퍼티 추적 (렌더링 중 상태 조정)
-  const [prevRepeat, set_prevRepeat] = useState(repeat);
-  const [prevVisible, set_prevVisible] = useState(visible);
-
-  if (repeat !== prevRepeat || visible !== prevVisible) {
-    set_prevRepeat(repeat);
-    set_prevVisible(visible);
-
-    if (visible) {
-      set_rpType(repeat?.rpType || TRANSACTION_TYPE.EXPENSE);
-      set_rpDateS(
-        repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date(),
-      );
-      set_rpDateE(
-        repeat?.rpDateE
-          ? dayjs(repeat.rpDateE).toDate()
-          : dayjs().add(1, 'year').toDate(),
-      );
-      set_rpPeriod(repeat?.rpPeriod || 'M');
-      set_rpDay(repeat?.rpDay ? String(repeat.rpDay) : '1');
-      set_rpAcc1(repeat?.rpAcc1 || defaultAssetCode || '');
-      set_rpAcc2(repeat?.rpAcc2 || '');
-      set_rpCategory(repeat?.rpCategory || '');
-      set_rpAmount(repeat?.rpAmount || 0);
-      set_rpTotalAmount(repeat?.rpTotalAmount || 0);
-      set_rpMemo(repeat?.rpMemo || '');
-      set_rpCompleted(repeat?.rpCompleted || false);
-      set_submitted(false);
-    }
-  }
+  // 다이얼로그가 열릴 때 상태 초기화
+  const fnOnShow = () => {
+    set_rpType(repeat?.rpType || TRANSACTION_TYPE.EXPENSE);
+    set_rpDateS(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
+    set_rpDateE(
+      repeat?.rpDateE
+        ? dayjs(repeat.rpDateE).toDate()
+        : dayjs().add(1, 'year').toDate(),
+    );
+    set_rpPeriod(repeat?.rpPeriod || 'M');
+    set_rpDay(repeat?.rpDay ? String(repeat.rpDay) : '1');
+    set_rpAcc1(repeat?.rpAcc1 || defaultAssetCode || '');
+    set_rpAcc2(repeat?.rpAcc2 || '');
+    set_rpCategory(repeat?.rpCategory || '');
+    set_rpAmount(repeat?.rpAmount || 0);
+    set_rpTotalAmount(repeat?.rpTotalAmount || 0);
+    set_rpMemo(repeat?.rpMemo || '');
+    set_rpCompleted(repeat?.rpCompleted || false);
+    set_submitted(false);
+  };
 
   // Functions -------------------------------------------------------------------------------------
   // 반복일 옵션 정의
@@ -265,6 +255,7 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       position="bottom"
       visible={visible}
       onHide={onHide}
+      onShow={fnOnShow}
     >
       <Panel footerTemplate={templateFooter}>
         <div className="formWrap">

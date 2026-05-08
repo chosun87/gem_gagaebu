@@ -4,11 +4,13 @@ import { useState } from 'react';
 
 export default function Settings({ visible, onHide }) {
   const navigate = useNavigate();
-  const [framework, setFramework] = useState(localStorage.getItem('ui-framework') || 'primereact');
+  const [framework, setFramework] = useState(
+    localStorage.getItem('ui-framework') || 'primereact',
+  );
 
   const frameworkOptions = [
     { label: 'PrimeReact', value: 'primereact' },
-    { label: 'Material UI (MUI)', value: 'mui' }
+    { label: 'Material UI (MUI)', value: 'mui' },
   ];
 
   const handleFrameworkChange = (e) => {
@@ -21,7 +23,7 @@ export default function Settings({ visible, onHide }) {
   const menuItems = [
     {
       label: '데이터 관리',
-      className: "text-lg",
+      className: 'text-lg',
       items: [
         {
           label: '반복 입출금 관리',
@@ -34,7 +36,7 @@ export default function Settings({ visible, onHide }) {
     },
     {
       label: '디자인 템플릿',
-      className: "text-lg mt-3",
+      className: 'text-lg mt-3',
       items: [
         {
           label: '빈 페이지 템플릿',
