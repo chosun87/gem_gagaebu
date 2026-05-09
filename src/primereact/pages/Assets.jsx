@@ -12,8 +12,10 @@ import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 
 const AssetList = lazy(() => import('@/pages/Assets/AssetList'));
-const MonthlySummary = lazy(() => import('@/pages/Ledger/MonthlySummary'));
-const MonthlySummary지출 = lazy(
+const AssetsMonthlySummary = lazy(
+  () => import('@/pages/Ledger/MonthlySummary'),
+);
+const AssetsYearlySummary = lazy(
   () => import('@/pages/Ledger/MonthlySummary지출'),
 );
 
@@ -31,22 +33,22 @@ export default function Assets() {
   const tabs = useMemo(
     () => [
       {
-        path: 'assetsList',
+        path: 'list',
         header: '목록',
         icon: 'pi pi-list-check mr-2',
         element: <AssetList />,
       },
       {
         path: 'monthlySummary',
-        header: '그래프',
+        header: '월별요약',
         icon: 'pi pi-chart-bar mr-2',
-        element: <MonthlySummary monthLength={6} />,
+        element: <AssetsMonthlySummary monthLength={6} />,
       },
       {
-        path: 'monthlySummaryExpenses',
-        header: '지출분석',
+        path: 'yearlySummary',
+        header: '연도별요약',
         icon: 'pi pi-chart-pie mr-2',
-        element: <MonthlySummary지출 monthLength={6} />,
+        element: <AssetsYearlySummary monthLength={6} />,
         // isReady: false,
       },
     ],
@@ -73,10 +75,7 @@ export default function Assets() {
   return (
     <div className="app-page assets-page">
       <Routes>
-        <Route
-          path="/"
-          element={<Navigate to="/assets/assetsList" replace />}
-        />
+        <Route path="/" element={<Navigate to="/assets/list" replace />} />
         <Route
           path="*"
           element={

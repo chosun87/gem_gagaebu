@@ -12,7 +12,9 @@ import {
 import AssetListItem from '@/components/Assets/AssetListItem';
 
 const DialogAsset = lazy(() => import('@/components/Assets/DialogAsset'));
-const DialogTransList = lazy(() => import('@/components/Assets/DialogTransList'));
+const DialogTransList = lazy(
+  () => import('@/components/Assets/DialogTransList'),
+);
 
 export default function AssetList() {
   const { sheet자산Data, loading } = useData();

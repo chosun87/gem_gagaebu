@@ -1,49 +1,35 @@
 import { DataTable, Column } from '@/assets/js/PrimeReact';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
-export default function LedgerSummary({ summary }) {
+export default function AssetSummary({ summary }) {
   const summaryA = [];
 
   if (
     !(
-      summary?.income0 === 0 &&
-      summary?.income1 === 0 &&
-      summary?.incomeA === 0
+      summary?.deposit0 === 0 &&
+      summary?.deposit1 === 0 &&
+      summary?.depositA === 0
     )
   ) {
     summaryA.push({
-      gType: TRANSACTION_TYPE.INCOME,
-      실행전: summary?.income0 || 0,
-      실행후: summary?.income1 || 0,
-      합계: summary?.incomeA || 0,
+      Trans: TRANSACTION_TYPE.DEPOSIT,
+      실행전: summary?.deposit0 || 0,
+      실행후: summary?.deposit1 || 0,
+      합계: summary?.depositA || 0,
     });
   }
   if (
     !(
-      summary?.expense0 === 0 &&
-      summary?.expense1 === 0 &&
-      summary?.expenseA === 0
+      summary?.widhdraw0 === 0 &&
+      summary?.widhdraw1 === 0 &&
+      summary?.widhdrawA === 0
     )
   ) {
     summaryA.push({
-      gType: TRANSACTION_TYPE.EXPENSE,
-      실행전: summary?.expense0 || 0,
-      실행후: summary?.expense1 || 0,
-      합계: summary?.expenseA || 0,
-    });
-  }
-  if (
-    !(
-      summary?.transfer0 === 0 &&
-      summary?.transfer1 === 0 &&
-      summary?.transferA === 0
-    )
-  ) {
-    summaryA.push({
-      gType: TRANSACTION_TYPE.TRANSFER,
-      실행전: summary?.transfer0 || 0,
-      실행후: summary?.transfer1 || 0,
-      합계: summary?.transferA || 0,
+      Trans: TRANSACTION_TYPE.WITHDRAW,
+      실행전: summary?.widhdraw0 || 0,
+      실행후: summary?.widhdraw1 || 0,
+      합계: summary?.widhdrawA || 0,
     });
   }
 
@@ -60,17 +46,17 @@ export default function LedgerSummary({ summary }) {
         value={summaryA}
       >
         <Column
-          field="gType"
+          field="Trans"
           header="구분"
           align="center"
-          bodyClassName={(rowData) => `px-0 font-bold gType-${rowData.gType}`}
+          bodyClassName={(rowData) => `px-0 font-bold trans-${rowData.Trans}`}
           style={{ width: '10%', minWidth: '4rem' }}
         />
         <Column
           field="실행전"
           header="실행전"
           alignHeader="center"
-          bodyClassName={(rowData) => `amount gType-${rowData.gType}`}
+          bodyClassName={(rowData) => `amount trans-${rowData.Trans}`}
           body={(rowData) => templateAmountBody(rowData, '실행전')}
           style={{ width: '30%' }}
         />
@@ -78,7 +64,7 @@ export default function LedgerSummary({ summary }) {
           field="실행후"
           header="실행후"
           alignHeader="center"
-          bodyClassName={(rowData) => `amount gType-${rowData.gType}`}
+          bodyClassName={(rowData) => `amount trans-${rowData.Trans}`}
           body={(rowData) => templateAmountBody(rowData, '실행후')}
           style={{ width: '30%' }}
         />
@@ -86,7 +72,7 @@ export default function LedgerSummary({ summary }) {
           field="합계"
           header="합계"
           alignHeader="center"
-          bodyClassName={(rowData) => `amount gType-${rowData.gType}`}
+          bodyClassName={(rowData) => `amount trans-${rowData.Trans}`}
           body={(rowData) => templateAmountBody(rowData, '합계')}
           style={{ width: '30%' }}
         />

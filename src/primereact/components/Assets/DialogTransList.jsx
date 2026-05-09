@@ -8,10 +8,10 @@ import {
   ProgressSpinner,
 } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
-import dayjs from 'dayjs';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
-import LedgerListItem from '@/components/Ledger/LedgerListItem';
-import LedgerSummary from '@/components/Ledger/LedgerSummary';
+import dayjs from 'dayjs';
+import AssetTransListItem from '@/components/Assets/AssetTransListItem';
+import AssetSummary from '@/components/Assets/AssetSummary';
 
 const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'));
 const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'));
@@ -23,7 +23,6 @@ export default function DialogList({ visible, onHide, params }) {
     loadSheet연도Data,
     loadedSheetYYYY,
     updateLedgerEntry_gExecute,
-    categoryMap,
     loading: dataLoading,
   } = useData();
   const [ledger, setLedger] = useState(null);
@@ -41,15 +40,6 @@ export default function DialogList({ visible, onHide, params }) {
 
     return baseData
       .filter((item) => {
-        // 반복 ID 조건 (rpID)
-        if (params.rpID && item.g_rpID !== params.rpID) return false;
-
-        // 날짜 조건 (date)
-        if (params.date && item.gDate !== params.date) return false;
-
-        // 타입 조건 (type)
-        if (params.type && item.gType !== params.type) return false;
-
         // 자산 조건 (accCode)
         if (
           params.accCode &&
@@ -57,9 +47,6 @@ export default function DialogList({ visible, onHide, params }) {
           item.gAcc2 !== params.accCode
         )
           return false;
-
-        // 분류 조건 (category)
-        if (params.category && item.gCategory !== params.category) return false;
 
         return true;
       })
@@ -70,13 +57,10 @@ export default function DialogList({ visible, onHide, params }) {
   const headerText = useMemo(() => {
     if (!params) return '조회 내역';
     const parts = [];
-    if (params.rpID || params.accCode) parts.push(params.header);
-    if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'));
-    if (params.type) parts.push(`[${params.type}]`);
-    if (params.category) parts.push(`[${params.category}]`);
+    if (params.accCode) parts.push(params.header);
     return parts.length === 1
       ? parts[0]
-      : params.rpID || params.accCode
+      : params.accCode
         ? params.header
         : '조회 내역';
   }, [params]);
@@ -84,44 +68,43 @@ export default function DialogList({ visible, onHide, params }) {
   // 필터링된 데이터의 합계 계산
   const listTotal = useMemo(() => {
     const total = {
-      income0: 0,
-      expense0: 0,
-      transfer0: 0,
-      income1: 0,
-      expense1: 0,
-      transfer1: 0,
-      incomeA: 0,
-      expenseA: 0,
-      transferA: 0,
+      deposit0: 0,
+      widhdraw0: 0,
+      deposit1: 0,
+      widhdraw1: 0,
+      depositA: 0,
+      widhdrawA: 0,
     };
 
     filteredData.forEach((item) => {
-      // 합계 제외 카테고리 체크
-      const catInfo = categoryMap[item.gCategory];
-      if (catInfo && catInfo.cdAddSum === false) return;
+      if (item.gType !== TRANSACTION_TYPE.TRANSFER) return;
 
       const amount = Number(item.gAmount) || 0;
+
       if (!item.gExecuted) {
-        if (item.gType === TRANSACTION_TYPE.INCOME) total.income0 += amount;
-        else if (item.gType === TRANSACTION_TYPE.EXPENSE)
-          total.expense0 += amount;
-        else if (item.gType === TRANSACTION_TYPE.TRANSFER)
-          total.transfer0 += amount;
+        if (amount >= 0) {
+          if (item.gAcc2 === params.accCode) total.deposit0 += amount;
+          else if (item.gAcc1 === params.accCode) total.widhdraw0 += -amount;
+        } else {
+          if (item.gAcc1 === params.accCode) total.deposit0 += -amount;
+          else if (item.gAcc2 === params.accCode) total.widhdraw0 += amount;
+        }
       } else {
-        if (item.gType === TRANSACTION_TYPE.INCOME) total.income1 += amount;
-        else if (item.gType === TRANSACTION_TYPE.EXPENSE)
-          total.expense1 += amount;
-        else if (item.gType === TRANSACTION_TYPE.TRANSFER)
-          total.transfer1 += amount;
+        if (amount >= 0) {
+          if (item.gAcc2 === params.accCode) total.deposit1 += amount;
+          else if (item.gAcc1 === params.accCode) total.widhdraw1 += -amount;
+        } else {
+          if (item.gAcc1 === params.accCode) total.deposit1 += -amount;
+          else if (item.gAcc2 === params.accCode) total.widhdraw1 += amount;
+        }
       }
     });
 
-    total.incomeA = total.income0 + total.income1;
-    total.expenseA = total.expense0 + total.expense1;
-    total.transferA = total.transfer0 + total.transfer1;
+    total.depositA = total.deposit0 + total.deposit1;
+    total.widhdrawA = total.widhdraw0 + total.widhdraw1;
 
     return total;
-  }, [filteredData, categoryMap]);
+  }, [filteredData, params.accCode]);
 
   // 반복 내역 전체 조회를 위한 연도별 데이터 로드
   useEffect(() => {
@@ -158,9 +141,9 @@ export default function DialogList({ visible, onHide, params }) {
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDataViewItem = (item) => (
-    <LedgerListItem
+    <AssetTransListItem
+      accCode={params.accCode}
       item={item}
-      showDate={!params.date}
       onClick={() => fnOpenDialogLedger(item)}
       onExecuteChange={updateLedgerEntry_gExecute}
     />
@@ -208,9 +191,9 @@ export default function DialogList({ visible, onHide, params }) {
       onHide={onHide}
     >
       <Panel footerTemplate={templateFooter}>
-        <LedgerSummary summary={listTotal} />
+        <AssetSummary summary={listTotal} />
 
-        <div className="ledger-page list-page">
+        <div className="asset-page list-page">
           {dataLoading ? (
             <div className="full-page">
               <ProgressSpinner />

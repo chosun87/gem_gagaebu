@@ -56,6 +56,77 @@
   }
 }
 
+.asset-page {
+  .list-item {
+    color: var(--text-color);
+
+    &.gType-수입 {
+      background-color: var(--bg-수입-100);
+
+      &.gExecuted-Y {
+        color: var(--text-color-secondary);
+        background-color: var(--bg-수입);
+      }
+    }
+
+    &.gType-지출 {
+      background-color: var(--bg-지출-100);
+
+      &.gExecuted-Y {
+        color: var(--text-color-secondary);
+        background-color: var(--bg-지출);
+      }
+    }
+
+    &.gType-이체 {
+      background-color: var(--bg-이체-100);
+
+      &.gExecuted-Y {
+        color: var(--text-color-secondary);
+        background-color: var(--bg-이체);
+      }
+
+      &.trans-출금 {
+        background-color: var(--bg-출금-100);
+        color: var(--color-출금);
+
+        &.gExecuted-Y {
+          color: var(--text-color-secondary);
+          background-color: var(--bg-출금);
+        }
+      }
+    }
+
+    .p-tag.gCategory,
+    .p-tag.rpCategory {
+      color: var(--text-color);
+      background-color: var(--bluegray-100);
+    }
+  }
+
+  .list-item {
+    .p-badge {
+      border: solid 1px transparent;
+      background-color: transparent;
+
+      &.gType-수입 {
+        color: var(--color-수입);
+        border-color: var(--color-수입);
+      }
+
+      &.gType-지출 {
+        color: var(--color-지출);
+        border-color: var(--color-지출);
+      }
+
+      &.gType-이체 {
+        color: var(--color-이체);
+        border-color: var(--color-이체);
+      }
+    }
+  }
+}
+
 .assets-page {
   .list-dataview {
     img.asset-icon-svg {

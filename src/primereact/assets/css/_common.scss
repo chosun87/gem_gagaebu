@@ -52,11 +52,13 @@ label.required {
   }
 }
 
-.gType-수입 {
+.gType-수입,
+.trans-입금 {
   color: var(--color-수입);
 }
 
-.gType-지출 {
+.gType-지출,
+.trans-출금 {
   color: var(--color-지출);
 }
 
