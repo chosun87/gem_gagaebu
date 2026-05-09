@@ -11,6 +11,7 @@ import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import { useMultiYearLoad } from '@/hooks/useMultiYearLoad';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { calculateLedgerTotal } from '@/assets/js/dataUtils';
 import LedgerListItem from '@/components/Ledger/LedgerListItem';
 import LedgerSummary from '@/components/Ledger/LedgerSummary';
 
@@ -81,46 +82,10 @@ export default function DialogList({ visible, onHide, params }) {
   }, [params]);
 
   // 필터링된 데이터의 합계 계산
-  const listTotal = useMemo(() => {
-    const total = {
-      income0: 0,
-      expense0: 0,
-      transfer0: 0,
-      income1: 0,
-      expense1: 0,
-      transfer1: 0,
-      incomeA: 0,
-      expenseA: 0,
-      transferA: 0,
-    };
-
-    filteredData.forEach((item) => {
-      // 합계 제외 카테고리 체크
-      const catInfo = categoryMap[item.gCategory];
-      if (catInfo && catInfo.cdAddSum === false) return;
-
-      const amount = Number(item.gAmount) || 0;
-      if (!item.gExecuted) {
-        if (item.gType === TRANSACTION_TYPE.INCOME) total.income0 += amount;
-        else if (item.gType === TRANSACTION_TYPE.EXPENSE)
-          total.expense0 += amount;
-        else if (item.gType === TRANSACTION_TYPE.TRANSFER)
-          total.transfer0 += amount;
-      } else {
-        if (item.gType === TRANSACTION_TYPE.INCOME) total.income1 += amount;
-        else if (item.gType === TRANSACTION_TYPE.EXPENSE)
-          total.expense1 += amount;
-        else if (item.gType === TRANSACTION_TYPE.TRANSFER)
-          total.transfer1 += amount;
-      }
-    });
-
-    total.incomeA = total.income0 + total.income1;
-    total.expenseA = total.expense0 + total.expense1;
-    total.transferA = total.transfer0 + total.transfer1;
-
-    return total;
-  }, [filteredData, categoryMap]);
+  const listTotal = useMemo(
+    () => calculateLedgerTotal(filteredData, categoryMap),
+    [filteredData, categoryMap],
+  );
 
   // 거래내역 전체 조회를 위한 연도별 데이터 로드
   useMultiYearLoad(visible, params);

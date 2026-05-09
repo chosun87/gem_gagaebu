@@ -76,30 +76,17 @@ export default function AssetSummary({ summary }) {
           bodyClassName={(rowData) => `px-0 font-bold trans-${rowData.Trans}`}
           style={{ width: '10%', minWidth: '4rem' }}
         />
-        <Column
-          field="실행전"
-          header="실행전"
-          alignHeader="center"
-          bodyClassName={(rowData) => `amount trans-${rowData.Trans}`}
-          body={(rowData) => templateAmountBody(rowData, '실행전')}
-          style={{ width: '30%' }}
-        />
-        <Column
-          field="실행후"
-          header="실행후"
-          alignHeader="center"
-          bodyClassName={(rowData) => `amount trans-${rowData.Trans}`}
-          body={(rowData) => templateAmountBody(rowData, '실행후')}
-          style={{ width: '30%' }}
-        />
-        <Column
-          field="합계"
-          header="합계"
-          alignHeader="center"
-          bodyClassName={(rowData) => `amount trans-${rowData.Trans}`}
-          body={(rowData) => templateAmountBody(rowData, '합계')}
-          style={{ width: '30%' }}
-        />
+        {['실행전', '실행후', '합계'].map((field) => (
+          <Column
+            key={field}
+            field={field}
+            header={field}
+            alignHeader="center"
+            bodyClassName={(rowData) => `amount trans-${rowData.Trans}`}
+            body={(rowData) => templateAmountBody(rowData, field)}
+            style={{ width: '30%' }}
+          />
+        ))}
       </DataTable>
     )
   );

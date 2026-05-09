@@ -10,6 +10,7 @@ import { useData } from '@/context/DataContext';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
 import dayjs from 'dayjs';
 import { useMultiYearLoad } from '@/hooks/useMultiYearLoad';
+import { calculateAssetTotal } from '@/assets/js/dataUtils';
 import AssetTransListItem from '@/components/Assets/AssetTransListItem';
 import AssetSummary from '@/components/Assets/AssetSummary';
 
@@ -66,43 +67,10 @@ export default function DialogTransList({ visible, onHide, params }) {
   }, [params]);
 
   // 필터링된 데이터의 합계 계산
-  const listTotal = useMemo(() => {
-    const total = {
-      deposit0: 0,
-      withdraw0: 0,
-      deposit1: 0,
-      withdraw1: 0,
-      depositA: 0,
-      withdrawA: 0,
-    };
-
-    filteredData.forEach((item) => {
-      const amount = Number(item.gAmount) || 0;
-
-      if (!item.gExecuted) {
-        if (amount >= 0) {
-          if (item.gAcc2 === params.accCode) total.deposit0 += amount;
-          else if (item.gAcc1 === params.accCode) total.withdraw0 += amount;
-        } else {
-          if (item.gAcc1 === params.accCode) total.deposit0 += -amount;
-          else if (item.gAcc2 === params.accCode) total.withdraw0 += -amount;
-        }
-      } else {
-        if (amount >= 0) {
-          if (item.gAcc2 === params.accCode) total.deposit1 += amount;
-          else if (item.gAcc1 === params.accCode) total.withdraw1 += amount;
-        } else {
-          if (item.gAcc1 === params.accCode) total.deposit1 += -amount;
-          else if (item.gAcc2 === params.accCode) total.withdraw1 += -amount;
-        }
-      }
-    });
-
-    total.depositA = total.deposit0 + total.deposit1;
-    total.withdrawA = total.withdraw0 + total.withdraw1;
-
-    return total;
-  }, [filteredData, params.accCode]);
+  const listTotal = useMemo(
+    () => calculateAssetTotal(filteredData, params.accCode),
+    [filteredData, params.accCode],
+  );
 
   // 자산 내역 전체 조회를 위한 연도별 데이터 로드
   useMultiYearLoad(visible, params);

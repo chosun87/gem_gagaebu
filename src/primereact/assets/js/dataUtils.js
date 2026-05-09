@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { REPEAT_PERIOD } from '@/assets/js/constants';
+import { REPEAT_PERIOD, TRANSACTION_TYPE } from '@/assets/js/constants';
 
 /**
  * 콤마(,) 등 숫자 외의 문자가 포함된 문자열을 숫자로 파싱합니다.
@@ -55,4 +55,94 @@ export const calculateRepeatDates = (repeat) => {
   }
 
   return targetDates;
+};
+
+/**
+ * 가계부 내역 합계를 계산합니다.
+ * @param {Array} data - 필터링된 데이터 배열
+ * @param {Object} categoryMap - 카테고리 정보 맵 (합계 제외 여부 확인용)
+ * @returns {Object} 합계 객체
+ */
+export const calculateLedgerTotal = (data, categoryMap) => {
+  const total = {
+    income0: 0,
+    expense0: 0,
+    transfer0: 0,
+    income1: 0,
+    expense1: 0,
+    transfer1: 0,
+    incomeA: 0,
+    expenseA: 0,
+    transferA: 0,
+  };
+
+  data.forEach((item) => {
+    const catInfo = categoryMap[item.gCategory];
+    if (catInfo && catInfo.cdAddSum === false) return;
+
+    const amount = Number(item.gAmount) || 0;
+    if (!item.gExecuted) {
+      if (item.gType === TRANSACTION_TYPE.INCOME) total.income0 += amount;
+      else if (item.gType === TRANSACTION_TYPE.EXPENSE)
+        total.expense0 += amount;
+      else if (item.gType === TRANSACTION_TYPE.TRANSFER)
+        total.transfer0 += amount;
+    } else {
+      if (item.gType === TRANSACTION_TYPE.INCOME) total.income1 += amount;
+      else if (item.gType === TRANSACTION_TYPE.EXPENSE)
+        total.expense1 += amount;
+      else if (item.gType === TRANSACTION_TYPE.TRANSFER)
+        total.transfer1 += amount;
+    }
+  });
+
+  total.incomeA = total.income0 + total.income1;
+  total.expenseA = total.expense0 + total.expense1;
+  total.transferA = total.transfer0 + total.transfer1;
+
+  return total;
+};
+
+/**
+ * 자산 내역(이체) 합계를 계산합니다.
+ * @param {Array} data - 필터링된 데이터 배열
+ * @param {string} accCode - 기준 자산 코드
+ * @returns {Object} 합계 객체
+ */
+export const calculateAssetTotal = (data, accCode) => {
+  const total = {
+    deposit0: 0,
+    withdraw0: 0,
+    deposit1: 0,
+    withdraw1: 0,
+    depositA: 0,
+    withdrawA: 0,
+  };
+
+  data.forEach((item) => {
+    const amount = Number(item.gAmount) || 0;
+
+    if (!item.gExecuted) {
+      if (amount >= 0) {
+        if (item.gAcc2 === accCode) total.deposit0 += amount;
+        else if (item.gAcc1 === accCode) total.withdraw0 += amount;
+      } else {
+        if (item.gAcc1 === accCode) total.deposit0 += -amount;
+        else if (item.gAcc2 === accCode) total.withdraw0 += -amount;
+      }
+    } else {
+      if (amount >= 0) {
+        if (item.gAcc2 === accCode) total.deposit1 += amount;
+        else if (item.gAcc1 === accCode) total.withdraw1 += amount;
+      } else {
+        if (item.gAcc1 === accCode) total.deposit1 += -amount;
+        else if (item.gAcc2 === accCode) total.withdraw1 += -amount;
+      }
+    }
+  });
+
+  total.depositA = total.deposit0 + total.deposit1;
+  total.withdrawA = total.withdraw0 + total.withdraw1;
+
+  return total;
 };
