@@ -1,0 +1,1 @@
+import{L as e,z as t}from"./jsx-runtime-BsZtGEmz.js";import{n}from"./DataContext-CT9baGKs.js";var r=t(e(),1);function i(e,t){let{loadedSheetYYYY:i,loadSheet연도Data:a}=n();(0,r.useEffect)(()=>{if(e&&t?.startYear&&t?.endYear&&t?.startYear!==t?.endYear)for(let e=t.startYear;e<=t.endYear;e++){let t=e.toString();i[t]||a(t)}},[e,t?.startYear,t?.endYear,i,a])}export{i as t};
