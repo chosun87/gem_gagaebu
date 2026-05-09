@@ -33,13 +33,15 @@ export default function DialogList({ visible, onHide, params }) {
   const filteredData = useMemo(() => {
     if (!params) return [];
 
-    const baseData =
-      params.rpID || params.accCode
-        ? Object.values(sheetYYYYData || {}).flat()
-        : yearData;
+    const baseData = params.accCode
+      ? Object.values(sheetYYYYData || {}).flat()
+      : yearData;
 
     return baseData
       .filter((item) => {
+        // 이체만 처리
+        if (item.gType !== TRANSACTION_TYPE.TRANSFER) return false;
+
         // 자산 조건 (accCode)
         if (
           params.accCode &&
@@ -77,25 +79,23 @@ export default function DialogList({ visible, onHide, params }) {
     };
 
     filteredData.forEach((item) => {
-      if (item.gType !== TRANSACTION_TYPE.TRANSFER) return;
-
       const amount = Number(item.gAmount) || 0;
 
       if (!item.gExecuted) {
         if (amount >= 0) {
           if (item.gAcc2 === params.accCode) total.deposit0 += amount;
-          else if (item.gAcc1 === params.accCode) total.widhdraw0 += -amount;
+          else if (item.gAcc1 === params.accCode) total.widhdraw0 += amount;
         } else {
           if (item.gAcc1 === params.accCode) total.deposit0 += -amount;
-          else if (item.gAcc2 === params.accCode) total.widhdraw0 += amount;
+          else if (item.gAcc2 === params.accCode) total.widhdraw0 += -amount;
         }
       } else {
         if (amount >= 0) {
           if (item.gAcc2 === params.accCode) total.deposit1 += amount;
-          else if (item.gAcc1 === params.accCode) total.widhdraw1 += -amount;
+          else if (item.gAcc1 === params.accCode) total.widhdraw1 += amount;
         } else {
           if (item.gAcc1 === params.accCode) total.deposit1 += -amount;
-          else if (item.gAcc2 === params.accCode) total.widhdraw1 += amount;
+          else if (item.gAcc2 === params.accCode) total.widhdraw1 += -amount;
         }
       }
     });

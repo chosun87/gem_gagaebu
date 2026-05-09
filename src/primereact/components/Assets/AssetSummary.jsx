@@ -1,4 +1,4 @@
-import { DataTable, Column } from '@/assets/js/PrimeReact';
+import { DataTable, Column, ColumnGroup, Row } from '@/assets/js/PrimeReact';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
 export default function AssetSummary({ summary }) {
@@ -38,12 +38,42 @@ export default function AssetSummary({ summary }) {
     return <>{(rowData[field] || 0).toLocaleString()}</>;
   };
 
+  const footerGroup = (
+    <ColumnGroup>
+      <Row>
+        <Column footer="합계" align="center" />
+        <Column
+          footer={
+            (summary?.deposit0 - summary?.widhdraw0).toLocaleString()
+          }
+          align="right"
+          className="amount"
+        />
+        <Column
+          footer={
+            (summary?.deposit1 - summary?.widhdraw1).toLocaleString()
+          }
+          align="right"
+          className="amount"
+        />
+        <Column
+          footer={
+            (summary?.depositA - summary?.widhdrawA).toLocaleString()
+          }
+          align="right"
+          className="amount"
+        />
+      </Row>
+    </ColumnGroup>
+  );
+
   return (
     summaryA.length > 0 && (
       <DataTable
         className="p-datatable-sm"
         responsiveLayout="scroll"
         value={summaryA}
+        footerColumnGroup={footerGroup}
       >
         <Column
           field="Trans"
