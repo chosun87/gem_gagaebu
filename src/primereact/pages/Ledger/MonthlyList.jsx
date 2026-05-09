@@ -71,7 +71,7 @@ export default function MonthlyList() {
   );
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const templateDateViewItem = (item) => (
+  const templateDataViewItem = (item) => (
     <LedgerListItem
       item={item}
       dateFormat="DD일"
@@ -102,7 +102,7 @@ export default function MonthlyList() {
           <DataView
             className="list-dataview with-btn-floating-action"
             value={monthData}
-            itemTemplate={templateDateViewItem}
+            itemTemplate={templateDataViewItem}
           />
         )}
       </div>

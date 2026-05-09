@@ -6,10 +6,10 @@ import { classNames } from 'primereact/utils';
  * - 그 외에는 PrimeIcons (pi pi-*) 클래스 사용
  */
 export default function AssetIcon({ icon, className, style }) {
-  const isSvg = icon && (icon.endsWith('.svg') || icon.startsWith('bank:'));
+  const isSvg = icon && (icon.endsWith('.svg') || icon.endsWith('.png'));
 
   if (isSvg) {
-    const fileName = icon.replace('bank:', '');
+    const fileName = icon
     // 한글 파일명의 경우 URL 인코딩이 필요할 수 있음
     const encodedFileName = fileName
       .split('/')

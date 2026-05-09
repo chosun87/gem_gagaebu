@@ -155,7 +155,7 @@ export default function DialogList({ visible, onHide, params }) {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const templateDateViewItem = (item) => (
+  const templateDataViewItem = (item) => (
     <LedgerListItem
       item={item}
       showDate={!params.date}
@@ -208,7 +208,7 @@ export default function DialogList({ visible, onHide, params }) {
       <Panel footerTemplate={templateFooter}>
         <LedgerSummary summary={listTotal} />
 
-        <div className="list-page">
+        <div className="ledger-page list-page">
           {dataLoading ? (
             <div className="full-page">
               <ProgressSpinner />
@@ -222,7 +222,7 @@ export default function DialogList({ visible, onHide, params }) {
             <DataView
               className="list-dataview"
               value={filteredData}
-              itemTemplate={templateDateViewItem}
+              itemTemplate={templateDataViewItem}
             />
           )}
         </div>

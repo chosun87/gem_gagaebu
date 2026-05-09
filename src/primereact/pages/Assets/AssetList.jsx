@@ -5,17 +5,22 @@ import {
   Button,
   DataView,
   Message,
+  Menu,
   ProgressSpinner,
 } from '@/assets/js/PrimeReact';
 
 import AssetListItem from '@/components/common/AssetListItem';
 
 const DialogAsset = lazy(() => import('@/components/DialogAsset'));
+const DialogList = lazy(() => import('@/components/DialogList'));
 
 export default function AssetList() {
   const { sheet자산Data, loading } = useData();
   const [asset, setAsset] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [showDialogAsset, setShowDialogAsset] = useState(false);
+  const [showDialogList, setShowDialogList] = useState(false);
+  const [dialogListParams, setDialogListParams] = useState({});
 
   // 자산 데이터 정렬 및 유형 정보 매핑
   const { assetOptions, saveAssetOrder } = useData();
@@ -41,6 +46,7 @@ export default function AssetList() {
 
   const listRef = useRef(null);
   const sortableRef = useRef(null);
+  const menuLeft = useRef(null);
 
   useEffect(() => {
     // DataView 렌더링 후 DOM이 안정될 때까지 대기
@@ -83,6 +89,19 @@ export default function AssetList() {
     };
   }, [sortedAssetData, saveAssetOrder]);
 
+  const menuItems = [
+    {
+      label: '편집',
+      icon: 'pi pi-pencil',
+      command: () => fnOpenDialogAsset(selectedItem),
+    },
+    {
+      label: '목록',
+      icon: 'pi pi-list',
+      command: () => fnOpenDialogList(selectedItem),
+    },
+  ];
+
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogAsset = (asset) => {
     setAsset(asset);
@@ -93,9 +112,24 @@ export default function AssetList() {
     setShowDialogAsset(false);
   };
 
+  const fnOpenDialogList = () => {
+    setDialogListParams({
+      accCode: selectedItem.accCode,
+      header: `${selectedItem.accType}-${selectedItem.accLabel}`,
+    });
+    setShowDialogList(true);
+  };
+
+  const fnHideDialogList = () => {
+    setShowDialogList(false);
+  };
+
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const templateAssetViewItem = (item) => (
-    <AssetListItem item={item} onClick={() => fnOpenDialogAsset(item)} />
+  const templateDataViewItem = (item) => (
+    <AssetListItem item={item} onClick={(e) => {
+      setSelectedItem(item);
+      menuLeft.current.toggle(e);
+    }} />
   );
 
   return (
@@ -118,10 +152,12 @@ export default function AssetList() {
             className="list-dataview with-btn-floating-action"
             value={sortedAssetData}
             dataKey="accCode"
-            itemTemplate={templateAssetViewItem}
+            itemTemplate={templateDataViewItem}
           />
         )}
       </div>
+
+      <Menu model={menuItems} ref={menuLeft} popup popupAlignment="right" />
 
       {/* Floating Action Button */}
       <Button
@@ -135,7 +171,7 @@ export default function AssetList() {
         tooltipOptions={{ position: 'top' }}
       />
 
-      {/* 자산 관리 다이얼로그 */}
+      {/* 자산 입력 폼 다이얼로그 */}
       <Suspense fallback={null}>
         {showDialogAsset && (
           <DialogAsset
@@ -144,6 +180,15 @@ export default function AssetList() {
             onHide={fnHideDialogAsset}
           />
         )}
+      </Suspense>
+
+      {/* 연관 내역 조회 다이얼로그 */}
+      <Suspense fallback={null}>
+        <DialogList
+          visible={showDialogList}
+          onHide={() => fnHideDialogList()}
+          params={dialogListParams}
+        />
       </Suspense>
     </>
   );

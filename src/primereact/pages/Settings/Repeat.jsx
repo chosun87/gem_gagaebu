@@ -19,8 +19,8 @@ const DialogList = lazy(() => import('@/components/DialogList'));
 export default function Repeat() {
   const { sheet반복Data, loading, updateRepeatEntry_rpCompleted } = useData();
   const [repeat, setRepeat] = useState(null);
-  const [showDialogRepeat, setShowDialogRepeat] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [showDialogRepeat, setShowDialogRepeat] = useState(false);
   const [showDialogList, setShowDialogList] = useState(false);
   const [dialogListParams, setDialogListParams] = useState({});
 
@@ -97,7 +97,7 @@ export default function Repeat() {
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
-  const templateDateViewItem = (item) => {
+  const templateDataViewItem = (item) => {
     const rpTypeClass = `rpType-${item.rpType}`;
     const rpCompletedClass = `rpCompleted-${item.rpCompleted ? 'Y' : 'N'}`;
 
@@ -180,7 +180,7 @@ export default function Repeat() {
           <DataView
             className="list-dataview with-btn-floating-action"
             value={data}
-            itemTemplate={templateDateViewItem}
+            itemTemplate={templateDataViewItem}
           />
         )}
       </div>
