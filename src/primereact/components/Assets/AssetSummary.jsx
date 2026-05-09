@@ -32,6 +32,20 @@ export default function AssetSummary({ summary }) {
       합계: summary?.withdrawA || 0,
     });
   }
+  if (
+    !(
+      summary?.revenue0 === 0 &&
+      summary?.revenue1 === 0 &&
+      summary?.revenueA === 0
+    )
+  ) {
+    summaryA.push({
+      Trans: TRANSACTION_TYPE.REVENUE,
+      실행전: summary?.revenue0 || 0,
+      실행후: summary?.revenue1 || 0,
+      합계: summary?.revenueA || 0,
+    });
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateAmountBody = (rowData, field) => {
@@ -43,17 +57,29 @@ export default function AssetSummary({ summary }) {
       <Row>
         <Column footer="합계" align="center" />
         <Column
-          footer={(summary?.deposit0 - summary?.withdraw0).toLocaleString()}
+          footer={(
+            summary?.deposit0 +
+            summary?.withdraw0 +
+            summary?.revenue0
+          ).toLocaleString()}
           align="right"
           className="amount"
         />
         <Column
-          footer={(summary?.deposit1 - summary?.withdraw1).toLocaleString()}
+          footer={(
+            summary?.deposit1 +
+            summary?.withdraw1 +
+            summary?.revenue1
+          ).toLocaleString()}
           align="right"
           className="amount"
         />
         <Column
-          footer={(summary?.depositA - summary?.withdrawA).toLocaleString()}
+          footer={(
+            summary?.depositA +
+            summary?.withdrawA +
+            summary?.revenueA
+          ).toLocaleString()}
           align="right"
           className="amount"
         />

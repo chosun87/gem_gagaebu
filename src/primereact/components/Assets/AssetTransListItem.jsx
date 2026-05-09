@@ -21,9 +21,11 @@ export default function AssetTransListItem({
   const _getTransType = (item, accCode) => {
     const amount = Number(item.gAmount) || 0;
     if (amount >= 0) {
+      if (item.gAcc1 === item.gAcc2) return TRANSACTION_TYPE.REVENUE;
       if (item.gAcc2 === accCode) return TRANSACTION_TYPE.DEPOSIT;
       if (item.gAcc1 === accCode) return TRANSACTION_TYPE.WITHDRAW;
     } else {
+      if (item.gAcc1 === item.gAcc2) return TRANSACTION_TYPE.REVENUE;
       if (item.gAcc1 === accCode) return TRANSACTION_TYPE.DEPOSIT;
       if (item.gAcc2 === accCode) return TRANSACTION_TYPE.WITHDRAW;
     }

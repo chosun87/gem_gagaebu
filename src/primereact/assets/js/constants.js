@@ -88,6 +88,7 @@ export const TRANSACTION_TYPE = {
   TRANSFER: '이체',
   DEPOSIT: '입금',
   WITHDRAW: '출금',
+  REVENUE: '수익',
 };
 
 export const REPEAT_PERIOD = {

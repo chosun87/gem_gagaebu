@@ -44,10 +44,13 @@
 
   --color-입금: var(--blue-500);
   --color-출금: var(--pink-500);
+  --color-수익: var(--blue-500);
   --bg-입금: color-mix(in srgb, var(--blue-100), transparent 50%);
   --bg-출금: color-mix(in srgb, var(--pink-100), transparent 50%);
+  --bg-수익: color-mix(in srgb, var(--blue-100), transparent 50%);
   --bg-입금-100: var(--blue-200);
   --bg-출금-100: var(--pink-200);
+  --bg-수익-100: var(--blue-200);
 
   // z-index
 
@@ -77,10 +80,13 @@
 
   --color-입금: var(--blue-500);
   --color-출금: var(--pink-500);
+  --color-수익: var(--blue-500);
   --bg-입금: color-mix(in srgb, var(--blue-800), transparent 50%);
   --bg-출금: color-mix(in srgb, var(--pink-800), transparent 50%);
+  --bg-수익: color-mix(in srgb, var(--blue-800), transparent 50%);
   --bg-입금-100: var(--blue-700);
   --bg-출금-100: var(--pink-700);
+  --bg-수익-100: var(--blue-700);
 }
 
 // 색상

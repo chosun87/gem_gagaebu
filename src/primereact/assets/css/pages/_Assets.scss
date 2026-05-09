@@ -95,6 +95,16 @@
           background-color: var(--bg-출금);
         }
       }
+
+      &.trans-수익 {
+        background-color: var(--bg-수익-100);
+        color: var(--color-수익);
+
+        &.gExecuted-Y {
+          color: var(--text-color-secondary);
+          background-color: var(--bg-수익);
+        }
+      }
     }
 
     .p-tag.gCategory,

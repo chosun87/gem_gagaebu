@@ -113,10 +113,13 @@ export const calculateAssetTotal = (data, accCode) => {
   const total = {
     deposit0: 0,
     withdraw0: 0,
+    revenue0: 0,
     deposit1: 0,
     withdraw1: 0,
+    revenue1: 0,
     depositA: 0,
     withdrawA: 0,
+    revenueA: 0,
   };
 
   data.forEach((item) => {
@@ -124,25 +127,30 @@ export const calculateAssetTotal = (data, accCode) => {
 
     if (!item.gExecuted) {
       if (amount >= 0) {
-        if (item.gAcc2 === accCode) total.deposit0 += amount;
-        else if (item.gAcc1 === accCode) total.withdraw0 += amount;
+        if (item.gAcc1 === item.gAcc2) total.revenue0 += amount;
+        else if (item.gAcc2 === accCode) total.deposit0 += amount;
+        else if (item.gAcc1 === accCode) total.withdraw0 += -amount;
       } else {
-        if (item.gAcc1 === accCode) total.deposit0 += -amount;
-        else if (item.gAcc2 === accCode) total.withdraw0 += -amount;
+        if (item.gAcc1 === item.gAcc2) total.revenue0 += amount;
+        else if (item.gAcc1 === accCode) total.deposit0 += -amount;
+        else if (item.gAcc2 === accCode) total.withdraw0 += amount;
       }
     } else {
       if (amount >= 0) {
-        if (item.gAcc2 === accCode) total.deposit1 += amount;
-        else if (item.gAcc1 === accCode) total.withdraw1 += amount;
+        if (item.gAcc1 === item.gAcc2) total.revenue1 += amount;
+        else if (item.gAcc2 === accCode) total.deposit1 += amount;
+        else if (item.gAcc1 === accCode) total.withdraw1 += -amount;
       } else {
-        if (item.gAcc1 === accCode) total.deposit1 += -amount;
-        else if (item.gAcc2 === accCode) total.withdraw1 += -amount;
+        if (item.gAcc1 === item.gAcc2) total.revenue1 += amount;
+        else if (item.gAcc1 === accCode) total.deposit1 += -amount;
+        else if (item.gAcc2 === accCode) total.withdraw1 += amount;
       }
     }
   });
 
   total.depositA = total.deposit0 + total.deposit1;
   total.withdrawA = total.withdraw0 + total.withdraw1;
+  total.revenueA = total.revenue0 + total.revenue1;
 
   return total;
 };
