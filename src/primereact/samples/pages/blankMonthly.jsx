@@ -1,7 +1,7 @@
 import { Panel } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
 import { useMonthSync } from '@/hooks/useMonthSync';
-import MonthNavigator from '@/components/MonthNavigator';
+import MonthNavigator from '@/components/common/MonthNavigator';
 import dayjs from 'dayjs';
 
 export default function BlankMonthly() {

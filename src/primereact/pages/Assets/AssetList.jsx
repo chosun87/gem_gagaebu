@@ -9,18 +9,18 @@ import {
   ProgressSpinner,
 } from '@/assets/js/PrimeReact';
 
-import AssetListItem from '@/components/common/AssetListItem';
+import AssetListItem from '@/components/Assets/AssetListItem';
 
-const DialogAsset = lazy(() => import('@/components/DialogAsset'));
-const DialogList = lazy(() => import('@/components/DialogList'));
+const DialogAsset = lazy(() => import('@/components/Assets/DialogAsset'));
+const DialogTransList = lazy(() => import('@/components/Assets/DialogTransList'));
 
 export default function AssetList() {
   const { sheet자산Data, loading } = useData();
   const [asset, setAsset] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showDialogAsset, setShowDialogAsset] = useState(false);
-  const [showDialogList, setShowDialogList] = useState(false);
-  const [dialogListParams, setDialogListParams] = useState({});
+  const [showDialogTransList, setShowDialogTransList] = useState(false);
+  const [dialogTransListParams, setDialogTransListParams] = useState({});
 
   // 자산 데이터 정렬 및 유형 정보 매핑
   const { assetOptions, saveAssetOrder } = useData();
@@ -98,7 +98,7 @@ export default function AssetList() {
     {
       label: '목록',
       icon: 'pi pi-list',
-      command: () => fnOpenDialogList(selectedItem),
+      command: () => fnOpenDialogTransList(selectedItem),
     },
   ];
 
@@ -112,16 +112,18 @@ export default function AssetList() {
     setShowDialogAsset(false);
   };
 
-  const fnOpenDialogList = () => {
-    setDialogListParams({
+  const fnOpenDialogTransList = () => {
+    setDialogTransListParams({
       accCode: selectedItem.accCode,
-      header: `${selectedItem.accType}-${selectedItem.accLabel}`,
+      header: `${selectedItem.accType}) ${selectedItem.accLabel}`,
+      startYear: 2021,
+      endYear: new Date().getFullYear(),
     });
-    setShowDialogList(true);
+    setShowDialogTransList(true);
   };
 
-  const fnHideDialogList = () => {
-    setShowDialogList(false);
+  const fnHideDialogTransList = () => {
+    setShowDialogTransList(false);
   };
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -187,10 +189,10 @@ export default function AssetList() {
 
       {/* 연관 내역 조회 다이얼로그 */}
       <Suspense fallback={null}>
-        <DialogList
-          visible={showDialogList}
-          onHide={() => fnHideDialogList()}
-          params={dialogListParams}
+        <DialogTransList
+          visible={showDialogTransList}
+          onHide={() => fnHideDialogTransList()}
+          params={dialogTransListParams}
         />
       </Suspense>
     </>

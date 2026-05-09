@@ -9,11 +9,11 @@ import {
   ProgressSpinner,
 } from '@/assets/js/PrimeReact';
 
-import MonthNavigator from '@/components/MonthNavigator';
-import LedgerListItem from '@/components/common/LedgerListItem';
+import MonthNavigator from '@/components/common/MonthNavigator';
+import LedgerListItem from '@/components/Ledger/LedgerListItem';
 
-const DialogLedger = lazy(() => import('@/components/DialogLedger'));
-const DialogAI = lazy(() => import('@/components/DialogAI'));
+const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'));
+const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'));
 
 export default function MonthlyList() {
   const { yearData, loading, selectedDate, updateLedgerEntry_gExecute } =

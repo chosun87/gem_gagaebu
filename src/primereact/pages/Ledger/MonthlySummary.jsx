@@ -6,8 +6,8 @@ import { DataTable, Column } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
-import MonthNavigator from '@/components/MonthNavigator';
-import MonthlySummaryChart from '@/components/MonthlySummaryChart';
+import MonthNavigator from '@/components/common/MonthNavigator';
+import MonthlySummaryChart from '@/components/Ledger/MonthlySummaryChart';
 
 const MONTH_LENGTH = 6;
 

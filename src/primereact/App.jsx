@@ -7,9 +7,9 @@ import {
   useLocation,
 } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import AuthGuard from '@/components/AuthGuard';
+import Header from '@/components/common/Header';
+import Footer from '@/components/common/Footer';
+import AuthGuard from '@/components/common/AuthGuard';
 
 // 페이지 컴포넌트 다이나믹 로딩 (Code Splitting)
 const Ledger = lazy(() => import('@/pages/Ledger'));
@@ -17,8 +17,10 @@ const Statistics = lazy(() => import('@/pages/Statistics'));
 const Assets = lazy(() => import('@/pages/Assets'));
 
 // 다이얼로그 컴포넌트 다이나믹 로딩
-const DialogSettings = lazy(() => import('@/components/DialogSettings'));
-const DialogTheme = lazy(() => import('@/components/DialogTheme'));
+const DialogSettings = lazy(
+  () => import('@/components/Settings/DialogSettings'),
+);
+const DialogTheme = lazy(() => import('@/components/common/DialogTheme'));
 const Repeat = lazy(() => import('@/pages/Settings/Repeat'));
 
 // 샘플 페이지 다이나믹 로딩

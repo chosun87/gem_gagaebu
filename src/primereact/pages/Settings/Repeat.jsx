@@ -13,8 +13,8 @@ import {
 import dayjs from 'dayjs';
 import { REPEAT_PERIOD } from '@/assets/js/constants';
 
-const DialogRepeat = lazy(() => import('@/components/DialogRepeat'));
-const DialogList = lazy(() => import('@/components/DialogList'));
+const DialogRepeat = lazy(() => import('@/components/Settings/DialogRepeat'));
+const DialogList = lazy(() => import('@/components/Ledger/DialogList'));
 
 export default function Repeat() {
   const { sheet반복Data, loading, updateRepeatEntry_rpCompleted } = useData();

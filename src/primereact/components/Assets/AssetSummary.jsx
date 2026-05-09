@@ -61,7 +61,7 @@ export default function LedgerSummary({ summary }) {
       >
         <Column
           field="gType"
-          header="연월"
+          header="구분"
           align="center"
           bodyClassName={(rowData) => `px-0 font-bold gType-${rowData.gType}`}
           style={{ width: '10%', minWidth: '4rem' }}

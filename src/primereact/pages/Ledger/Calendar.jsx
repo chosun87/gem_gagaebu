@@ -5,14 +5,14 @@ import { useSwipe } from '@/hooks/useSwipe';
 import dayjs from 'dayjs';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
-import MonthNavigator from '@/components/MonthNavigator';
-import LedgerSummary from '@/components/LedgerSummary';
+import MonthNavigator from '@/components/common/MonthNavigator';
+import LedgerSummary from '@/components/Ledger/LedgerSummary';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 
-const DialogList = lazy(() => import('@/components/DialogList'));
+const DialogList = lazy(() => import('@/components/Ledger/DialogList'));
 
 export default function Calendar() {
   const { yearData, selectedDate, categoryMap } = useData();

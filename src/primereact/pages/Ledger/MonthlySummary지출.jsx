@@ -6,8 +6,8 @@ import { DataTable, Column, Row, ColumnGroup } from '@/assets/js/PrimeReact';
 import dayjs from 'dayjs';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
 
-import MonthNavigator from '@/components/MonthNavigator';
-import MonthlySummaryChart지출 from '@/components/MonthlySummaryChart지출';
+import MonthNavigator from '@/components/common/MonthNavigator';
+import MonthlySummaryChart지출 from '@/components/Ledger/MonthlySummaryChart지출';
 
 const MONTH_LENGTH = 6;
 

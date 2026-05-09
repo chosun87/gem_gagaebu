@@ -10,10 +10,11 @@ import {
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
-import LedgerListItem from '@/components/common/LedgerListItem';
-const DialogLedger = lazy(() => import('@/components/DialogLedger'));
-import LedgerSummary from '@/components/LedgerSummary';
-const DialogAI = lazy(() => import('@/components/DialogAI'));
+import LedgerListItem from '@/components/Ledger/LedgerListItem';
+import LedgerSummary from '@/components/Ledger/LedgerSummary';
+
+const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'));
+const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'));
 
 export default function DialogList({ visible, onHide, params }) {
   const {
@@ -33,9 +34,10 @@ export default function DialogList({ visible, onHide, params }) {
   const filteredData = useMemo(() => {
     if (!params) return [];
 
-    const baseData = params.rpID
-      ? Object.values(sheetYYYYData || {}).flat()
-      : yearData;
+    const baseData =
+      params.rpID || params.accCode
+        ? Object.values(sheetYYYYData || {}).flat()
+        : yearData;
 
     return baseData
       .filter((item) => {
@@ -68,13 +70,13 @@ export default function DialogList({ visible, onHide, params }) {
   const headerText = useMemo(() => {
     if (!params) return '조회 내역';
     const parts = [];
-    if (params.rpID) parts.push(params.header);
+    if (params.rpID || params.accCode) parts.push(params.header);
     if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'));
     if (params.type) parts.push(`[${params.type}]`);
     if (params.category) parts.push(`[${params.category}]`);
     return parts.length === 1
       ? parts[0]
-      : params.rpID
+      : params.rpID || params.accCode
         ? params.header
         : '조회 내역';
   }, [params]);

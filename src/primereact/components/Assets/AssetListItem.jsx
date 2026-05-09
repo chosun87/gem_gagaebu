@@ -1,5 +1,5 @@
 import { Badge } from '@/assets/js/PrimeReact';
-import AssetIcon from './AssetIcon';
+import AssetIcon from '../common/AssetIcon';
 import { classNames } from 'primereact/utils';
 
 /**
