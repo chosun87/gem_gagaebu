@@ -59,8 +59,8 @@
 .assets-page {
   .list-dataview {
     img.asset-icon-svg {
-      width: calc(var(--padding-base) * 2);
-      height: calc(var(--padding-base) * 2);
+      width: 3rem;
+      height: 3rem;
       border-radius: calc(var(--padding-base) * 2);
       object-fit: contain;
     }
@@ -92,8 +92,8 @@
     padding: 0 8px;
 
     img {
-      width: calc(var(--padding-base) * 1.5);
-      height: calc(var(--padding-base) * 1.5);
+      width: 2rem;
+      height: 2rem;
       object-fit: contain;
     }
   }

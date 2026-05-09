@@ -105,13 +105,11 @@ export const CodeProvider = ({ children }) => {
   }, []);
 
   // 추후 CRUD를 위한 스텁 (Stub for future CRUD)
-  const saveCodeEntry = useCallback(async (entry) => {
-    console.log('saveCodeEntry stub', entry);
+  const saveCodeEntry = useCallback(async () => {
     return true;
   }, []);
 
-  const deleteCodeEntry = useCallback(async (entry) => {
-    console.log('deleteCodeEntry stub', entry);
+  const deleteCodeEntry = useCallback(async () => {
     return true;
   }, []);
 

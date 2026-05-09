@@ -85,7 +85,6 @@ export default function AssetList() {
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogAsset = (asset) => {
-    console.log(asset);
     setAsset(asset);
     setShowDialogAsset(true);
   };

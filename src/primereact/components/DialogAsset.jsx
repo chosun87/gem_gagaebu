@@ -30,8 +30,6 @@ export default function DialogAsset({ asset, visible, onHide }) {
   const [accUnused, set_accUnused] = useState(false);
   const [submitted, set_submitted] = useState(false);
 
-  console.log(asset, visible);
-
   // 다이얼로그가 열릴 때 상태 초기화
   const fnOnShow = () => {
     set_accType(asset?.accType || '');
@@ -243,7 +241,7 @@ export default function DialogAsset({ asset, visible, onHide }) {
                 onChange={(e) => set_accDefault(e.value)}
               />
 
-              <label htmlFor="accUnused" className="ml-5">
+              <label htmlFor="accUnused" className="ml-auto">
                 미사용 계좌
               </label>
               <InputSwitch

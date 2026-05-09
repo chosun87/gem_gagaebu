@@ -234,9 +234,6 @@ export const YYYYProvider = ({ children }) => {
         }
 
         return true;
-      } catch (error) {
-        console.error('Error saving ledger entry:', error);
-        throw error;
       } finally {
         setLoading(false);
       }
@@ -313,23 +310,23 @@ export const YYYYProvider = ({ children }) => {
               existingEntries = [];
               for (let i = 1; i < rawData.length; i++) {
                 const row = rawData[i];
-                if (!row) continue;
+                if (!row || row.length < 2) continue;
 
-                const deletedVal = row[SHEET_COL_INDEX.YYYY.gDeleted];
+                const getVal = (idx) =>
+                  row[idx] !== undefined ? String(row[idx]).trim() : '';
+
+                const deletedVal = getVal(SHEET_COL_INDEX.YYYY.gDeleted);
                 const isDeleted =
-                  deletedVal &&
-                  String(deletedVal).trim() !== '' &&
-                  String(deletedVal).toUpperCase() !== 'FALSE';
+                  deletedVal !== '' && deletedVal.toUpperCase() !== 'FALSE';
                 if (isDeleted) continue;
 
                 existingEntries.push({
                   sheetRowNo: i + 1,
-                  gDate: row[SHEET_COL_INDEX.YYYY.gDate],
+                  gDate: getVal(SHEET_COL_INDEX.YYYY.gDate),
                   gExecuted:
-                    String(
-                      row[SHEET_COL_INDEX.YYYY.gExecuted],
-                    ).toUpperCase() === 'TRUE',
-                  g_rpID: row[SHEET_COL_INDEX.YYYY.g_rpID],
+                    getVal(SHEET_COL_INDEX.YYYY.gExecuted).toUpperCase() ===
+                    'TRUE',
+                  g_rpID: getVal(SHEET_COL_INDEX.YYYY.g_rpID),
                 });
               }
             } catch {
