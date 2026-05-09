@@ -126,10 +126,13 @@ export default function AssetList() {
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDataViewItem = (item) => (
-    <AssetListItem item={item} onClick={(e) => {
-      setSelectedItem(item);
-      menuLeft.current.toggle(e);
-    }} />
+    <AssetListItem
+      item={item}
+      onClick={(e) => {
+        setSelectedItem(item);
+        menuLeft.current.toggle(e);
+      }}
+    />
   );
 
   return (
