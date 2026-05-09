@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, lazy, Suspense } from 'react';
+import { useState, useMemo, lazy, Suspense } from 'react';
 import {
   Sidebar,
   Panel,
@@ -9,6 +9,7 @@ import {
 } from '@/assets/js/PrimeReact';
 import { useData } from '@/context/DataContext';
 import dayjs from 'dayjs';
+import { useMultiYearLoad } from '@/hooks/useMultiYearLoad';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
 import LedgerListItem from '@/components/Ledger/LedgerListItem';
 import LedgerSummary from '@/components/Ledger/LedgerSummary';
@@ -20,8 +21,6 @@ export default function DialogList({ visible, onHide, params }) {
   const {
     yearData,
     sheetYYYYData,
-    loadSheet연도Data,
-    loadedSheetYYYY,
     updateLedgerEntry_gExecute,
     categoryMap,
     loading: dataLoading,
@@ -123,28 +122,8 @@ export default function DialogList({ visible, onHide, params }) {
     return total;
   }, [filteredData, categoryMap]);
 
-  // 반복 내역 전체 조회를 위한 연도별 데이터 로드
-  useEffect(() => {
-    if (
-      visible &&
-      params?.startYear &&
-      params?.endYear &&
-      params?.startYear !== params?.endYear
-    ) {
-      for (let y = params.startYear; y <= params.endYear; y++) {
-        const yearStr = y.toString();
-        if (!loadedSheetYYYY[yearStr]) {
-          loadSheet연도Data(yearStr);
-        }
-      }
-    }
-  }, [
-    visible,
-    params?.startYear,
-    params?.endYear,
-    loadedSheetYYYY,
-    loadSheet연도Data,
-  ]);
+  // 거래내역 전체 조회를 위한 연도별 데이터 로드
+  useMultiYearLoad(visible, params);
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogLedger = (ledger) => {

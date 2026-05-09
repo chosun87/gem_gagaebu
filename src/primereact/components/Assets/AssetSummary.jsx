@@ -20,16 +20,16 @@ export default function AssetSummary({ summary }) {
   }
   if (
     !(
-      summary?.widhdraw0 === 0 &&
-      summary?.widhdraw1 === 0 &&
-      summary?.widhdrawA === 0
+      summary?.withdraw0 === 0 &&
+      summary?.withdraw1 === 0 &&
+      summary?.withdrawA === 0
     )
   ) {
     summaryA.push({
       Trans: TRANSACTION_TYPE.WITHDRAW,
-      실행전: summary?.widhdraw0 || 0,
-      실행후: summary?.widhdraw1 || 0,
-      합계: summary?.widhdrawA || 0,
+      실행전: summary?.withdraw0 || 0,
+      실행후: summary?.withdraw1 || 0,
+      합계: summary?.withdrawA || 0,
     });
   }
 
@@ -43,23 +43,17 @@ export default function AssetSummary({ summary }) {
       <Row>
         <Column footer="합계" align="center" />
         <Column
-          footer={
-            (summary?.deposit0 - summary?.widhdraw0).toLocaleString()
-          }
+          footer={(summary?.deposit0 - summary?.withdraw0).toLocaleString()}
           align="right"
           className="amount"
         />
         <Column
-          footer={
-            (summary?.deposit1 - summary?.widhdraw1).toLocaleString()
-          }
+          footer={(summary?.deposit1 - summary?.withdraw1).toLocaleString()}
           align="right"
           className="amount"
         />
         <Column
-          footer={
-            (summary?.depositA - summary?.widhdrawA).toLocaleString()
-          }
+          footer={(summary?.depositA - summary?.withdrawA).toLocaleString()}
           align="right"
           className="amount"
         />
