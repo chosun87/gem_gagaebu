@@ -59,8 +59,8 @@ function App() {
   const menuItems = useMemo(
     () => [
       { path: '/ledger', label: '가계부' },
-      { path: '/statistics', label: '통계' },
       { path: '/assets', label: '자산' },
+      { path: '/statistics', label: '통계' },
       { path: '/settings', label: '설정' },
     ],
     [],
@@ -109,8 +109,8 @@ function App() {
 
               {/* 메인 라우트 */}
               <Route path="/ledger/*" element={<Ledger />} />
-              <Route path="/statistics" element={<Statistics />} />
               <Route path="/assets/*" element={<Assets />} />
+              <Route path="/statistics" element={<Statistics />} />
               <Route path="/settings/repeat" element={<Repeat />} />
 
               {/* 직접 접근 시 배경이 없을 경우를 위해 가계부를 기본으로 둠 */}

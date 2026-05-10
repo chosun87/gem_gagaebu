@@ -26,13 +26,13 @@ export default function Footer({ activeIndex, onMenuChange }) {
       template: (item) => templateItem(item, 0, onMenuChange),
     },
     {
-      label: '통계',
-      icon: 'pi pi-chart-bar',
+      label: '자산',
+      icon: 'pi pi-wallet',
       template: (item) => templateItem(item, 1, onMenuChange),
     },
     {
-      label: '자산',
-      icon: 'pi pi-wallet',
+      label: '통계',
+      icon: 'pi pi-chart-bar',
       template: (item) => templateItem(item, 2, onMenuChange),
     },
     {
