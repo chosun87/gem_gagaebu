@@ -56,6 +56,13 @@
   }
 }
 
+.ledger-summary {
+  padding: calc(var(--padding-base) / 4);
+  border: solid 1px var(--primary-200);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
 .ledger-summary-wrap {
   background-color: transparent;
   border-radius: var(--border-radius);
@@ -237,5 +244,12 @@
     margin-top: -0.75rem;
     margin-bottom: -0.75rem;
     object-fit: contain;
+  }
+}
+
+/* 모바일 환경 */
+@media (max-width: 575px) {
+  .ledger-summary {
+    margin-bottom: var(--padding-base);
   }
 }

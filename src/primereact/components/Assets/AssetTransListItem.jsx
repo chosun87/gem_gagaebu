@@ -1,5 +1,6 @@
 import { Badge, InputSwitch } from '@/assets/js/PrimeReact';
 import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { getSignedAmount } from '@/assets/js/dataUtils';
 import dayjs from 'dayjs';
 
 /**
@@ -18,21 +19,10 @@ export default function AssetTransListItem({
   onClick,
   onExecuteChange,
 }) {
-  const _getTransType = (item, accCode) => {
-    const amount = Number(item.gAmount) || 0;
-    if (amount >= 0) {
-      if (item.gAcc1 === item.gAcc2) return TRANSACTION_TYPE.REVENUE;
-      if (item.gAcc2 === accCode) return TRANSACTION_TYPE.DEPOSIT;
-      if (item.gAcc1 === accCode) return TRANSACTION_TYPE.WITHDRAW;
-    } else {
-      if (item.gAcc1 === item.gAcc2) return TRANSACTION_TYPE.REVENUE;
-      if (item.gAcc1 === accCode) return TRANSACTION_TYPE.DEPOSIT;
-      if (item.gAcc2 === accCode) return TRANSACTION_TYPE.WITHDRAW;
-    }
-  };
+  const { trType } = getSignedAmount(item, accCode);
 
   const gTypeClass = `gType-${item.gType}`;
-  const transClass = `trans-${_getTransType(item, accCode)}`;
+  const transClass = `trans-${trType}`;
   const gExecutedClass = `gExecuted-${item.gExecuted ? 'Y' : 'N'}`;
 
   return (

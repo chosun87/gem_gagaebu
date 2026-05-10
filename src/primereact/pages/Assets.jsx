@@ -13,7 +13,7 @@ import dayjs from 'dayjs';
 
 const AssetList = lazy(() => import('@/pages/Assets/AssetList'));
 const AssetsMonthlySummary = lazy(
-  () => import('@/pages/Ledger/MonthlySummary'),
+  () => import('@/pages/Assets/AssetsMonthlySummary'),
 );
 const AssetsYearlySummary = lazy(
   () => import('@/pages/Ledger/MonthlySummary지출'),

@@ -123,28 +123,44 @@ export const calculateAssetTotal = (data, accCode) => {
   };
 
   data.forEach((item) => {
-    const amount = Number(item.gAmount) || 0;
+    /*
+        const amount = Number(item.gAmount) || 0;
+    
+        if (!item.gExecuted) {
+          if (amount >= 0) {
+            if (item.gAcc1 === item.gAcc2) total.revenue0 += amount;
+            else if (item.gAcc2 === accCode) total.deposit0 += amount;
+            else if (item.gAcc1 === accCode) total.withdraw0 += -amount;
+          } else {
+            if (item.gAcc1 === item.gAcc2) total.revenue0 += amount;
+            else if (item.gAcc1 === accCode) total.deposit0 += -amount;
+            else if (item.gAcc2 === accCode) total.withdraw0 += amount;
+          }
+        } else {
+          if (amount >= 0) {
+            if (item.gAcc1 === item.gAcc2) total.revenue1 += amount;
+            else if (item.gAcc2 === accCode) total.deposit1 += amount;
+            else if (item.gAcc1 === accCode) total.withdraw1 += -amount;
+          } else {
+            if (item.gAcc1 === item.gAcc2) total.revenue1 += amount;
+            else if (item.gAcc1 === accCode) total.deposit1 += -amount;
+            else if (item.gAcc2 === accCode) total.withdraw1 += amount;
+          }
+        }
+    */
+    const { trType, trAmount } = getSignedAmount(item, accCode);
+    if (!trType) return;
 
     if (!item.gExecuted) {
-      if (amount >= 0) {
-        if (item.gAcc1 === item.gAcc2) total.revenue0 += amount;
-        else if (item.gAcc2 === accCode) total.deposit0 += amount;
-        else if (item.gAcc1 === accCode) total.withdraw0 += -amount;
-      } else {
-        if (item.gAcc1 === item.gAcc2) total.revenue0 += amount;
-        else if (item.gAcc1 === accCode) total.deposit0 += -amount;
-        else if (item.gAcc2 === accCode) total.withdraw0 += amount;
-      }
+      if (trType === TRANSACTION_TYPE.DEPOSIT) total.deposit0 += trAmount;
+      else if (trType === TRANSACTION_TYPE.WITHDRAW)
+        total.withdraw0 += trAmount;
+      else if (trType === TRANSACTION_TYPE.REVENUE) total.revenue0 += trAmount;
     } else {
-      if (amount >= 0) {
-        if (item.gAcc1 === item.gAcc2) total.revenue1 += amount;
-        else if (item.gAcc2 === accCode) total.deposit1 += amount;
-        else if (item.gAcc1 === accCode) total.withdraw1 += -amount;
-      } else {
-        if (item.gAcc1 === item.gAcc2) total.revenue1 += amount;
-        else if (item.gAcc1 === accCode) total.deposit1 += -amount;
-        else if (item.gAcc2 === accCode) total.withdraw1 += amount;
-      }
+      if (trType === TRANSACTION_TYPE.DEPOSIT) total.deposit1 += trAmount;
+      else if (trType === TRANSACTION_TYPE.WITHDRAW)
+        total.withdraw1 += trAmount;
+      else if (trType === TRANSACTION_TYPE.REVENUE) total.revenue1 += trAmount;
     }
   });
 
@@ -153,4 +169,32 @@ export const calculateAssetTotal = (data, accCode) => {
   total.revenueA = total.revenue0 + total.revenue1;
 
   return total;
+};
+
+/**
+ * 자산/계정별 거래 유형과 서명된 금액을 반환합니다.
+ * @param {Object} item - 가계부 데이터 객체
+ * @param {string} accCode - 기준 자산 코드
+ * @returns {Object} { trType: 거래유형, amount: 서명된금액 }
+ */
+export const getSignedAmount = (item, accCode) => {
+  const amount = Number(item.gAmount) || 0;
+
+  if (amount >= 0) {
+    if (item.gAcc1 === item.gAcc2)
+      return { trType: TRANSACTION_TYPE.REVENUE, trAmount: amount };
+    if (item.gAcc2 === accCode)
+      return { trType: TRANSACTION_TYPE.DEPOSIT, trAmount: amount };
+    if (item.gAcc1 === accCode)
+      return { trType: TRANSACTION_TYPE.WITHDRAW, trAmount: -amount };
+  } else {
+    if (item.gAcc1 === item.gAcc2)
+      return { trType: TRANSACTION_TYPE.REVENUE, trAmount: amount };
+    if (item.gAcc1 === accCode)
+      return { trType: TRANSACTION_TYPE.DEPOSIT, trAmount: -amount };
+    if (item.gAcc2 === accCode)
+      return { trType: TRANSACTION_TYPE.WITHDRAW, trAmount: amount };
+  }
+
+  return { trType: null, trAmount: 0 };
 };

@@ -177,18 +177,16 @@
 }
 
 .p-datatable {
-  .p-datatable-thead {
+  .p-datatable-thead,
+  .p-datatable-tfoot {
     & > tr {
-      & > th {
+      & > th,
+      & > td {
         background: var(--highlight-bg);
         color: var(--highlight-text-color);
         font-weight: bold;
       }
     }
-  }
-
-  .p-datatable-tfoot > tr > td {
-    background-color: var(--highlight-bg);
   }
 }
 
@@ -239,6 +237,7 @@
 
 .drag-handle {
   cursor: grab;
+
   &:active {
     cursor: grabbing;
   }

@@ -56,9 +56,63 @@
   }
 }
 
+.assets-page {
+  .list-dataview {
+    img.asset-icon-svg {
+      width: 3rem;
+      height: 3rem;
+      border-radius: calc(var(--padding-base) * 2);
+      object-fit: contain;
+    }
+
+    .list-item {
+      padding-left: 0;
+      padding-right: 0;
+      padding-bottom: var(--padding-base);
+      border-bottom: solid 1px var(--surface-border);
+      border-radius: 0;
+
+      .p-badge {
+        width: auto;
+        height: auto;
+        border-radius: 1rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+  }
+
+  .unused {
+    opacity: 0.5;
+
+    img {
+      filter: grayscale(100%);
+    }
+  }
+}
+
 .asset-page {
   .list-item {
     color: var(--text-color);
+
+    .p-badge {
+      border: solid 1px transparent;
+      background-color: transparent;
+
+      &.gType-수입 {
+        color: var(--color-수입);
+        border-color: var(--color-수입);
+      }
+
+      &.gType-지출 {
+        color: var(--color-지출);
+        border-color: var(--color-지출);
+      }
+
+      &.gType-이체 {
+        color: var(--color-이체);
+        border-color: var(--color-이체);
+      }
+    }
 
     &.gType-수입 {
       background-color: var(--bg-수입-100);
@@ -106,66 +160,14 @@
         }
       }
     }
-
-    .p-tag.gCategory,
-    .p-tag.rpCategory {
-      color: var(--text-color);
-      background-color: var(--bluegray-100);
-    }
-  }
-
-  .list-item {
-    .p-badge {
-      border: solid 1px transparent;
-      background-color: transparent;
-
-      &.gType-수입 {
-        color: var(--color-수입);
-        border-color: var(--color-수입);
-      }
-
-      &.gType-지출 {
-        color: var(--color-지출);
-        border-color: var(--color-지출);
-      }
-
-      &.gType-이체 {
-        color: var(--color-이체);
-        border-color: var(--color-이체);
-      }
-    }
   }
 }
 
-.assets-page {
-  .list-dataview {
-    img.asset-icon-svg {
-      width: 3rem;
-      height: 3rem;
-      border-radius: calc(var(--padding-base) * 2);
-      object-fit: contain;
-    }
-
-    .list-item {
-      padding-left: 0;
-      padding-right: 0;
-
-      .p-badge {
-        width: auto;
-        height: auto;
-        border-radius: 1rem;
-        padding: 0.25rem 0.5rem;
-      }
-    }
-  }
-
-  .unused {
-    opacity: 0.5;
-
-    img {
-      filter: grayscale(100%);
-    }
-  }
+.asset-summary {
+  padding: calc(var(--padding-base) / 4);
+  border: solid 1px var(--primary-200);
+  border-radius: var(--border-radius);
+  overflow: hidden;
 }
 
 .dialog-asset {
@@ -177,5 +179,12 @@
       height: 2rem;
       object-fit: contain;
     }
+  }
+}
+
+/* 모바일 환경 */
+@media (max-width: 575px) {
+  .asset-summary {
+    margin-bottom: var(--padding-base);
   }
 }

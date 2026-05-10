@@ -90,7 +90,7 @@ export default function AssetSummary({ summary }) {
   return (
     summaryA.length > 0 && (
       <DataTable
-        className="p-datatable-sm"
+        className="asset-summary p-datatable-sm"
         responsiveLayout="scroll"
         value={summaryA}
         footerColumnGroup={footerGroup}

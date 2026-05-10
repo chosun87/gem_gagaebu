@@ -55,7 +55,7 @@ export default function LedgerSummary({ summary }) {
   return (
     summaryA.length > 0 && (
       <DataTable
-        className="p-datatable-sm"
+        className="ledger-summary p-datatable-sm"
         responsiveLayout="scroll"
         value={summaryA}
       >
