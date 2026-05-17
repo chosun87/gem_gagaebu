@@ -174,8 +174,6 @@ import Footer from './components/Footer';
   - 단, localhost에서 구글 sheet에 접근하려고 함.
   - 화면 reload시에 구글 로그인을 다시 하지 말 것.
   - google cloude OAuth 2.0
-    - 클라이언트 ID : 660525556283-dtpdooehas3u161nsstn2l4hufvndhpr.apps.googleusercontent.com
-    - 클라이언트 보안 비밀번호 : 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
     - Header의 로그인 버튼 클릭 시, 구글 로그인 화면이 나타나고, 로그인 성공 시 구글 시트에 접근할 수 있도록 할 것.
 - 구글 스프레드시트 파일에는 아래와 같은 시트가 있음
   - 자산 시트 : accType / accCode / accLabel / accIcon / accRank / accMemo
