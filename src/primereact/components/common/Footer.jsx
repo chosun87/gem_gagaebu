@@ -1,12 +1,12 @@
-import { TabMenu } from '@/assets/js/PrimeReact';
+import { TabMenu } from '@/assets/js/PrimeReact'
 
 const templateItem = (item, index, onMenuChange) => {
   return (
     <a
       className="p-menuitem-link"
       onClick={(e) => {
-        e.preventDefault();
-        onMenuChange(index);
+        e.preventDefault()
+        onMenuChange(index)
       }}
       style={{ cursor: 'pointer' }}
     >
@@ -15,8 +15,8 @@ const templateItem = (item, index, onMenuChange) => {
       </div>
       <div className="p-menuitem-text text-lg">{item.label}</div>
     </a>
-  );
-};
+  )
+}
 
 export default function Footer({ activeIndex, onMenuChange }) {
   const menuItems = [
@@ -40,7 +40,7 @@ export default function Footer({ activeIndex, onMenuChange }) {
       icon: 'pi pi-cog',
       template: (item) => templateItem(item, 3, onMenuChange),
     },
-  ];
+  ]
 
   return (
     <footer className="app-footer">
@@ -50,5 +50,5 @@ export default function Footer({ activeIndex, onMenuChange }) {
         onTabChange={(e) => onMenuChange(e.index)}
       />
     </footer>
-  );
+  )
 }

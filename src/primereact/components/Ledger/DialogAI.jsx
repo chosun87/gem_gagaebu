@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Sidebar, Panel, Button, InputTextarea } from '@/assets/js/PrimeReact';
-import { showNotice, showError } from '@/assets/js/dialogUtils';
+import { useState } from 'react'
+import { Sidebar, Panel, Button, InputTextarea } from '@/assets/js/PrimeReact'
+import { showNotice, showError } from '@/assets/js/dialogUtils'
 
 export default function DialogAI({ visible, onHide }) {
-  const [text, setText] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [text, setText] = useState('')
+  const [loading, setLoading] = useState(false)
 
   // Functions -------------------------------------------------------------------------------------
   const fnParse = async () => {
-    if (!text.trim()) return;
-    setLoading(true);
+    if (!text.trim()) return
+    setLoading(true)
     try {
       // TODO: 실제 AI 분석 로직 추가
       // 임시로 성공 처리
@@ -19,13 +19,13 @@ export default function DialogAI({ visible, onHide }) {
           icon: 'pi pi-sparkles',
           message: '분석 준비 중입니다.',
           accept: () => setLoading(false),
-        });
-      }, 1000);
+        })
+      }, 1000)
     } catch (error) {
-      showError(error, '분석 실패');
-      setLoading(false);
+      showError(error, '분석 실패')
+      setLoading(false)
     }
-  };
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateFooter = (options) => {
@@ -48,8 +48,8 @@ export default function DialogAI({ visible, onHide }) {
           disabled={loading || !text.trim()}
         />
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -86,5 +86,5 @@ export default function DialogAI({ visible, onHide }) {
         </div>
       </Panel>
     </Sidebar>
-  );
+  )
 }

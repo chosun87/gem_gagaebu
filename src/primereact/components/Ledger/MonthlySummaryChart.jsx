@@ -1,19 +1,19 @@
-import { Chart } from '@/assets/js/PrimeReact';
-import { useTheme } from '@/context/ThemeContext';
-import dayjs from 'dayjs';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { Chart } from '@/assets/js/PrimeReact'
+import { useTheme } from '@/context/ThemeContext'
+import dayjs from 'dayjs'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
 
 export default function MonthlySummaryChart({ months, rawData }) {
-  const { chartColor } = useTheme();
+  const { chartColor } = useTheme()
 
   // 테마 변수 가져오기
-  const rootStyle = getComputedStyle(document.documentElement);
+  const rootStyle = getComputedStyle(document.documentElement)
 
   const labels = [
     TRANSACTION_TYPE.INCOME,
     TRANSACTION_TYPE.EXPENSE,
     TRANSACTION_TYPE.TRANSFER,
-  ];
+  ]
 
   const chartData = {
     labels: labels,
@@ -22,7 +22,7 @@ export default function MonthlySummaryChart({ months, rawData }) {
         const varName =
           colorName === 'primary'
             ? `--primary-${shade}`
-            : `--${colorName}-${shade}`;
+            : `--${colorName}-${shade}`
         return (
           rootStyle.getPropertyValue(varName).trim() ||
           (shade === '500'
@@ -30,10 +30,10 @@ export default function MonthlySummaryChart({ months, rawData }) {
             : shade === '400'
               ? '#60A5FA'
               : '#93C5FD')
-        );
-      };
+        )
+      }
 
-      const shade = (idx + 1) * 100;
+      const shade = (idx + 1) * 100
       return {
         label: dayjs(m).format('M월'),
         backgroundColor: getThemeColor(chartColor, shade),
@@ -42,9 +42,9 @@ export default function MonthlySummaryChart({ months, rawData }) {
           rawData[m][TRANSACTION_TYPE.EXPENSE],
           rawData[m][TRANSACTION_TYPE.TRANSFER],
         ],
-      };
+      }
     }),
-  };
+  }
 
   const chartOptions = {
     maintainAspectRatio: false,
@@ -77,7 +77,7 @@ export default function MonthlySummaryChart({ months, rawData }) {
           color:
             rootStyle.getPropertyValue('--text-color-secondary') || '#6c757d',
           callback: function (value) {
-            return (value / 10000).toLocaleString() + '만';
+            return (value / 10000).toLocaleString() + '만'
           },
         },
         grid: {
@@ -86,12 +86,12 @@ export default function MonthlySummaryChart({ months, rawData }) {
         },
       },
     },
-  };
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
     <div className="summary-chart-container">
       <Chart type="bar" data={chartData} options={chartOptions} />
     </div>
-  );
+  )
 }

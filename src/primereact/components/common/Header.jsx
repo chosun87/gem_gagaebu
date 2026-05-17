@@ -1,16 +1,16 @@
-import { useAuth, useAuthTimer } from '@/context/AuthContext';
-import { useData } from '@/context/DataContext';
-import { Button } from '@/assets/js/PrimeReact';
-import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen';
-import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams';
-import useLongPress from '@/hooks/useLongPress';
-import { showConfirm } from '@/assets/js/dialogUtils';
+import { useAuth, useAuthTimer } from '@/context/AuthContext'
+import { useData } from '@/context/DataContext'
+import { Button } from '@/assets/js/PrimeReact'
+import { toggleFullscreen, useFullscreenStatus } from '@/assets/js/Fullscreen'
+import { GOOGLE_AUTH_PARAMS } from '@/assets/js/googleAuthParams'
+import useLongPress from '@/hooks/useLongPress'
+import { showConfirm } from '@/assets/js/dialogUtils'
 
 export default function Header({ onThemeClick }) {
-  const { isInitialized, isSignedIn, login, logout, extendLogin } = useAuth();
-  const { authRemainingTime } = useAuthTimer();
-  const isFullscreen = useFullscreenStatus();
-  const { reloadData, loading } = useData();
+  const { isInitialized, isSignedIn, login, logout, extendLogin } = useAuth()
+  const { authRemainingTime } = useAuthTimer()
+  const isFullscreen = useFullscreenStatus()
+  const { reloadData, loading } = useData()
 
   // Functions -------------------------------------------------------------------------------------
   const fnLogout = () => {
@@ -19,8 +19,8 @@ export default function Header({ onThemeClick }) {
       message: '로그아웃 하시겠습니까?',
       acceptLabel: '로그아웃',
       accept: () => logout(),
-    });
-  };
+    })
+  }
 
   const fnHardReload = () => {
     showConfirm({
@@ -35,14 +35,14 @@ export default function Header({ onThemeClick }) {
       ),
       acceptLabel: '새로고침',
       accept: () => window.location.reload(),
-    });
-  };
+    })
+  }
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const handlersPressRefresh = useLongPress(
     () => reloadData(),
     () => fnHardReload(),
-  );
+  )
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -147,5 +147,5 @@ export default function Header({ onThemeClick }) {
         )}
       </div>
     </header>
-  );
+  )
 }

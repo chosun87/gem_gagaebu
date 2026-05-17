@@ -1,26 +1,26 @@
-import { useState, lazy, Suspense, useMemo } from 'react';
-import { useData } from '@/context/DataContext';
-import { useMonthSync } from '@/hooks/useMonthSync';
+import { useState, lazy, Suspense, useMemo } from 'react'
+import { useData } from '@/context/DataContext'
+import { useMonthSync } from '@/hooks/useMonthSync'
 import {
   DataView,
   Message,
   SpeedDial,
   Tooltip,
   ProgressSpinner,
-} from '@/assets/js/PrimeReact';
+} from '@/assets/js/PrimeReact'
 
-import MonthNavigator from '@/components/common/MonthNavigator';
-import LedgerListItem from '@/components/Ledger/LedgerListItem';
+import MonthNavigator from '@/components/common/MonthNavigator'
+import LedgerListItem from '@/components/Ledger/LedgerListItem'
 
-const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'));
-const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'));
+const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'))
+const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'))
 
 export default function MonthlyList() {
   const { yearData, loading, selectedDate, updateLedgerEntry_gExecute } =
-    useData();
-  const [ledger, setLedger] = useState(null);
-  const [showDialogLedger, setShowDialogLedger] = useState(false);
-  const [showDialogAI, setShowDialogAI] = useState(false);
+    useData()
+  const [ledger, setLedger] = useState(null)
+  const [showDialogLedger, setShowDialogLedger] = useState(false)
+  const [showDialogAI, setShowDialogAI] = useState(false)
 
   const speedDialItems = [
     {
@@ -30,7 +30,7 @@ export default function MonthlyList() {
       tooltip: 'AI로 입력',
       tooltipOptions: { position: 'left' },
       command: () => {
-        setShowDialogAI(true);
+        setShowDialogAI(true)
       },
     },
     {
@@ -40,35 +40,35 @@ export default function MonthlyList() {
       tooltipOptions: { position: 'left' },
       command: () => fnOpenDialogLedger(null),
     },
-  ];
+  ]
 
   // yearData에서 현재 선택된 달의 데이터만 필터링
   const monthData = useMemo(() => {
-    const currentMonthNum = selectedDate.getMonth() + 1;
+    const currentMonthNum = selectedDate.getMonth() + 1
     return yearData.filter((item) => {
-      const dateParts = item.gDate.split(/[-./\s]+/);
+      const dateParts = item.gDate.split(/[-./\s]+/)
       if (dateParts.length >= 2) {
-        const rowMonthNum = parseInt(dateParts[1], 10);
-        return rowMonthNum === currentMonthNum;
+        const rowMonthNum = parseInt(dateParts[1], 10)
+        return rowMonthNum === currentMonthNum
       }
-      return false;
-    });
-  }, [yearData, selectedDate]);
+      return false
+    })
+  }, [yearData, selectedDate])
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogLedger = (ledger) => {
-    setLedger(ledger);
-    setShowDialogLedger(true);
-  };
+    setLedger(ledger)
+    setShowDialogLedger(true)
+  }
 
   const fnHideDialogLedger = () => {
-    setShowDialogLedger(false);
-  };
+    setShowDialogLedger(false)
+  }
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const { handleMonthChange, handleViewDateChange } = useMonthSync(
     '/ledger/monthlyList',
-  );
+  )
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDataViewItem = (item) => (
@@ -78,7 +78,7 @@ export default function MonthlyList() {
       onClick={() => fnOpenDialogLedger(item)}
       onExecuteChange={updateLedgerEntry_gExecute}
     />
-  );
+  )
 
   return (
     <>
@@ -133,5 +133,5 @@ export default function MonthlyList() {
         />
       </Suspense>
     </>
-  );
+  )
 }

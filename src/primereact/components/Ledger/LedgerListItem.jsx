@@ -1,5 +1,5 @@
-import { Badge, InputSwitch } from '@/assets/js/PrimeReact';
-import dayjs from 'dayjs';
+import { Badge, InputSwitch } from '@/assets/js/PrimeReact'
+import dayjs from 'dayjs'
 
 /**
  * 가계부 리스트 아이템 템플릿 (MonthlyList, DialogList 공용)
@@ -17,8 +17,8 @@ export default function LedgerListItem({
   onClick,
   onExecuteChange,
 }) {
-  const gTypeClass = `gType-${item.gType}`;
-  const gExecutedClass = `gExecuted-${item.gExecuted ? 'Y' : 'N'}`;
+  const gTypeClass = `gType-${item.gType}`
+  const gExecutedClass = `gExecuted-${item.gExecuted ? 'Y' : 'N'}`
 
   return (
     <div
@@ -61,5 +61,5 @@ export default function LedgerListItem({
         onClick={(e) => e.stopPropagation()}
       />
     </div>
-  );
+  )
 }

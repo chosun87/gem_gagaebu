@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useData } from '@/context/DataContext';
+import { useState } from 'react'
+import { useData } from '@/context/DataContext'
 import {
   Button,
   Panel,
@@ -12,17 +12,17 @@ import {
   InputNumber,
   InputText,
   SelectButton,
-} from '@/assets/js/PrimeReact';
-import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils';
+} from '@/assets/js/PrimeReact'
+import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils'
 import {
   templateCategoryItem,
   templateCategoryValue,
   templateAssetItem,
   templateAssetValue,
-} from '@/components/common/SelectTemplates';
-import { classNames } from 'primereact/utils';
-import dayjs from 'dayjs';
-import { TRANSACTION_TYPE, G_TYPE } from '@/assets/js/constants';
+} from '@/components/common/SelectTemplates'
+import { classNames } from 'primereact/utils'
+import dayjs from 'dayjs'
+import { TRANSACTION_TYPE, G_TYPE } from '@/assets/js/constants'
 
 export default function DialogLedger({ ledger, visible, onHide, params }) {
   const {
@@ -32,19 +32,19 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
     assetNodes,
     categoryOptions,
     defaultAssetCode,
-  } = useData();
+  } = useData()
 
-  const [gDate, set_gDate] = useState(new Date());
-  const [gType, set_gType] = useState('');
-  const [gAcc1, set_gAcc1] = useState('');
-  const [gAcc2, set_gAcc2] = useState('');
-  const [gCategory, set_gCategory] = useState('');
-  const [gAmount, set_gAmount] = useState(0);
-  const [gMemo, set_gMemo] = useState('');
-  const [gExecuted, set_gExecuted] = useState(false);
-  const [submitted, set_submitted] = useState(false);
+  const [gDate, set_gDate] = useState(new Date())
+  const [gType, set_gType] = useState('')
+  const [gAcc1, set_gAcc1] = useState('')
+  const [gAcc2, set_gAcc2] = useState('')
+  const [gCategory, set_gCategory] = useState('')
+  const [gAmount, set_gAmount] = useState(0)
+  const [gMemo, set_gMemo] = useState('')
+  const [gExecuted, set_gExecuted] = useState(false)
+  const [submitted, set_submitted] = useState(false)
 
-  const [dateFocused, setDateFocused] = useState(false);
+  const [dateFocused, setDateFocused] = useState(false)
 
   // 다이얼로그가 열릴 때 상태 초기화
   const fnOnShow = () => {
@@ -52,45 +52,45 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       ? dayjs(ledger.gDate).toDate()
       : params?.date
         ? dayjs(params.date).toDate()
-        : new Date();
+        : new Date()
 
-    set_gDate(initialDate);
-    set_gType(ledger?.gType || params?.type || TRANSACTION_TYPE.EXPENSE);
-    set_gAcc1(ledger?.gAcc1 || params?.accCode || defaultAssetCode || '');
-    set_gAcc2(ledger?.gAcc2 || '');
-    set_gCategory(ledger?.gCategory || params?.category || '');
-    set_gAmount(ledger?.gAmount || 0);
-    set_gMemo(ledger?.gMemo || '');
+    set_gDate(initialDate)
+    set_gType(ledger?.gType || params?.type || TRANSACTION_TYPE.EXPENSE)
+    set_gAcc1(ledger?.gAcc1 || params?.accCode || defaultAssetCode || '')
+    set_gAcc2(ledger?.gAcc2 || '')
+    set_gCategory(ledger?.gCategory || params?.category || '')
+    set_gAmount(ledger?.gAmount || 0)
+    set_gMemo(ledger?.gMemo || '')
     // 실행 여부 초기화
     if (ledger) {
-      set_gExecuted(ledger.gExecuted || false);
+      set_gExecuted(ledger.gExecuted || false)
     } else {
-      const today = dayjs().startOf('day');
-      const selectedDate = dayjs(initialDate).startOf('day');
-      set_gExecuted(!selectedDate.isAfter(today));
+      const today = dayjs().startOf('day')
+      const selectedDate = dayjs(initialDate).startOf('day')
+      set_gExecuted(!selectedDate.isAfter(today))
     }
 
-    set_submitted(false);
-  };
+    set_submitted(false)
+  }
 
   // Functions -------------------------------------------------------------------------------------
   const _getAccLabels = (type) => {
     switch (type) {
       case TRANSACTION_TYPE.INCOME:
-        return ['입금계좌', ''];
+        return ['입금계좌', '']
       case TRANSACTION_TYPE.EXPENSE:
-        return ['출금계좌', ''];
+        return ['출금계좌', '']
       case TRANSACTION_TYPE.TRANSFER:
-        return ['출금계좌', '입금계좌'];
+        return ['출금계좌', '입금계좌']
       default:
-        return ['자산1', '자산2'];
+        return ['자산1', '자산2']
     }
-  };
+  }
 
-  const [gAcc1Label, gAcc2Label] = _getAccLabels(gType);
+  const [gAcc1Label, gAcc2Label] = _getAccLabels(gType)
 
   const fnSave = async () => {
-    set_submitted(true);
+    set_submitted(true)
 
     // 필수 항목 검증
     const isInvalid =
@@ -100,9 +100,9 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       gAmount === null ||
       !gCategory ||
       !gAcc1 ||
-      (gType === TRANSACTION_TYPE.TRANSFER && !gAcc2);
+      (gType === TRANSACTION_TYPE.TRANSFER && !gAcc2)
     if (isInvalid) {
-      return;
+      return
     }
 
     const formData = {
@@ -115,19 +115,19 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       gAmount,
       gMemo,
       gExecuted,
-    };
+    }
 
     try {
-      await saveLedgerEntry(ledger, formData);
+      await saveLedgerEntry(ledger, formData)
       showNotice({
         header: '처리 완료',
         message: '저장되었습니다.',
         accept: () => onHide(),
-      });
+      })
     } catch (error) {
-      showError(error, '저장 오류');
+      showError(error, '저장 오류')
     }
-  };
+  }
 
   const fnDelete = () => {
     showConfirm({
@@ -137,18 +137,18 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
       acceptClassName: 'p-button-danger',
       accept: async () => {
         try {
-          await deleteLedgerEntry(ledger);
+          await deleteLedgerEntry(ledger)
           showNotice({
             header: '처리 완료',
             message: '삭제되었습니다.',
             accept: () => onHide(),
-          });
+          })
         } catch (error) {
-          showError(error, '삭제 오류');
+          showError(error, '삭제 오류')
         }
       },
-    });
-  };
+    })
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
 
@@ -182,8 +182,8 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
           disabled={dataLoading}
         />
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -222,13 +222,13 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                 dateFormat={dateFocused ? 'yymmdd' : 'yy-mm-dd (D)'}
                 value={gDate}
                 onChange={(e) => {
-                  const newDate = e.value;
-                  set_gDate(newDate);
+                  const newDate = e.value
+                  set_gDate(newDate)
                   // 신규 입력일 때만 날짜에 따라 실행 여부 자동 설정
                   if (!ledger) {
-                    const today = dayjs().startOf('day');
-                    const selectedDate = dayjs(newDate).startOf('day');
-                    set_gExecuted(!selectedDate.isAfter(today));
+                    const today = dayjs().startOf('day')
+                    const selectedDate = dayjs(newDate).startOf('day')
+                    set_gExecuted(!selectedDate.isAfter(today))
                   }
                 }}
                 onFocus={() => setDateFocused(true)}
@@ -272,12 +272,12 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                 optionValue="cd"
                 value={gCategory}
                 onChange={(e) => {
-                  set_gCategory(e.value);
+                  set_gCategory(e.value)
                   const selectedCategory = categoryOptions
                     .find((node) => node.cdGroup === gType)
-                    ?.children.find((c) => c.cd === e.value);
+                    ?.children.find((c) => c.cd === e.value)
                   if (selectedCategory?.cdDefaultAcc1) {
-                    set_gAcc1(selectedCategory.cdDefaultAcc1);
+                    set_gAcc1(selectedCategory.cdDefaultAcc1)
                   }
                 }}
               />
@@ -362,9 +362,9 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
                   checked={gAmount < 0}
                   onChange={(e) => {
                     set_gAmount((prev) => {
-                      const val = Math.abs(prev || 0);
-                      return e.value && val !== 0 ? -val : val;
-                    });
+                      const val = Math.abs(prev || 0)
+                      return e.value && val !== 0 ? -val : val
+                    })
                   }}
                 />
                 <InputNumber
@@ -385,5 +385,5 @@ export default function DialogLedger({ ledger, visible, onHide, params }) {
         </div>
       </Panel>
     </Sidebar>
-  );
+  )
 }

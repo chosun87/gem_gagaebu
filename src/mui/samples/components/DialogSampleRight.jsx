@@ -1,4 +1,4 @@
-import { Panel, Sidebar } from '@/assets/js/PrimeReact';
+import { Panel, Sidebar } from '@/assets/js/PrimeReact'
 
 export default function DialogSampleRight({ visible, onHide }) {
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -17,5 +17,5 @@ export default function DialogSampleRight({ visible, onHide }) {
         </div>
       </Panel>
     </Sidebar>
-  );
+  )
 }

@@ -1,24 +1,24 @@
-import { Sidebar, Panel, Menu, Dropdown } from '@/assets/js/PrimeReact';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Sidebar, Panel, Menu, Dropdown } from '@/assets/js/PrimeReact'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
 export default function Settings({ visible, onHide }) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [framework, setFramework] = useState(
     localStorage.getItem('ui-framework') || 'primereact',
-  );
+  )
 
   const frameworkOptions = [
     { label: 'PrimeReact', value: 'primereact' },
     { label: 'Material UI (MUI)', value: 'mui' },
-  ];
+  ]
 
   const handleFrameworkChange = (e) => {
-    const value = e.value;
-    setFramework(value);
-    localStorage.setItem('ui-framework', value);
-    window.location.reload();
-  };
+    const value = e.value
+    setFramework(value)
+    localStorage.setItem('ui-framework', value)
+    window.location.reload()
+  }
 
   const menuItems = [
     {
@@ -29,7 +29,7 @@ export default function Settings({ visible, onHide }) {
           label: '반복 입출금 관리',
           icon: 'pi pi-clone',
           command: () => {
-            navigate('/settings/repeat');
+            navigate('/settings/repeat')
           },
         },
       ],
@@ -42,33 +42,33 @@ export default function Settings({ visible, onHide }) {
           label: '빈 페이지 템플릿',
           icon: 'pi pi-file',
           command: () => {
-            navigate('/samples/blank');
+            navigate('/samples/blank')
           },
         },
         {
           label: '우측 사이드바 템플릿',
           icon: 'pi pi-arrow-left',
           command: () => {
-            navigate('/samples/blankSidebarRight');
+            navigate('/samples/blankSidebarRight')
           },
         },
         {
           label: '하단 사이드바 템플릿',
           icon: 'pi pi-arrow-up',
           command: () => {
-            navigate('/samples/blankSidebarBottom');
+            navigate('/samples/blankSidebarBottom')
           },
         },
         {
           label: '월별 빈 페이지 템플릿',
           icon: 'pi pi-calendar',
           command: () => {
-            navigate('/samples/blankMonthly');
+            navigate('/samples/blankMonthly')
           },
         },
       ],
     },
-  ];
+  ]
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -98,5 +98,5 @@ export default function Settings({ visible, onHide }) {
         />
       </Panel>
     </Sidebar>
-  );
+  )
 }

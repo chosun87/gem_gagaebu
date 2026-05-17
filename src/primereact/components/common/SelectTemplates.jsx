@@ -1,5 +1,5 @@
-import { classNames } from 'primereact/utils';
-import AssetIcon from './AssetIcon';
+import { classNames } from 'primereact/utils'
+import AssetIcon from './AssetIcon'
 
 export const templateCategoryItem = (option) => {
   return (
@@ -7,8 +7,8 @@ export const templateCategoryItem = (option) => {
       <i className={classNames(option.cdIcon, 'mr-2')} />
       <span>{option.cdLabel}</span>
     </div>
-  );
-};
+  )
+}
 
 export const templateCategoryValue = (option, props) => {
   if (option) {
@@ -17,10 +17,10 @@ export const templateCategoryValue = (option, props) => {
         <i className={classNames(option.cdIcon, 'mr-2')} />
         <span>{option.cdLabel}</span>
       </div>
-    );
+    )
   }
-  return <span>{props.placeholder}</span>;
-};
+  return <span>{props.placeholder}</span>
+}
 
 export const templateAssetItem = (option) => {
   return (
@@ -28,8 +28,8 @@ export const templateAssetItem = (option) => {
       <AssetIcon icon={option.accIcon} className="mr-2" />
       <span>{option.accLabel}</span>
     </div>
-  );
-};
+  )
+}
 
 export const templateAssetValue = (option, props) => {
   if (option) {
@@ -38,7 +38,7 @@ export const templateAssetValue = (option, props) => {
         <AssetIcon icon={option.accIcon} className="mr-2" />
         <span>{option.accLabel}</span>
       </div>
-    );
+    )
   }
-  return <span>{props.placeholder}</span>;
-};
+  return <span>{props.placeholder}</span>
+}

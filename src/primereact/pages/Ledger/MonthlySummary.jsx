@@ -1,17 +1,17 @@
-import { Chart as ChartJS, registerables } from 'chart.js';
-import { useMemo, useEffect, useRef } from 'react';
-import { useData } from '@/context/DataContext';
-import { useMonthSync } from '@/hooks/useMonthSync';
-import { DataTable, Column } from '@/assets/js/PrimeReact';
-import dayjs from 'dayjs';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { Chart as ChartJS, registerables } from 'chart.js'
+import { useMemo, useEffect, useRef } from 'react'
+import { useData } from '@/context/DataContext'
+import { useMonthSync } from '@/hooks/useMonthSync'
+import { DataTable, Column } from '@/assets/js/PrimeReact'
+import dayjs from 'dayjs'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
 
-import MonthNavigator from '@/components/common/MonthNavigator';
-import MonthlySummaryChart from '@/components/Ledger/MonthlySummaryChart';
+import MonthNavigator from '@/components/common/MonthNavigator'
+import MonthlySummaryChart from '@/components/Ledger/MonthlySummaryChart'
 
-const MONTH_LENGTH = 6;
+const MONTH_LENGTH = 6
 
-ChartJS.register(...registerables);
+ChartJS.register(...registerables)
 
 export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
   const {
@@ -20,79 +20,79 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
     loadSheet연도Data,
     selectedDate,
     categoryMap,
-  } = useData();
-  const fetchingYears = useRef(new Set());
+  } = useData()
+  const fetchingYears = useRef(new Set())
 
   // 데이터 가공 ---------------------------------------------------------------------------------------
   const months = useMemo(() => {
-    const arr = [];
+    const arr = []
     for (let i = monthLength - 1; i >= 0; i--) {
-      arr.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'));
+      arr.push(dayjs(selectedDate).subtract(i, 'month').format('YYYY-MM'))
     }
-    return arr;
-  }, [selectedDate, monthLength]);
+    return arr
+  }, [selectedDate, monthLength])
 
   const requiredYears = useMemo(() => {
-    const years = new Set();
-    months.forEach((m) => years.add(m.split('-')[0]));
-    return Array.from(years);
-  }, [months]);
+    const years = new Set()
+    months.forEach((m) => years.add(m.split('-')[0]))
+    return Array.from(years)
+  }, [months])
 
   const summaryData = useMemo(() => {
-    const rawData = {};
+    const rawData = {}
     months.forEach((m) => {
-      rawData[m] = { month: m, 수입: 0, 지출: 0, 이체: 0 };
-    });
+      rawData[m] = { month: m, 수입: 0, 지출: 0, 이체: 0 }
+    })
 
-    const allData = [];
+    const allData = []
     requiredYears.forEach((year) => {
       if (sheetYYYYData[year]) {
-        allData.push(...sheetYYYYData[year]);
+        allData.push(...sheetYYYYData[year])
       }
-    });
+    })
 
     allData.forEach((item) => {
-      if (item.gDeleted) return;
+      if (item.gDeleted) return
 
       // 합계 제외 카테고리 체크
-      const catInfo = categoryMap[item.gCategory];
-      if (catInfo && catInfo.cdAddSum === false) return;
+      const catInfo = categoryMap[item.gCategory]
+      if (catInfo && catInfo.cdAddSum === false) return
 
-      const m = dayjs(item.gDate).format('YYYY-MM');
+      const m = dayjs(item.gDate).format('YYYY-MM')
       if (rawData[m]) {
-        rawData[m][item.gType] += item.gAmount;
+        rawData[m][item.gType] += item.gAmount
       }
-    });
+    })
 
     // DataTable용 리스트 (최신순)
     const tableData = [...months].reverse().map((m) => ({
       monthLabel: dayjs(m).format('YYYY-MM'),
       ...rawData[m],
-    }));
+    }))
 
-    return { months, tableData, rawData };
-  }, [sheetYYYYData, months, requiredYears, categoryMap]);
+    return { months, tableData, rawData }
+  }, [sheetYYYYData, months, requiredYears, categoryMap])
 
   useEffect(() => {
     requiredYears.forEach((year) => {
       if (!loadedSheetYYYY[year] && !fetchingYears.current.has(year)) {
-        fetchingYears.current.add(year);
+        fetchingYears.current.add(year)
         loadSheet연도Data(year).finally(() => {
-          fetchingYears.current.delete(year);
-        });
+          fetchingYears.current.delete(year)
+        })
       }
-    });
-  }, [requiredYears, loadedSheetYYYY, loadSheet연도Data]);
+    })
+  }, [requiredYears, loadedSheetYYYY, loadSheet연도Data])
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const { handleMonthChange, handleViewDateChange } = useMonthSync(
     '/ledger/monthlySummary',
-  );
+  )
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateAmountBody = (rowData, field) => {
-    return <>{(rowData[field] || 0).toLocaleString()}</>;
-  };
+    return <>{(rowData[field] || 0).toLocaleString()}</>
+  }
 
   return (
     <div className="panel-content summary-page">
@@ -159,5 +159,5 @@ export default function MonthlySummary({ monthLength = MONTH_LENGTH }) {
         </div>
       </section>
     </div>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { Panel, Button } from '@/assets/js/PrimeReact';
-import DialogSampleBottom from '@/samples/components/DialogSampleBottom';
+import { useState } from 'react'
+import { Panel, Button } from '@/assets/js/PrimeReact'
+import DialogSampleBottom from '@/samples/components/DialogSampleBottom'
 
 export default function BlankSidebarBottom() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -21,5 +21,5 @@ export default function BlankSidebarBottom() {
 
       <DialogSampleBottom visible={visible} onHide={() => setVisible(false)} />
     </Panel>
-  );
+  )
 }

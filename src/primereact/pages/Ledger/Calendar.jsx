@@ -1,37 +1,37 @@
-import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
-import { useData } from '@/context/DataContext';
-import { useMonthSync } from '@/hooks/useMonthSync';
-import { useSwipe } from '@/hooks/useSwipe';
-import dayjs from 'dayjs';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react'
+import { useData } from '@/context/DataContext'
+import { useMonthSync } from '@/hooks/useMonthSync'
+import { useSwipe } from '@/hooks/useSwipe'
+import dayjs from 'dayjs'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
 
-import MonthNavigator from '@/components/common/MonthNavigator';
-import LedgerSummary from '@/components/Ledger/LedgerSummary';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import timeGridPlugin from '@fullcalendar/timegrid';
+import MonthNavigator from '@/components/common/MonthNavigator'
+import LedgerSummary from '@/components/Ledger/LedgerSummary'
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import timeGridPlugin from '@fullcalendar/timegrid'
 
-const DialogList = lazy(() => import('@/components/Ledger/DialogList'));
+const DialogList = lazy(() => import('@/components/Ledger/DialogList'))
 
 export default function Calendar() {
-  const { yearData, selectedDate, categoryMap } = useData();
-  const [showDialogList, setShowDialogList] = useState(false);
-  const [dialogParams, setDialogParams] = useState({});
-  const fcRef = useRef(null);
+  const { yearData, selectedDate, categoryMap } = useData()
+  const [showDialogList, setShowDialogList] = useState(false)
+  const [dialogParams, setDialogParams] = useState({})
+  const fcRef = useRef(null)
 
   // 일일 합계 데이터 가공
   const dailySummary = useMemo(() => {
-    const summary = {};
-    (yearData || []).forEach((item) => {
-      if (item.gDeleted) return;
+    const summary = {}
+    ;(yearData || []).forEach((item) => {
+      if (item.gDeleted) return
 
       // 합계 제외 카테고리 체크
-      const catInfo = categoryMap[item.gCategory];
-      if (catInfo && catInfo.cdAddSum === false) return;
+      const catInfo = categoryMap[item.gCategory]
+      if (catInfo && catInfo.cdAddSum === false) return
 
       // 날짜 포맷 표준화 (YYYY-MM-DD)
-      const dateStr = dayjs(item.gDate).format('YYYY-MM-DD');
+      const dateStr = dayjs(item.gDate).format('YYYY-MM-DD')
       if (!summary[dateStr]) {
         summary[dateStr] = {
           income0: 0,
@@ -42,37 +42,37 @@ export default function Calendar() {
           expense1: 0,
           transfer1: 0,
           length1: 0,
-        };
+        }
       }
 
-      const amount = Number(item.gAmount) || 0;
+      const amount = Number(item.gAmount) || 0
       if (!item.gExecuted) {
         if (item.gType === TRANSACTION_TYPE.INCOME) {
-          summary[dateStr].income0 += amount;
-          ++summary[dateStr].length0;
+          summary[dateStr].income0 += amount
+          ++summary[dateStr].length0
         } else if (item.gType === TRANSACTION_TYPE.EXPENSE) {
-          summary[dateStr].expense0 += amount;
-          ++summary[dateStr].length0;
+          summary[dateStr].expense0 += amount
+          ++summary[dateStr].length0
         } else if (item.gType === TRANSACTION_TYPE.TRANSFER) {
-          summary[dateStr].transfer0 += amount;
-          ++summary[dateStr].length0;
+          summary[dateStr].transfer0 += amount
+          ++summary[dateStr].length0
         }
       } else {
         if (item.gType === TRANSACTION_TYPE.INCOME) {
-          summary[dateStr].income1 += amount;
-          ++summary[dateStr].length1;
+          summary[dateStr].income1 += amount
+          ++summary[dateStr].length1
         } else if (item.gType === TRANSACTION_TYPE.EXPENSE) {
-          summary[dateStr].expense1 += amount;
-          ++summary[dateStr].length1;
+          summary[dateStr].expense1 += amount
+          ++summary[dateStr].length1
         } else if (item.gType === TRANSACTION_TYPE.TRANSFER) {
-          summary[dateStr].transfer1 += amount;
-          ++summary[dateStr].length1;
+          summary[dateStr].transfer1 += amount
+          ++summary[dateStr].length1
         }
       }
-    });
+    })
 
-    return summary;
-  }, [yearData, categoryMap]);
+    return summary
+  }, [yearData, categoryMap])
 
   // 월별 합계 계산
   const monthTotal = useMemo(() => {
@@ -86,76 +86,76 @@ export default function Calendar() {
       incomeA: 0,
       expenseA: 0,
       transferA: 0,
-    };
-    if (!selectedDate || !dailySummary) return total;
+    }
+    if (!selectedDate || !dailySummary) return total
 
-    const currentMonth = dayjs(selectedDate).format('YYYY-MM');
+    const currentMonth = dayjs(selectedDate).format('YYYY-MM')
     Object.keys(dailySummary).forEach((dateStr) => {
       if (dateStr.startsWith(currentMonth)) {
-        total.income0 += dailySummary[dateStr].income0;
-        total.expense0 += dailySummary[dateStr].expense0;
-        total.transfer0 += dailySummary[dateStr].transfer0;
+        total.income0 += dailySummary[dateStr].income0
+        total.expense0 += dailySummary[dateStr].expense0
+        total.transfer0 += dailySummary[dateStr].transfer0
 
-        total.income1 += dailySummary[dateStr].income1;
-        total.expense1 += dailySummary[dateStr].expense1;
-        total.transfer1 += dailySummary[dateStr].transfer1;
+        total.income1 += dailySummary[dateStr].income1
+        total.expense1 += dailySummary[dateStr].expense1
+        total.transfer1 += dailySummary[dateStr].transfer1
       }
-    });
-    total.incomeA = total.income0 + total.income1;
-    total.expenseA = total.expense0 + total.expense1;
-    total.transferA = total.transfer0 + total.transfer1;
+    })
+    total.incomeA = total.income0 + total.income1
+    total.expenseA = total.expense0 + total.expense1
+    total.transferA = total.transfer0 + total.transfer1
 
-    return total;
-  }, [selectedDate, dailySummary]);
+    return total
+  }, [selectedDate, dailySummary])
 
   useEffect(() => {
     if (fcRef.current && selectedDate) {
-      const calendarApi = fcRef.current.getApi();
+      const calendarApi = fcRef.current.getApi()
       // flushSync 에러 방지를 위해 비동기 처리 (타스크 큐로 위임)
       setTimeout(() => {
-        calendarApi.gotoDate(selectedDate);
-      }, 0);
+        calendarApi.gotoDate(selectedDate)
+      }, 0)
     }
-  }, [selectedDate]);
+  }, [selectedDate])
 
   // Functions -------------------------------------------------------------------------------------
   const formatCompactAmount = (amount) => {
-    if (!amount) return '0';
+    if (!amount) return '0'
     if (Math.abs(amount) >= 1000000) {
-      return Math.trunc(amount / 10000).toLocaleString() + '만';
+      return Math.trunc(amount / 10000).toLocaleString() + '만'
     }
-    return amount.toLocaleString();
-  };
+    return amount.toLocaleString()
+  }
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const { handleMonthChange, handleViewDateChange, moveMonth } =
-    useMonthSync('/ledger/calendar');
+    useMonthSync('/ledger/calendar')
 
   // 날짜 칸 클릭 처리
   const handleDateClick = (info) => {
-    setDialogParams({ date: info.dateStr });
-    setShowDialogList(true);
-  };
+    setDialogParams({ date: info.dateStr })
+    setShowDialogList(true)
+  }
 
   const swipeHandlers = useSwipe({
     onSwipeLeft: () => moveMonth(1),
     onSwipeRight: () => moveMonth(-1),
-  });
+  })
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
 
   const templateDayCell = (arg) => {
-    const day = arg.date.getDate();
+    const day = arg.date.getDate()
 
-    const argDate = dayjs(arg.date).format('YYYY-MM-DD');
-    const data = dailySummary[argDate];
+    const argDate = dayjs(arg.date).format('YYYY-MM-DD')
+    const data = dailySummary[argDate]
     if (data === undefined) {
       return (
         <div className="custom-day-content">
           <div className="day-number">{day}</div>
           <div className="daily-totals monospace text-xs"></div>
         </div>
-      );
+      )
     } else {
       return (
         <div className="custom-day-content">
@@ -196,9 +196,9 @@ export default function Calendar() {
             } */}
           </div>
         </div>
-      );
+      )
     }
-  };
+  }
 
   return (
     <div className="panel-content calendar-page">
@@ -237,5 +237,5 @@ export default function Calendar() {
         />
       </Suspense>
     </div>
-  );
+  )
 }

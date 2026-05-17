@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useData } from '@/context/DataContext';
+import { useEffect } from 'react'
+import { useData } from '@/context/DataContext'
 
 /**
  * 여러 연도의 데이터를 로드하는 커스텀 훅
@@ -7,7 +7,7 @@ import { useData } from '@/context/DataContext';
  * @param {Object} params - 파라미터 (startYear, endYear 포함)
  */
 export function useMultiYearLoad(visible, params) {
-  const { loadedSheetYYYY, loadSheet연도Data } = useData();
+  const { loadedSheetYYYY, loadSheet연도Data } = useData()
 
   useEffect(() => {
     if (
@@ -17,9 +17,9 @@ export function useMultiYearLoad(visible, params) {
       params?.startYear !== params?.endYear
     ) {
       for (let y = params.startYear; y <= params.endYear; y++) {
-        const yearStr = y.toString();
+        const yearStr = y.toString()
         if (!loadedSheetYYYY[yearStr]) {
-          loadSheet연도Data(yearStr);
+          loadSheet연도Data(yearStr)
         }
       }
     }
@@ -29,5 +29,5 @@ export function useMultiYearLoad(visible, params) {
     params?.endYear,
     loadedSheetYYYY,
     loadSheet연도Data,
-  ]);
+  ])
 }

@@ -1,6 +1,6 @@
-import { Badge } from '@/assets/js/PrimeReact';
-import AssetIcon from '../common/AssetIcon';
-import { classNames } from 'primereact/utils';
+import { Badge } from '@/assets/js/PrimeReact'
+import AssetIcon from '../common/AssetIcon'
+import { classNames } from 'primereact/utils'
 
 /**
  * 자산(계좌) 리스트 아이템 템플릿
@@ -40,5 +40,5 @@ export default function AssetListItem({ item, onClick }) {
 
       <i className="pi pi-chevron-right"></i>
     </div>
-  );
+  )
 }

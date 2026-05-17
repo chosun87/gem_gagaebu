@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react';
-import { useData } from '@/context/DataContext';
-import { Chart, TabView, TabPanel, Button } from '@/assets/js/PrimeReact';
-import dayjs from 'dayjs';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { useState, useMemo } from 'react'
+import { useData } from '@/context/DataContext'
+import { Chart, TabView, TabPanel, Button } from '@/assets/js/PrimeReact'
+import dayjs from 'dayjs'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
 
 export default function Statistics() {
   const {
@@ -11,35 +11,34 @@ export default function Statistics() {
     setSelectedDate,
     categoryOptions,
     categoryMap,
-  } = useData();
-  const [activeIndex, setActiveIndex] = useState(1); // 0: 주간, 1: 월간, 2: 연간
+  } = useData()
+  const [activeIndex, setActiveIndex] = useState(1) // 0: 주간, 1: 월간, 2: 연간
 
   const { chartData, chartOptions, listData, totalAmount } = useMemo(() => {
     // 1. 선택된 달의 지출 데이터만 필터링
     const monthData = (yearData || []).filter((item) => {
-      if (item.gDeleted || item.gType !== TRANSACTION_TYPE.EXPENSE)
-        return false;
+      if (item.gDeleted || item.gType !== TRANSACTION_TYPE.EXPENSE) return false
 
       // 합계 제외 카테고리 체크
-      const catInfo = categoryMap[item.gCategory];
-      if (catInfo && catInfo.cdAddSum === false) return false;
+      const catInfo = categoryMap[item.gCategory]
+      if (catInfo && catInfo.cdAddSum === false) return false
 
-      const d = dayjs(item.gDate);
+      const d = dayjs(item.gDate)
       return (
         d.year() === selectedDate.getFullYear() &&
         d.month() === selectedDate.getMonth()
-      );
-    });
+      )
+    })
 
     // 2. 카테고리별 합산
-    const categoryTotals = {};
-    let totalExpense = 0;
+    const categoryTotals = {}
+    let totalExpense = 0
     monthData.forEach((item) => {
-      const cat = item.gCategory || '기타';
-      const amount = Math.abs(Number(item.gAmount) || 0); // 지출은 양수로 표기
-      categoryTotals[cat] = (categoryTotals[cat] || 0) + amount;
-      totalExpense += amount;
-    });
+      const cat = item.gCategory || '기타'
+      const amount = Math.abs(Number(item.gAmount) || 0) // 지출은 양수로 표기
+      categoryTotals[cat] = (categoryTotals[cat] || 0) + amount
+      totalExpense += amount
+    })
 
     // 따뜻하고 조화로운 색상 팔레트
     const colors = [
@@ -54,31 +53,31 @@ export default function Statistics() {
       '#c98fc9',
       '#e685a6',
       '#a0a0a0',
-    ];
+    ]
 
     // 3. 금액순 정렬 및 퍼센트 계산
     const sortedCategories = Object.keys(categoryTotals)
       .map((cat) => {
-        const amount = categoryTotals[cat];
-        const percent = totalExpense > 0 ? (amount / totalExpense) * 100 : 0;
+        const amount = categoryTotals[cat]
+        const percent = totalExpense > 0 ? (amount / totalExpense) * 100 : 0
 
         const catNode = categoryOptions
           .find((group) => group.cdGroup === TRANSACTION_TYPE.EXPENSE)
-          ?.children?.find((c) => c.cd === cat);
+          ?.children?.find((c) => c.cd === cat)
         return {
           id: cat,
           name: catNode?.cdLabel || cat,
           icon: catNode?.cdIcon || 'pi pi-tag',
           amount,
           percent,
-        };
+        }
       })
-      .sort((a, b) => b.amount - a.amount);
+      .sort((a, b) => b.amount - a.amount)
 
     // 정렬된 순서대로 색상 할당
     sortedCategories.forEach((cat, idx) => {
-      cat.color = colors[idx % colors.length];
-    });
+      cat.color = colors[idx % colors.length]
+    })
 
     // 4. 차트 데이터 생성
     const data = {
@@ -92,7 +91,7 @@ export default function Statistics() {
           borderColor: '#ffffff',
         },
       ],
-    };
+    }
 
     const options = {
       plugins: {
@@ -108,24 +107,24 @@ export default function Statistics() {
         },
       },
       maintainAspectRatio: false,
-    };
+    }
 
     return {
       chartData: data,
       chartOptions: options,
       listData: sortedCategories,
       totalAmount: totalExpense,
-    };
-  }, [yearData, selectedDate, categoryOptions, categoryMap]);
+    }
+  }, [yearData, selectedDate, categoryOptions, categoryMap])
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const handlePrev = () => {
-    setSelectedDate((prev) => dayjs(prev).subtract(1, 'month').toDate());
-  };
+    setSelectedDate((prev) => dayjs(prev).subtract(1, 'month').toDate())
+  }
 
   const handleNext = () => {
-    setSelectedDate((prev) => dayjs(prev).add(1, 'month').toDate());
-  };
+    setSelectedDate((prev) => dayjs(prev).add(1, 'month').toDate())
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const renderContent = () => (
@@ -214,7 +213,7 @@ export default function Statistics() {
         )}
       </div>
     </div>
-  );
+  )
 
   return (
     <div className="app-page statistics-page">
@@ -243,5 +242,5 @@ export default function Statistics() {
         </TabPanel>
       </TabView>
     </div>
-  );
+  )
 }

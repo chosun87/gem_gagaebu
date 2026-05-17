@@ -1,10 +1,10 @@
-import { createContext, useMemo } from 'react';
-import { CodeProvider, useCodeData } from './DataContext코드';
-import { AssetProvider, useAssetData } from './DataContext자산';
-import { RepeatProvider, useRepeatData } from './DataContext반복';
-import { YYYYProvider, useYYYYData } from './DataContextYYYY';
+import { createContext, useMemo } from 'react'
+import { CodeProvider, useCodeData } from './DataContext코드'
+import { AssetProvider, useAssetData } from './DataContext자산'
+import { RepeatProvider, useRepeatData } from './DataContext반복'
+import { YYYYProvider, useYYYYData } from './DataContextYYYY'
 
-const DataContext = createContext(null);
+const DataContext = createContext(null)
 
 export const DataProvider = ({ children }) => {
   return (
@@ -15,14 +15,14 @@ export const DataProvider = ({ children }) => {
         </RepeatProvider>
       </AssetProvider>
     </CodeProvider>
-  );
-};
+  )
+}
 
 export const useData = () => {
-  const code = useCodeData();
-  const asset = useAssetData();
-  const repeat = useRepeatData();
-  const yyyy = useYYYYData();
+  const code = useCodeData()
+  const asset = useAssetData()
+  const repeat = useRepeatData()
+  const yyyy = useYYYYData()
 
   // 모든 컨텍스트의 데이터를 하나로 합쳐서 반환 (기존 호환성 유지)
   return useMemo(
@@ -69,15 +69,15 @@ export const useData = () => {
 
       // 전체 데이터 새로고침
       reloadData: async () => {
-        const currentYear = yyyy.selectedDate.getFullYear().toString();
+        const currentYear = yyyy.selectedDate.getFullYear().toString()
         await Promise.all([
           code.loadSheet코드Data(),
           asset.loadSheet자산Data(),
           repeat.loadSheet반복Data(),
           yyyy.loadSheet연도Data(currentYear),
-        ]);
+        ])
       },
     }),
     [code, asset, repeat, yyyy],
-  );
-};
+  )
+}

@@ -1,5 +1,5 @@
-import { useState, useRef, useMemo, lazy, Suspense } from 'react';
-import { useData } from '@/context/DataContext';
+import { useState, useRef, useMemo, lazy, Suspense } from 'react'
+import { useData } from '@/context/DataContext'
 import {
   Badge,
   Button,
@@ -9,55 +9,55 @@ import {
   Menu,
   Panel,
   ProgressSpinner,
-} from '@/assets/js/PrimeReact';
-import dayjs from 'dayjs';
-import { REPEAT_PERIOD } from '@/assets/js/constants';
+} from '@/assets/js/PrimeReact'
+import dayjs from 'dayjs'
+import { REPEAT_PERIOD } from '@/assets/js/constants'
 
-const DialogRepeat = lazy(() => import('@/components/Settings/DialogRepeat'));
-const DialogList = lazy(() => import('@/components/Ledger/DialogList'));
+const DialogRepeat = lazy(() => import('@/components/Settings/DialogRepeat'))
+const DialogList = lazy(() => import('@/components/Ledger/DialogList'))
 
 export default function Repeat() {
-  const { sheet반복Data, loading, updateRepeatEntry_rpCompleted } = useData();
-  const [repeat, setRepeat] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [showDialogRepeat, setShowDialogRepeat] = useState(false);
-  const [showDialogList, setShowDialogList] = useState(false);
-  const [dialogListParams, setDialogListParams] = useState({});
+  const { sheet반복Data, loading, updateRepeatEntry_rpCompleted } = useData()
+  const [repeat, setRepeat] = useState(null)
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [showDialogRepeat, setShowDialogRepeat] = useState(false)
+  const [showDialogList, setShowDialogList] = useState(false)
+  const [dialogListParams, setDialogListParams] = useState({})
 
-  const menuLeft = useRef(null);
+  const menuLeft = useRef(null)
 
   const data = useMemo(() => {
-    const list = [...(sheet반복Data || [])];
+    const list = [...(sheet반복Data || [])]
     return list.sort((a, b) => {
       // 1. 완료 여부 정렬 (미완료 우선)
       if (a.rpCompleted !== b.rpCompleted) {
-        return a.rpCompleted ? 1 : -1;
+        return a.rpCompleted ? 1 : -1
       }
 
       // 2. 반복 주기 정렬 (매주 'W' 우선)
       if (a.rpPeriod !== b.rpPeriod) {
-        return a.rpPeriod === REPEAT_PERIOD.WEEKLY ? -1 : 1;
+        return a.rpPeriod === REPEAT_PERIOD.WEEKLY ? -1 : 1
       }
 
       // 3. rpDay 정렬 (높은 값 우선)
       const getDayValue = (item) => {
         if (item.rpPeriod === REPEAT_PERIOD.MONTHLY) {
-          return parseInt(item.rpDay) || 0;
+          return parseInt(item.rpDay) || 0
         }
         if (item.rpPeriod === REPEAT_PERIOD.WEEKLY) {
-          const dayMap = { 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6, 일: 7 };
-          return dayMap[item.rpDay] || 0;
+          const dayMap = { 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6, 일: 7 }
+          return dayMap[item.rpDay] || 0
         }
-        return 0;
-      };
+        return 0
+      }
 
-      const dayDiff = getDayValue(b) - getDayValue(a);
-      if (dayDiff !== 0) return dayDiff;
+      const dayDiff = getDayValue(b) - getDayValue(a)
+      if (dayDiff !== 0) return dayDiff
 
       // 4. 종료일 정렬 (늦은 날짜 우선)
-      return dayjs(b.rpDateE).unix() - dayjs(a.rpDateE).unix();
-    });
-  }, [sheet반복Data]);
+      return dayjs(b.rpDateE).unix() - dayjs(a.rpDateE).unix()
+    })
+  }, [sheet반복Data])
 
   const menuItems = [
     {
@@ -70,17 +70,17 @@ export default function Repeat() {
       icon: 'pi pi-list',
       command: () => fnOpenDialogList(selectedItem),
     },
-  ];
+  ]
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogRepeat = (repeat) => {
-    setRepeat(repeat);
-    setShowDialogRepeat(true);
-  };
+    setRepeat(repeat)
+    setShowDialogRepeat(true)
+  }
 
   const fnHideDialogRepeat = () => {
-    setShowDialogRepeat(false);
-  };
+    setShowDialogRepeat(false)
+  }
 
   const fnOpenDialogList = () => {
     setDialogListParams({
@@ -88,25 +88,25 @@ export default function Repeat() {
       header: `${selectedItem.rpCategory}-${selectedItem.rpMemo}`,
       startYear: dayjs(selectedItem.rpDateS).year(),
       endYear: dayjs(selectedItem.rpDateE).year(),
-    });
-    setShowDialogList(true);
-  };
+    })
+    setShowDialogList(true)
+  }
 
   const fnHideDialogList = () => {
-    setShowDialogList(false);
-  };
+    setShowDialogList(false)
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDataViewItem = (item) => {
-    const rpTypeClass = `rpType-${item.rpType}`;
-    const rpCompletedClass = `rpCompleted-${item.rpCompleted ? 'Y' : 'N'}`;
+    const rpTypeClass = `rpType-${item.rpType}`
+    const rpCompletedClass = `rpCompleted-${item.rpCompleted ? 'Y' : 'N'}`
 
     return (
       <div
         className={`list-item ${rpTypeClass} ${rpCompletedClass} col-12`}
         onClick={(e) => {
-          setSelectedItem(item);
-          menuLeft.current.toggle(e);
+          setSelectedItem(item)
+          menuLeft.current.toggle(e)
         }}
       >
         <Badge
@@ -158,8 +158,8 @@ export default function Repeat() {
           />
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Panel
@@ -217,5 +217,5 @@ export default function Repeat() {
         />
       </Suspense>
     </Panel>
-  );
+  )
 }

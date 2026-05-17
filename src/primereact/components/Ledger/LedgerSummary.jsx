@@ -1,8 +1,8 @@
-import { DataTable, Column } from '@/assets/js/PrimeReact';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { DataTable, Column } from '@/assets/js/PrimeReact'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
 
 export default function LedgerSummary({ summary }) {
-  const summaryA = [];
+  const summaryA = []
 
   if (
     !(
@@ -16,7 +16,7 @@ export default function LedgerSummary({ summary }) {
       실행전: summary?.income0 || 0,
       실행후: summary?.income1 || 0,
       합계: summary?.incomeA || 0,
-    });
+    })
   }
   if (
     !(
@@ -30,7 +30,7 @@ export default function LedgerSummary({ summary }) {
       실행전: summary?.expense0 || 0,
       실행후: summary?.expense1 || 0,
       합계: summary?.expenseA || 0,
-    });
+    })
   }
   if (
     !(
@@ -44,13 +44,13 @@ export default function LedgerSummary({ summary }) {
       실행전: summary?.transfer0 || 0,
       실행후: summary?.transfer1 || 0,
       합계: summary?.transferA || 0,
-    });
+    })
   }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateAmountBody = (rowData, field) => {
-    return <>{(rowData[field] || 0).toLocaleString()}</>;
-  };
+    return <>{(rowData[field] || 0).toLocaleString()}</>
+  }
 
   return (
     summaryA.length > 0 && (
@@ -79,5 +79,5 @@ export default function LedgerSummary({ summary }) {
         ))}
       </DataTable>
     )
-  );
+  )
 }

@@ -3,7 +3,7 @@ export const GOOGLE_SHEET = {
   SPREADSHEET_ID: import.meta.env.DEV
     ? import.meta.env.VITE_GOOGLE_SPREADSHEET_ID_DEV
     : import.meta.env.VITE_GOOGLE_SPREADSHEET_ID_PROD,
-};
+}
 
 // Google Sheets 시트 이름과 범위
 export const SHEET_NAME_RANGE = {
@@ -11,7 +11,7 @@ export const SHEET_NAME_RANGE = {
   ASSET: '자산!A1:J',
   REPEAT: '반복!A1:O',
   YEAR: 'YYYY!A1:K',
-};
+}
 
 // Google Sheets 시트 컬럼 인덱스
 export const SHEET_COL_INDEX = {
@@ -76,7 +76,7 @@ export const SHEET_COL_INDEX = {
     gDeleted: 9,
     gTimestamp: 10,
   },
-};
+}
 
 export const TRANSACTION_TYPE = {
   INCOME: '수입',
@@ -85,23 +85,23 @@ export const TRANSACTION_TYPE = {
   DEPOSIT: '입금',
   WITHDRAW: '출금',
   REVENUE: '수익',
-};
+}
 
 export const REPEAT_PERIOD = {
   MONTHLY: 'M',
   WEEKLY: 'W',
-};
+}
 
 // 거래 유형 (UI 바인딩용)
 export const G_TYPE = {
   수입: { label: TRANSACTION_TYPE.INCOME, value: TRANSACTION_TYPE.INCOME },
   지출: { label: TRANSACTION_TYPE.EXPENSE, value: TRANSACTION_TYPE.EXPENSE },
   이체: { label: TRANSACTION_TYPE.TRANSFER, value: TRANSACTION_TYPE.TRANSFER },
-};
+}
 
 // 반복 거래 유형
 export const RP_TYPE = {
   수입: { label: TRANSACTION_TYPE.INCOME, value: TRANSACTION_TYPE.INCOME },
   지출: { label: TRANSACTION_TYPE.EXPENSE, value: TRANSACTION_TYPE.EXPENSE },
   이체: { label: TRANSACTION_TYPE.TRANSFER, value: TRANSACTION_TYPE.TRANSFER },
-};
+}

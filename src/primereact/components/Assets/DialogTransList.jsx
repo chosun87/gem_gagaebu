@@ -1,4 +1,4 @@
-import { useState, useMemo, lazy, Suspense } from 'react';
+import { useState, useMemo, lazy, Suspense } from 'react'
 import {
   Sidebar,
   Panel,
@@ -6,17 +6,17 @@ import {
   Button,
   Message,
   ProgressSpinner,
-} from '@/assets/js/PrimeReact';
-import { useData } from '@/context/DataContext';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
-import dayjs from 'dayjs';
-import { useMultiYearLoad } from '@/hooks/useMultiYearLoad';
-import { calculateAssetTotal } from '@/assets/js/dataUtils';
-import AssetTransListItem from '@/components/Assets/AssetTransListItem';
-import AssetSummary from '@/components/Assets/AssetSummary';
+} from '@/assets/js/PrimeReact'
+import { useData } from '@/context/DataContext'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
+import dayjs from 'dayjs'
+import { useMultiYearLoad } from '@/hooks/useMultiYearLoad'
+import { calculateAssetTotal } from '@/assets/js/dataUtils'
+import AssetTransListItem from '@/components/Assets/AssetTransListItem'
+import AssetSummary from '@/components/Assets/AssetSummary'
 
-const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'));
-const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'));
+const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'))
+const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'))
 
 export default function DialogTransList({ visible, onHide, params }) {
   const {
@@ -24,23 +24,23 @@ export default function DialogTransList({ visible, onHide, params }) {
     sheetYYYYData,
     updateLedgerEntry_gExecute,
     loading: dataLoading,
-  } = useData();
-  const [ledger, setLedger] = useState(null);
-  const [showDialogLedger, setShowDialogLedger] = useState(false);
-  const [showDialogAI, setShowDialogAI] = useState(false);
+  } = useData()
+  const [ledger, setLedger] = useState(null)
+  const [showDialogLedger, setShowDialogLedger] = useState(false)
+  const [showDialogAI, setShowDialogAI] = useState(false)
 
   // 파라미터 기반 필터링 로직
   const filteredData = useMemo(() => {
-    if (!params) return [];
+    if (!params) return []
 
     const baseData = params.accCode
       ? Object.values(sheetYYYYData || {}).flat()
-      : yearData;
+      : yearData
 
     return baseData
       .filter((item) => {
         // 이체만 처리
-        if (item.gType !== TRANSACTION_TYPE.TRANSFER) return false;
+        if (item.gType !== TRANSACTION_TYPE.TRANSFER) return false
 
         // 자산 조건 (accCode)
         if (
@@ -48,43 +48,43 @@ export default function DialogTransList({ visible, onHide, params }) {
           item.gAcc1 !== params.accCode &&
           item.gAcc2 !== params.accCode
         )
-          return false;
+          return false
 
-        return true;
+        return true
       })
-      .sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix());
-  }, [yearData, sheetYYYYData, params]);
+      .sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix())
+  }, [yearData, sheetYYYYData, params])
 
   // 헤더에 출력할 조건 텍스트 생성
   const headerText = useMemo(() => {
-    if (!params) return '조회 내역';
-    const parts = [];
-    if (params.accCode) parts.push(params.header);
+    if (!params) return '조회 내역'
+    const parts = []
+    if (params.accCode) parts.push(params.header)
     return parts.length === 1
       ? parts[0]
       : params.accCode
         ? params.header
-        : '조회 내역';
-  }, [params]);
+        : '조회 내역'
+  }, [params])
 
   // 필터링된 데이터의 합계 계산
   const listTotal = useMemo(
     () => calculateAssetTotal(filteredData, params.accCode),
     [filteredData, params.accCode],
-  );
+  )
 
   // 자산 내역 전체 조회를 위한 연도별 데이터 로드
-  useMultiYearLoad(visible, params);
+  useMultiYearLoad(visible, params)
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogLedger = (ledger) => {
-    setLedger(ledger);
-    setShowDialogLedger(true);
-  };
+    setLedger(ledger)
+    setShowDialogLedger(true)
+  }
 
   const fnHideDialogLedger = () => {
-    setShowDialogLedger(false);
-  };
+    setShowDialogLedger(false)
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDataViewItem = (item) => (
@@ -94,7 +94,7 @@ export default function DialogTransList({ visible, onHide, params }) {
       onClick={() => fnOpenDialogLedger(item)}
       onExecuteChange={updateLedgerEntry_gExecute}
     />
-  );
+  )
 
   const templateFooter = (options) => {
     return (
@@ -126,8 +126,8 @@ export default function DialogTransList({ visible, onHide, params }) {
           disabled={dataLoading}
         />
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -176,5 +176,5 @@ export default function DialogTransList({ visible, onHide, params }) {
         />
       </Suspense>
     </Sidebar>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import { Sidebar, Panel, Button } from '@/assets/js/PrimeReact';
+import { Sidebar, Panel, Button } from '@/assets/js/PrimeReact'
 
 export default function DialogSampleBottom({ visible, onHide }) {
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -14,8 +14,8 @@ export default function DialogSampleBottom({ visible, onHide }) {
         />
         <Button severity="primary" size="large" label="OK" onClick={onHide} />
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -32,5 +32,5 @@ export default function DialogSampleBottom({ visible, onHide }) {
         </div>
       </Panel>
     </Sidebar>
-  );
+  )
 }

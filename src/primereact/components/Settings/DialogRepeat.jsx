@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useData } from '@/context/DataContext';
+import { useState } from 'react'
+import { useData } from '@/context/DataContext'
 import {
   Button,
   Panel,
@@ -10,20 +10,20 @@ import {
   SelectButton,
   Dropdown,
   ToggleButton,
-} from '@/assets/js/PrimeReact';
-import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils';
-import { classNames } from 'primereact/utils';
-import dayjs from 'dayjs';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
+} from '@/assets/js/PrimeReact'
+import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils'
+import { classNames } from 'primereact/utils'
+import dayjs from 'dayjs'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
 
 import {
   templateCategoryItem,
   templateCategoryValue,
   templateAssetItem,
   templateAssetValue,
-} from '@/components/common/SelectTemplates';
+} from '@/components/common/SelectTemplates'
 
-import { RP_TYPE } from '@/assets/js/constants';
+import { RP_TYPE } from '@/assets/js/constants'
 
 export default function DialogRepeat({ repeat, visible, onHide }) {
   const {
@@ -35,52 +35,52 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     categoryOptions,
     defaultAssetCode,
     periodOptions,
-  } = useData();
+  } = useData()
 
-  const [rpType, set_rpType] = useState('');
-  const [rpDateS, set_rpDateS] = useState(new Date());
-  const [rpDateE, set_rpDateE] = useState(new Date());
-  const [rpPeriod, set_rpPeriod] = useState('M');
-  const [rpDay, set_rpDay] = useState('1');
-  const [rpAcc1, set_rpAcc1] = useState('');
-  const [rpAcc2, set_rpAcc2] = useState('');
-  const [rpCategory, set_rpCategory] = useState('');
-  const [rpAmount, set_rpAmount] = useState(0);
-  const [rpTotalAmount, set_rpTotalAmount] = useState(0);
-  const [rpMemo, set_rpMemo] = useState('');
-  const [rpCompleted, set_rpCompleted] = useState(false);
-  const [submitted, set_submitted] = useState(false);
+  const [rpType, set_rpType] = useState('')
+  const [rpDateS, set_rpDateS] = useState(new Date())
+  const [rpDateE, set_rpDateE] = useState(new Date())
+  const [rpPeriod, set_rpPeriod] = useState('M')
+  const [rpDay, set_rpDay] = useState('1')
+  const [rpAcc1, set_rpAcc1] = useState('')
+  const [rpAcc2, set_rpAcc2] = useState('')
+  const [rpCategory, set_rpCategory] = useState('')
+  const [rpAmount, set_rpAmount] = useState(0)
+  const [rpTotalAmount, set_rpTotalAmount] = useState(0)
+  const [rpMemo, set_rpMemo] = useState('')
+  const [rpCompleted, set_rpCompleted] = useState(false)
+  const [submitted, set_submitted] = useState(false)
 
-  const [dateSFocused, setDateSFocused] = useState(false);
-  const [dateEFocused, setDateEFocused] = useState(false);
+  const [dateSFocused, setDateSFocused] = useState(false)
+  const [dateEFocused, setDateEFocused] = useState(false)
 
   // 다이얼로그가 열릴 때 상태 초기화
   const fnOnShow = () => {
-    set_rpType(repeat?.rpType || TRANSACTION_TYPE.EXPENSE);
-    set_rpDateS(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date());
+    set_rpType(repeat?.rpType || TRANSACTION_TYPE.EXPENSE)
+    set_rpDateS(repeat?.rpDateS ? dayjs(repeat.rpDateS).toDate() : new Date())
     set_rpDateE(
       repeat?.rpDateE
         ? dayjs(repeat.rpDateE).toDate()
         : dayjs().add(1, 'year').toDate(),
-    );
-    set_rpPeriod(repeat?.rpPeriod || 'M');
-    set_rpDay(repeat?.rpDay ? String(repeat.rpDay) : '1');
-    set_rpAcc1(repeat?.rpAcc1 || defaultAssetCode || '');
-    set_rpAcc2(repeat?.rpAcc2 || '');
-    set_rpCategory(repeat?.rpCategory || '');
-    set_rpAmount(repeat?.rpAmount || 0);
-    set_rpTotalAmount(repeat?.rpTotalAmount || 0);
-    set_rpMemo(repeat?.rpMemo || '');
-    set_rpCompleted(repeat?.rpCompleted || false);
-    set_submitted(false);
-  };
+    )
+    set_rpPeriod(repeat?.rpPeriod || 'M')
+    set_rpDay(repeat?.rpDay ? String(repeat.rpDay) : '1')
+    set_rpAcc1(repeat?.rpAcc1 || defaultAssetCode || '')
+    set_rpAcc2(repeat?.rpAcc2 || '')
+    set_rpCategory(repeat?.rpCategory || '')
+    set_rpAmount(repeat?.rpAmount || 0)
+    set_rpTotalAmount(repeat?.rpTotalAmount || 0)
+    set_rpMemo(repeat?.rpMemo || '')
+    set_rpCompleted(repeat?.rpCompleted || false)
+    set_submitted(false)
+  }
 
   // Functions -------------------------------------------------------------------------------------
   // 반복일 옵션 정의
   const monthDays = Array.from({ length: 31 }, (_, i) => ({
     label: `${i + 1}일`,
     value: String(i + 1),
-  }));
+  }))
   const weekDays = [
     { label: '월요일', value: '월' },
     { label: '화요일', value: '화' },
@@ -89,58 +89,58 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
     { label: '금요일', value: '금' },
     { label: '토요일', value: '토' },
     { label: '일요일', value: '일' },
-  ];
+  ]
 
   const _getAccLabels = (type) => {
     switch (type) {
       case TRANSACTION_TYPE.INCOME:
-        return ['입금계좌', ''];
+        return ['입금계좌', '']
       case TRANSACTION_TYPE.EXPENSE:
-        return ['출금계좌', ''];
+        return ['출금계좌', '']
       case TRANSACTION_TYPE.TRANSFER:
-        return ['출금계좌', '입금계좌'];
+        return ['출금계좌', '입금계좌']
       default:
-        return ['자산1', '자산2'];
+        return ['자산1', '자산2']
     }
-  };
+  }
 
-  const [rpAcc1Label, rpAcc2Label] = _getAccLabels(rpType);
+  const [rpAcc1Label, rpAcc2Label] = _getAccLabels(rpType)
 
   const calculateTotalAmount = () => {
-    if (!rpDateS || !rpDateE || !rpAmount || !rpPeriod || !rpDay) return;
+    if (!rpDateS || !rpDateE || !rpAmount || !rpPeriod || !rpDay) return
 
-    let count = 0;
-    const start = dayjs(rpDateS);
-    const end = dayjs(rpDateE);
+    let count = 0
+    const start = dayjs(rpDateS)
+    const end = dayjs(rpDateE)
 
     if (rpPeriod === 'M') {
-      const day = parseInt(rpDay);
+      const day = parseInt(rpDay)
       // 시작 월부터 종료 월까지 루프
-      let temp = start.date(day);
-      if (temp.isBefore(start, 'day')) temp = temp.add(1, 'month');
+      let temp = start.date(day)
+      if (temp.isBefore(start, 'day')) temp = temp.add(1, 'month')
 
       while (temp.isBefore(end) || temp.isSame(end, 'day')) {
-        count++;
-        temp = temp.add(1, 'month');
+        count++
+        temp = temp.add(1, 'month')
       }
     } else if (rpPeriod === 'W') {
-      const dayOfWeekMap = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 };
-      const dayOfWeek = dayOfWeekMap[rpDay];
+      const dayOfWeekMap = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 }
+      const dayOfWeek = dayOfWeekMap[rpDay]
 
-      let temp = start.day(dayOfWeek);
-      if (temp.isBefore(start, 'day')) temp = temp.add(1, 'week');
+      let temp = start.day(dayOfWeek)
+      if (temp.isBefore(start, 'day')) temp = temp.add(1, 'week')
 
       while (temp.isBefore(end) || temp.isSame(end, 'day')) {
-        count++;
-        temp = temp.add(1, 'week');
+        count++
+        temp = temp.add(1, 'week')
       }
     }
 
-    set_rpTotalAmount(count * rpAmount);
-  };
+    set_rpTotalAmount(count * rpAmount)
+  }
 
   const fnSave = async () => {
-    set_submitted(true);
+    set_submitted(true)
 
     // 필수 항목 검증
     const isInvalid =
@@ -152,9 +152,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       rpAmount === null ||
       !rpCategory ||
       !rpAcc1 ||
-      (rpType === TRANSACTION_TYPE.TRANSFER && !rpAcc2);
+      (rpType === TRANSACTION_TYPE.TRANSFER && !rpAcc2)
     if (isInvalid) {
-      return;
+      return
     }
 
     const formData = {
@@ -171,12 +171,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       rpTotalAmount,
       rpMemo,
       rpCompleted,
-    };
+    }
 
     try {
-      const rpID = await saveRepeatEntry(repeat, formData);
+      const rpID = await saveRepeatEntry(repeat, formData)
       const { addedCount, updatedCount, deletedCount } =
-        await generateLedgerFromRepeat(formData, rpID);
+        await generateLedgerFromRepeat(formData, rpID)
 
       showNotice({
         header: '처리 완료',
@@ -190,11 +190,11 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           </>
         ),
         accept: () => onHide(),
-      });
+      })
     } catch (error) {
-      showError(error, '저장 오류');
+      showError(error, '저장 오류')
     }
-  };
+  }
 
   const fnDelete = () => {
     showConfirm({
@@ -204,14 +204,14 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
       acceptClassName: 'p-button-danger',
       accept: async () => {
         try {
-          await deleteRepeatEntry(repeat);
-          onHide();
+          await deleteRepeatEntry(repeat)
+          onHide()
         } catch (error) {
-          showError(error, '삭제 오류');
+          showError(error, '삭제 오류')
         }
       },
-    });
-  };
+    })
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
 
@@ -245,8 +245,8 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
           disabled={dataLoading}
         />
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -315,10 +315,10 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                 optionValue="cd"
                 value={rpPeriod}
                 onChange={(e) => {
-                  set_rpPeriod(e.value);
+                  set_rpPeriod(e.value)
                   // 주기가 변경되면 반복일 초기화 (센스있게 1일 또는 월요일로)
-                  if (e.value === 'M') set_rpDay('1');
-                  else if (e.value === 'W') set_rpDay('월');
+                  if (e.value === 'M') set_rpDay('1')
+                  else if (e.value === 'W') set_rpDay('월')
                 }}
               />
               <Dropdown
@@ -353,12 +353,12 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                 optionValue="cd"
                 value={rpCategory}
                 onChange={(e) => {
-                  set_rpCategory(e.value);
+                  set_rpCategory(e.value)
                   const selectedCategory = categoryOptions
                     .find((node) => node.cdGroup === rpType)
-                    ?.children.find((c) => c.cd === e.value);
+                    ?.children.find((c) => c.cd === e.value)
                   if (selectedCategory?.cdDefaultAcc1) {
-                    set_rpAcc1(selectedCategory.cdDefaultAcc1);
+                    set_rpAcc1(selectedCategory.cdDefaultAcc1)
                   }
                 }}
                 itemTemplate={templateCategoryItem}
@@ -447,9 +447,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                   checked={rpAmount < 0}
                   onChange={(e) => {
                     set_rpAmount((prev) => {
-                      const val = Math.abs(prev || 0);
-                      return e.value && val !== 0 ? -val : val;
-                    });
+                      const val = Math.abs(prev || 0)
+                      return e.value && val !== 0 ? -val : val
+                    })
                   }}
                 />
                 <InputNumber
@@ -482,9 +482,9 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
                   checked={rpTotalAmount < 0}
                   onChange={(e) => {
                     set_rpTotalAmount((prev) => {
-                      const val = Math.abs(prev || 0);
-                      return e.value && val !== 0 ? -val : val;
-                    });
+                      const val = Math.abs(prev || 0)
+                      return e.value && val !== 0 ? -val : val
+                    })
                   }}
                 />
                 <InputNumber
@@ -510,5 +510,5 @@ export default function DialogRepeat({ repeat, visible, onHide }) {
         </div>
       </Panel>
     </Sidebar>
-  );
+  )
 }

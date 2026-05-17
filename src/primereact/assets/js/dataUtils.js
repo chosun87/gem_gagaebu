@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import { REPEAT_PERIOD, TRANSACTION_TYPE } from '@/assets/js/constants';
+import dayjs from 'dayjs'
+import { REPEAT_PERIOD, TRANSACTION_TYPE } from '@/assets/js/constants'
 
 /**
  * 콤마(,) 등 숫자 외의 문자가 포함된 문자열을 숫자로 파싱합니다.
@@ -7,15 +7,15 @@ import { REPEAT_PERIOD, TRANSACTION_TYPE } from '@/assets/js/constants';
  * @returns {number}
  */
 export const parseAmount = (val) => {
-  if (val === undefined || val === null) return 0;
+  if (val === undefined || val === null) return 0
   return (
     Number(
       String(val)
         .replace(/,/g, '')
         .replace(/[^0-9.-]+/g, ''),
     ) || 0
-  );
-};
+  )
+}
 
 /**
  * 반복 설정 객체를 기반으로 반복 실행될 대상 날짜 배열을 계산합니다.
@@ -23,39 +23,39 @@ export const parseAmount = (val) => {
  * @returns {dayjs[]} - 계산된 target 날짜(dayjs 객체) 배열
  */
 export const calculateRepeatDates = (repeat) => {
-  const { rpDateS, rpDateE, rpPeriod, rpDay } = repeat;
-  if (!rpDateS || !rpDateE || !rpPeriod || !rpDay) return [];
+  const { rpDateS, rpDateE, rpPeriod, rpDay } = repeat
+  if (!rpDateS || !rpDateE || !rpPeriod || !rpDay) return []
 
-  const start = dayjs(rpDateS);
-  const end = dayjs(rpDateE);
-  const targetDates = [];
+  const start = dayjs(rpDateS)
+  const end = dayjs(rpDateE)
+  const targetDates = []
 
   if (rpPeriod === REPEAT_PERIOD.MONTHLY) {
-    const day = parseInt(rpDay, 10);
-    let temp = start.date(day);
+    const day = parseInt(rpDay, 10)
+    let temp = start.date(day)
     // 시작일(rpDateS)보다 계산된 날짜가 과거면 다음 달부터
-    if (temp.isBefore(start, 'day')) temp = temp.add(1, 'month');
+    if (temp.isBefore(start, 'day')) temp = temp.add(1, 'month')
 
     while (temp.isBefore(end) || temp.isSame(end, 'day')) {
-      targetDates.push(temp);
-      temp = temp.add(1, 'month');
+      targetDates.push(temp)
+      temp = temp.add(1, 'month')
     }
   } else if (rpPeriod === REPEAT_PERIOD.WEEKLY) {
-    const dayOfWeekMap = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 };
-    const dayOfWeek = dayOfWeekMap[rpDay];
+    const dayOfWeekMap = { 일: 0, 월: 1, 화: 2, 수: 3, 목: 4, 금: 5, 토: 6 }
+    const dayOfWeek = dayOfWeekMap[rpDay]
 
-    let temp = start.day(dayOfWeek);
+    let temp = start.day(dayOfWeek)
     // 시작일(rpDateS)보다 계산된 요일 날짜가 과거면 다음 주부터
-    if (temp.isBefore(start, 'day')) temp = temp.add(1, 'week');
+    if (temp.isBefore(start, 'day')) temp = temp.add(1, 'week')
 
     while (temp.isBefore(end) || temp.isSame(end, 'day')) {
-      targetDates.push(temp);
-      temp = temp.add(1, 'week');
+      targetDates.push(temp)
+      temp = temp.add(1, 'week')
     }
   }
 
-  return targetDates;
-};
+  return targetDates
+}
 
 /**
  * 가계부 내역 합계를 계산합니다.
@@ -74,34 +74,32 @@ export const calculateLedgerTotal = (data, categoryMap) => {
     incomeA: 0,
     expenseA: 0,
     transferA: 0,
-  };
+  }
 
   data.forEach((item) => {
-    const catInfo = categoryMap[item.gCategory];
-    if (catInfo && catInfo.cdAddSum === false) return;
+    const catInfo = categoryMap[item.gCategory]
+    if (catInfo && catInfo.cdAddSum === false) return
 
-    const amount = Number(item.gAmount) || 0;
+    const amount = Number(item.gAmount) || 0
     if (!item.gExecuted) {
-      if (item.gType === TRANSACTION_TYPE.INCOME) total.income0 += amount;
-      else if (item.gType === TRANSACTION_TYPE.EXPENSE)
-        total.expense0 += amount;
+      if (item.gType === TRANSACTION_TYPE.INCOME) total.income0 += amount
+      else if (item.gType === TRANSACTION_TYPE.EXPENSE) total.expense0 += amount
       else if (item.gType === TRANSACTION_TYPE.TRANSFER)
-        total.transfer0 += amount;
+        total.transfer0 += amount
     } else {
-      if (item.gType === TRANSACTION_TYPE.INCOME) total.income1 += amount;
-      else if (item.gType === TRANSACTION_TYPE.EXPENSE)
-        total.expense1 += amount;
+      if (item.gType === TRANSACTION_TYPE.INCOME) total.income1 += amount
+      else if (item.gType === TRANSACTION_TYPE.EXPENSE) total.expense1 += amount
       else if (item.gType === TRANSACTION_TYPE.TRANSFER)
-        total.transfer1 += amount;
+        total.transfer1 += amount
     }
-  });
+  })
 
-  total.incomeA = total.income0 + total.income1;
-  total.expenseA = total.expense0 + total.expense1;
-  total.transferA = total.transfer0 + total.transfer1;
+  total.incomeA = total.income0 + total.income1
+  total.expenseA = total.expense0 + total.expense1
+  total.transferA = total.transfer0 + total.transfer1
 
-  return total;
-};
+  return total
+}
 
 /**
  * 자산 내역(이체) 합계를 계산합니다.
@@ -120,7 +118,7 @@ export const calculateAssetTotal = (data, accCode) => {
     depositA: 0,
     withdrawA: 0,
     revenueA: 0,
-  };
+  }
 
   data.forEach((item) => {
     /*
@@ -148,28 +146,26 @@ export const calculateAssetTotal = (data, accCode) => {
           }
         }
     */
-    const { trType, trAmount } = getSignedAmount(item, accCode);
-    if (!trType) return;
+    const { trType, trAmount } = getSignedAmount(item, accCode)
+    if (!trType) return
 
     if (!item.gExecuted) {
-      if (trType === TRANSACTION_TYPE.DEPOSIT) total.deposit0 += trAmount;
-      else if (trType === TRANSACTION_TYPE.WITHDRAW)
-        total.withdraw0 += trAmount;
-      else if (trType === TRANSACTION_TYPE.REVENUE) total.revenue0 += trAmount;
+      if (trType === TRANSACTION_TYPE.DEPOSIT) total.deposit0 += trAmount
+      else if (trType === TRANSACTION_TYPE.WITHDRAW) total.withdraw0 += trAmount
+      else if (trType === TRANSACTION_TYPE.REVENUE) total.revenue0 += trAmount
     } else {
-      if (trType === TRANSACTION_TYPE.DEPOSIT) total.deposit1 += trAmount;
-      else if (trType === TRANSACTION_TYPE.WITHDRAW)
-        total.withdraw1 += trAmount;
-      else if (trType === TRANSACTION_TYPE.REVENUE) total.revenue1 += trAmount;
+      if (trType === TRANSACTION_TYPE.DEPOSIT) total.deposit1 += trAmount
+      else if (trType === TRANSACTION_TYPE.WITHDRAW) total.withdraw1 += trAmount
+      else if (trType === TRANSACTION_TYPE.REVENUE) total.revenue1 += trAmount
     }
-  });
+  })
 
-  total.depositA = total.deposit0 + total.deposit1;
-  total.withdrawA = total.withdraw0 + total.withdraw1;
-  total.revenueA = total.revenue0 + total.revenue1;
+  total.depositA = total.deposit0 + total.deposit1
+  total.withdrawA = total.withdraw0 + total.withdraw1
+  total.revenueA = total.revenue0 + total.revenue1
 
-  return total;
-};
+  return total
+}
 
 /**
  * 자산/계정별 거래 유형과 서명된 금액을 반환합니다.
@@ -178,23 +174,23 @@ export const calculateAssetTotal = (data, accCode) => {
  * @returns {Object} { trType: 거래유형, amount: 서명된금액 }
  */
 export const getSignedAmount = (item, accCode) => {
-  const amount = Number(item.gAmount) || 0;
+  const amount = Number(item.gAmount) || 0
 
   if (amount >= 0) {
     if (item.gAcc1 === item.gAcc2)
-      return { trType: TRANSACTION_TYPE.REVENUE, trAmount: amount };
+      return { trType: TRANSACTION_TYPE.REVENUE, trAmount: amount }
     if (item.gAcc2 === accCode)
-      return { trType: TRANSACTION_TYPE.DEPOSIT, trAmount: amount };
+      return { trType: TRANSACTION_TYPE.DEPOSIT, trAmount: amount }
     if (item.gAcc1 === accCode)
-      return { trType: TRANSACTION_TYPE.WITHDRAW, trAmount: -amount };
+      return { trType: TRANSACTION_TYPE.WITHDRAW, trAmount: -amount }
   } else {
     if (item.gAcc1 === item.gAcc2)
-      return { trType: TRANSACTION_TYPE.REVENUE, trAmount: amount };
+      return { trType: TRANSACTION_TYPE.REVENUE, trAmount: amount }
     if (item.gAcc1 === accCode)
-      return { trType: TRANSACTION_TYPE.DEPOSIT, trAmount: -amount };
+      return { trType: TRANSACTION_TYPE.DEPOSIT, trAmount: -amount }
     if (item.gAcc2 === accCode)
-      return { trType: TRANSACTION_TYPE.WITHDRAW, trAmount: amount };
+      return { trType: TRANSACTION_TYPE.WITHDRAW, trAmount: amount }
   }
 
-  return { trType: null, trAmount: 0 };
-};
+  return { trType: null, trAmount: 0 }
+}

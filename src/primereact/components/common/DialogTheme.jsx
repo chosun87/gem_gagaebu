@@ -7,13 +7,13 @@ import {
   SelectButton,
   Panel,
   Dropdown,
-} from '@/assets/js/PrimeReact';
-import { useTheme } from '@/context/ThemeContext';
+} from '@/assets/js/PrimeReact'
+import { useTheme } from '@/context/ThemeContext'
 import {
   THEME_NODES,
   INPUT_STYLE_OPTIONS,
   SCALES,
-} from '@/assets/js/PrimeReactThemes';
+} from '@/assets/js/PrimeReactThemes'
 
 export default function DialogTheme({ visible, onHide }) {
   const {
@@ -29,43 +29,43 @@ export default function DialogTheme({ visible, onHide }) {
     set_condensed,
     chartColor,
     set_chartColor,
-  } = useTheme();
+  } = useTheme()
 
-  const allThemes = THEME_NODES.flatMap((group) => group.children || []);
+  const allThemes = THEME_NODES.flatMap((group) => group.children || [])
   const currentThemeNode = allThemes.find((t) => {
-    const pattern = t.key.replace('{MODE}', '(light|dark)');
-    const regex = new RegExp(`^${pattern}$`);
-    return regex.test(theme);
-  });
+    const pattern = t.key.replace('{MODE}', '(light|dark)')
+    const regex = new RegExp(`^${pattern}$`)
+    return regex.test(theme)
+  })
 
   const isDarkMode = currentThemeNode?.singleMode
     ? currentThemeNode.singleMode === 'dark'
-    : theme.includes('dark');
+    : theme.includes('dark')
 
-  const isMaterialTheme = theme.startsWith('md-') || theme.startsWith('mdc-');
-  const supportsDarkMode = !currentThemeNode?.singleMode;
+  const isMaterialTheme = theme.startsWith('md-') || theme.startsWith('mdc-')
+  const supportsDarkMode = !currentThemeNode?.singleMode
 
   // Functions -------------------------------------------------------------------------------------
   const fnChangeScale = (type) => {
     if (type === 'plus') {
-      set_scale((prev) => Math.min(prev + 1, 16));
+      set_scale((prev) => Math.min(prev + 1, 16))
     } else {
-      set_scale((prev) => Math.max(prev - 1, 12));
+      set_scale((prev) => Math.max(prev - 1, 12))
     }
-  };
+  }
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const onDarkModeToggle = (e) => {
-    if (!supportsDarkMode) return;
+    if (!supportsDarkMode) return
 
-    let newTheme = '';
+    let newTheme = ''
     if (e.value) {
-      newTheme = theme.replace('light', 'dark');
+      newTheme = theme.replace('light', 'dark')
     } else {
-      newTheme = theme.replace('dark', 'light');
+      newTheme = theme.replace('dark', 'light')
     }
-    changeTheme(newTheme);
-  };
+    changeTheme(newTheme)
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateSelectedTheme = (option, props) => {
@@ -78,10 +78,10 @@ export default function DialogTheme({ visible, onHide }) {
           ></div>
           <span>{option.label}</span>
         </div>
-      );
+      )
     }
-    return <span>{props.placeholder}</span>;
-  };
+    return <span>{props.placeholder}</span>
+  }
 
   const templateThemeGroup = (option) => {
     return (
@@ -96,8 +96,8 @@ export default function DialogTheme({ visible, onHide }) {
         )}
         <span className="font-bold">{option.label}</span>
       </div>
-    );
-  };
+    )
+  }
 
   const templateThemeItem = (option) => {
     return (
@@ -106,8 +106,8 @@ export default function DialogTheme({ visible, onHide }) {
           <i className="pi pi-check"></i>
         )}
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -171,14 +171,14 @@ export default function DialogTheme({ visible, onHide }) {
                 value={currentThemeNode?.key}
                 valueTemplate={templateSelectedTheme}
                 onChange={(e) => {
-                  let newTheme = e.value;
+                  let newTheme = e.value
                   if (newTheme.includes('{MODE}')) {
                     newTheme = newTheme.replace(
                       '{MODE}',
                       isDarkMode ? 'dark' : 'light',
-                    );
+                    )
                   }
-                  changeTheme(newTheme);
+                  changeTheme(newTheme)
                 }}
               />
             </div>
@@ -303,5 +303,5 @@ export default function DialogTheme({ visible, onHide }) {
         </div>
       </Panel>
     </Sidebar>
-  );
+  )
 }

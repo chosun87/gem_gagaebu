@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useData } from '@/context/DataContext';
+import { useState } from 'react'
+import { useData } from '@/context/DataContext'
 import {
   Button,
   Panel,
@@ -7,10 +7,10 @@ import {
   Dropdown,
   InputSwitch,
   InputText,
-} from '@/assets/js/PrimeReact';
-import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils';
-import { classNames } from 'primereact/utils';
-import AssetIcon from '@/components/common/AssetIcon';
+} from '@/assets/js/PrimeReact'
+import { showNotice, showConfirm, showError } from '@/assets/js/dialogUtils'
+import { classNames } from 'primereact/utils'
+import AssetIcon from '@/components/common/AssetIcon'
 
 export default function DialogAsset({ asset, visible, onHide }) {
   const {
@@ -18,39 +18,39 @@ export default function DialogAsset({ asset, visible, onHide }) {
     deleteAssetEntry,
     loading: dataLoading,
     assetOptions,
-  } = useData();
+  } = useData()
 
-  const [accType, set_accType] = useState('');
-  const [accCode, set_accCode] = useState('');
-  const [accLabel, set_accLabel] = useState('');
-  const [accIcon, set_accIcon] = useState('');
-  const [accDefault, set_accDefault] = useState(false);
-  const [accOrder, set_accOrder] = useState(0);
-  const [accMemo, set_accMemo] = useState('');
-  const [accUnused, set_accUnused] = useState(false);
-  const [submitted, set_submitted] = useState(false);
+  const [accType, set_accType] = useState('')
+  const [accCode, set_accCode] = useState('')
+  const [accLabel, set_accLabel] = useState('')
+  const [accIcon, set_accIcon] = useState('')
+  const [accDefault, set_accDefault] = useState(false)
+  const [accOrder, set_accOrder] = useState(0)
+  const [accMemo, set_accMemo] = useState('')
+  const [accUnused, set_accUnused] = useState(false)
+  const [submitted, set_submitted] = useState(false)
 
   // 다이얼로그가 열릴 때 상태 초기화
   const fnOnShow = () => {
-    set_accType(asset?.accType || '');
-    set_accCode(asset?.accCode || '');
-    set_accLabel(asset?.accLabel || '');
-    set_accIcon(asset?.accIcon || 'pi pi-wallet');
-    set_accDefault(asset?.accDefault || false);
-    set_accOrder(asset?.accOrder || 0);
-    set_accMemo(asset?.accMemo || '');
-    set_accUnused(asset?.accUnused || false);
-    set_submitted(false);
-  };
+    set_accType(asset?.accType || '')
+    set_accCode(asset?.accCode || '')
+    set_accLabel(asset?.accLabel || '')
+    set_accIcon(asset?.accIcon || 'pi pi-wallet')
+    set_accDefault(asset?.accDefault || false)
+    set_accOrder(asset?.accOrder || 0)
+    set_accMemo(asset?.accMemo || '')
+    set_accUnused(asset?.accUnused || false)
+    set_submitted(false)
+  }
 
   // Functions -------------------------------------------------------------------------------------
   const fnSave = async () => {
-    set_submitted(true);
+    set_submitted(true)
 
     // 필수 항목 검증
-    const isInvalid = !accType || !accCode || !accLabel;
+    const isInvalid = !accType || !accCode || !accLabel
     if (isInvalid) {
-      return;
+      return
     }
 
     const formData = {
@@ -63,19 +63,19 @@ export default function DialogAsset({ asset, visible, onHide }) {
       accOrder,
       accMemo,
       accUnused,
-    };
+    }
 
     try {
-      await saveAssetEntry(formData);
+      await saveAssetEntry(formData)
       showNotice({
         header: '처리 완료',
         message: '저장되었습니다.',
         accept: () => onHide(),
-      });
+      })
     } catch (error) {
-      showError(error, '저장 오류');
+      showError(error, '저장 오류')
     }
-  };
+  }
 
   const fnDelete = () => {
     showConfirm({
@@ -85,18 +85,18 @@ export default function DialogAsset({ asset, visible, onHide }) {
       acceptClassName: 'p-button-danger',
       accept: async () => {
         try {
-          await deleteAssetEntry(asset);
+          await deleteAssetEntry(asset)
           showNotice({
             header: '처리 완료',
             message: '삭제되었습니다.',
             accept: () => onHide(),
-          });
+          })
         } catch (error) {
-          showError(error, '삭제 오류');
+          showError(error, '삭제 오류')
         }
       },
-    });
-  };
+    })
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
 
@@ -130,8 +130,8 @@ export default function DialogAsset({ asset, visible, onHide }) {
           disabled={dataLoading}
         />
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -254,5 +254,5 @@ export default function DialogAsset({ asset, visible, onHide }) {
         </div>
       </Panel>
     </Sidebar>
-  );
+  )
 }

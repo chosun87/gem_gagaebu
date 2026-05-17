@@ -1,13 +1,8 @@
-import { useAuth } from '@/context/AuthContext';
-import {
-  Message,
-  Button,
-  Panel,
-  ProgressSpinner,
-} from '@/assets/js/PrimeReact';
+import { useAuth } from '@/context/AuthContext'
+import { Message, Button, Panel, ProgressSpinner } from '@/assets/js/PrimeReact'
 
 export default function AuthGuard({ children }) {
-  const { isInitialized, isSignedIn, login } = useAuth();
+  const { isInitialized, isSignedIn, login } = useAuth()
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   if (!isInitialized) {
@@ -16,7 +11,7 @@ export default function AuthGuard({ children }) {
         <ProgressSpinner />
         <p>인증 상태 확인 중...</p>
       </div>
-    );
+    )
   }
 
   if (!isSignedIn) {
@@ -31,8 +26,8 @@ export default function AuthGuard({ children }) {
           onClick={login}
         />
       </div>
-    );
+    )
   }
 
-  return children;
+  return children
 }

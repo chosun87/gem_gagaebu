@@ -1,7 +1,7 @@
-const framework = localStorage.getItem('ui-framework') || 'primereact';
+const framework = localStorage.getItem('ui-framework') || 'primereact'
 
 if (framework === 'mui') {
   // import('./mui/main.jsx');
 } else {
-  import('./primereact/main.jsx');
+  import('./primereact/main.jsx')
 }

@@ -1,4 +1,4 @@
-import { useState, useMemo, lazy, Suspense } from 'react';
+import { useState, useMemo, lazy, Suspense } from 'react'
 import {
   Sidebar,
   Panel,
@@ -6,17 +6,17 @@ import {
   Button,
   Message,
   ProgressSpinner,
-} from '@/assets/js/PrimeReact';
-import { useData } from '@/context/DataContext';
-import dayjs from 'dayjs';
-import { useMultiYearLoad } from '@/hooks/useMultiYearLoad';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
-import { calculateLedgerTotal } from '@/assets/js/dataUtils';
-import LedgerListItem from '@/components/Ledger/LedgerListItem';
-import LedgerSummary from '@/components/Ledger/LedgerSummary';
+} from '@/assets/js/PrimeReact'
+import { useData } from '@/context/DataContext'
+import dayjs from 'dayjs'
+import { useMultiYearLoad } from '@/hooks/useMultiYearLoad'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
+import { calculateLedgerTotal } from '@/assets/js/dataUtils'
+import LedgerListItem from '@/components/Ledger/LedgerListItem'
+import LedgerSummary from '@/components/Ledger/LedgerSummary'
 
-const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'));
-const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'));
+const DialogLedger = lazy(() => import('@/components/Ledger/DialogLedger'))
+const DialogAI = lazy(() => import('@/components/Ledger/DialogAI'))
 
 export default function DialogList({ visible, onHide, params }) {
   const {
@@ -25,30 +25,30 @@ export default function DialogList({ visible, onHide, params }) {
     updateLedgerEntry_gExecute,
     categoryMap,
     loading: dataLoading,
-  } = useData();
-  const [ledger, setLedger] = useState(null);
-  const [showDialogLedger, setShowDialogLedger] = useState(false);
-  const [showDialogAI, setShowDialogAI] = useState(false);
+  } = useData()
+  const [ledger, setLedger] = useState(null)
+  const [showDialogLedger, setShowDialogLedger] = useState(false)
+  const [showDialogAI, setShowDialogAI] = useState(false)
 
   // 파라미터 기반 필터링 로직
   const filteredData = useMemo(() => {
-    if (!params) return [];
+    if (!params) return []
 
     const baseData =
       params.rpID || params.accCode
         ? Object.values(sheetYYYYData || {}).flat()
-        : yearData;
+        : yearData
 
     return baseData
       .filter((item) => {
         // 반복 ID 조건 (rpID)
-        if (params.rpID && item.g_rpID !== params.rpID) return false;
+        if (params.rpID && item.g_rpID !== params.rpID) return false
 
         // 날짜 조건 (date)
-        if (params.date && item.gDate !== params.date) return false;
+        if (params.date && item.gDate !== params.date) return false
 
         // 타입 조건 (type)
-        if (params.type && item.gType !== params.type) return false;
+        if (params.type && item.gType !== params.type) return false
 
         // 자산 조건 (accCode)
         if (
@@ -56,49 +56,49 @@ export default function DialogList({ visible, onHide, params }) {
           item.gAcc1 !== params.accCode &&
           item.gAcc2 !== params.accCode
         )
-          return false;
+          return false
 
         // 분류 조건 (category)
-        if (params.category && item.gCategory !== params.category) return false;
+        if (params.category && item.gCategory !== params.category) return false
 
-        return true;
+        return true
       })
-      .sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix());
-  }, [yearData, sheetYYYYData, params]);
+      .sort((a, b) => dayjs(b.gDate).unix() - dayjs(a.gDate).unix())
+  }, [yearData, sheetYYYYData, params])
 
   // 헤더에 출력할 조건 텍스트 생성
   const headerText = useMemo(() => {
-    if (!params) return '조회 내역';
-    const parts = [];
-    if (params.rpID || params.accCode) parts.push(params.header);
-    if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'));
-    if (params.type) parts.push(`[${params.type}]`);
-    if (params.category) parts.push(`[${params.category}]`);
+    if (!params) return '조회 내역'
+    const parts = []
+    if (params.rpID || params.accCode) parts.push(params.header)
+    if (params.date) parts.push(dayjs(params.date).format('YYYY년 MM월 DD일'))
+    if (params.type) parts.push(`[${params.type}]`)
+    if (params.category) parts.push(`[${params.category}]`)
     return parts.length === 1
       ? parts[0]
       : params.rpID || params.accCode
         ? params.header
-        : '조회 내역';
-  }, [params]);
+        : '조회 내역'
+  }, [params])
 
   // 필터링된 데이터의 합계 계산
   const listTotal = useMemo(
     () => calculateLedgerTotal(filteredData, categoryMap),
     [filteredData, categoryMap],
-  );
+  )
 
   // 거래내역 전체 조회를 위한 연도별 데이터 로드
-  useMultiYearLoad(visible, params);
+  useMultiYearLoad(visible, params)
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogLedger = (ledger) => {
-    setLedger(ledger);
-    setShowDialogLedger(true);
-  };
+    setLedger(ledger)
+    setShowDialogLedger(true)
+  }
 
   const fnHideDialogLedger = () => {
-    setShowDialogLedger(false);
-  };
+    setShowDialogLedger(false)
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDataViewItem = (item) => (
@@ -108,7 +108,7 @@ export default function DialogList({ visible, onHide, params }) {
       onClick={() => fnOpenDialogLedger(item)}
       onExecuteChange={updateLedgerEntry_gExecute}
     />
-  );
+  )
 
   const templateFooter = (options) => {
     return (
@@ -140,8 +140,8 @@ export default function DialogList({ visible, onHide, params }) {
           disabled={dataLoading}
         />
       </div>
-    );
-  };
+    )
+  }
 
   return (
     <Sidebar
@@ -190,5 +190,5 @@ export default function DialogList({ visible, onHide, params }) {
         />
       </Suspense>
     </Sidebar>
-  );
+  )
 }

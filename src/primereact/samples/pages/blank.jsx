@@ -1,4 +1,4 @@
-import { Panel } from '@/assets/js/PrimeReact';
+import { Panel } from '@/assets/js/PrimeReact'
 
 export default function Blank() {
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
@@ -9,5 +9,5 @@ export default function Blank() {
     >
       <div>빈 페이지 템플릿입니다.</div>
     </Panel>
-  );
+  )
 }

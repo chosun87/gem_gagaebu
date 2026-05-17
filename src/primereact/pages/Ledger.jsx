@@ -1,33 +1,33 @@
-import { lazy, Suspense, useMemo, useCallback } from 'react';
+import { lazy, Suspense, useMemo, useCallback } from 'react'
 import {
   Routes,
   Route,
   Navigate,
   useLocation,
   useNavigate,
-} from 'react-router-dom';
-import { TabView, TabPanel, ProgressSpinner } from '@/assets/js/PrimeReact';
+} from 'react-router-dom'
+import { TabView, TabPanel, ProgressSpinner } from '@/assets/js/PrimeReact'
 
-import { useData } from '@/context/DataContext';
-import dayjs from 'dayjs';
+import { useData } from '@/context/DataContext'
+import dayjs from 'dayjs'
 
-const Calendar = lazy(() => import('@/pages/Ledger/Calendar'));
-const MonthlyList = lazy(() => import('@/pages/Ledger/MonthlyList'));
-const MonthlySummary = lazy(() => import('@/pages/Ledger/MonthlySummary'));
+const Calendar = lazy(() => import('@/pages/Ledger/Calendar'))
+const MonthlyList = lazy(() => import('@/pages/Ledger/MonthlyList'))
+const MonthlySummary = lazy(() => import('@/pages/Ledger/MonthlySummary'))
 const MonthlySummary지출 = lazy(
   () => import('@/pages/Ledger/MonthlySummary지출'),
-);
+)
 
 const TabLoading = () => (
   <div className="full-page">
     <ProgressSpinner />
   </div>
-);
+)
 
 export default function Ledger() {
-  const { selectedDate } = useData();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { selectedDate } = useData()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   const tabs = useMemo(
     () => [
@@ -58,23 +58,23 @@ export default function Ledger() {
       },
     ],
     [],
-  );
+  )
 
   const activeIndex = useMemo(() => {
-    const segments = location.pathname.split('/');
-    const index = tabs.findIndex((tab) => segments.includes(tab.path));
-    return index === -1 ? 0 : index;
-  }, [location.pathname, tabs]);
+    const segments = location.pathname.split('/')
+    const index = tabs.findIndex((tab) => segments.includes(tab.path))
+    return index === -1 ? 0 : index
+  }, [location.pathname, tabs])
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const handleTabChange = useCallback(
     (e) => {
-      const yearMonth = dayjs(selectedDate).format('YYYYMM');
-      const targetPath = tabs[e.index].path;
-      navigate(`/ledger/${targetPath}/${yearMonth}`);
+      const yearMonth = dayjs(selectedDate).format('YYYYMM')
+      const targetPath = tabs[e.index].path
+      navigate(`/ledger/${targetPath}/${yearMonth}`)
     },
     [navigate, selectedDate, tabs],
-  );
+  )
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -121,5 +121,5 @@ export default function Ledger() {
         />
       </Routes>
     </div>
-  );
+  )
 }

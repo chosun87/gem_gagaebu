@@ -1,67 +1,67 @@
-import { useRef, useEffect, useState, lazy, Suspense, useMemo } from 'react';
-import { useData } from '@/context/DataContext';
-import Sortable from 'sortablejs';
+import { useRef, useEffect, useState, lazy, Suspense, useMemo } from 'react'
+import { useData } from '@/context/DataContext'
+import Sortable from 'sortablejs'
 import {
   Button,
   DataView,
   Message,
   Menu,
   ProgressSpinner,
-} from '@/assets/js/PrimeReact';
+} from '@/assets/js/PrimeReact'
 
-import AssetListItem from '@/components/Assets/AssetListItem';
+import AssetListItem from '@/components/Assets/AssetListItem'
 
-const DialogAsset = lazy(() => import('@/components/Assets/DialogAsset'));
+const DialogAsset = lazy(() => import('@/components/Assets/DialogAsset'))
 const DialogTransList = lazy(
   () => import('@/components/Assets/DialogTransList'),
-);
+)
 
 export default function AssetList() {
-  const { sheet자산Data, loading } = useData();
-  const [asset, setAsset] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
-  const [showDialogAsset, setShowDialogAsset] = useState(false);
-  const [showDialogTransList, setShowDialogTransList] = useState(false);
-  const [dialogTransListParams, setDialogTransListParams] = useState({});
+  const { sheet자산Data, loading } = useData()
+  const [asset, setAsset] = useState(null)
+  const [selectedItem, setSelectedItem] = useState(null)
+  const [showDialogAsset, setShowDialogAsset] = useState(false)
+  const [showDialogTransList, setShowDialogTransList] = useState(false)
+  const [dialogTransListParams, setDialogTransListParams] = useState({})
 
   // 자산 데이터 정렬 및 유형 정보 매핑
-  const { assetOptions, saveAssetOrder } = useData();
+  const { assetOptions, saveAssetOrder } = useData()
 
   const sortedAssetData = useMemo(() => {
     return [...sheet자산Data]
       .map((item) => {
-        const typeInfo = assetOptions.find((opt) => opt.cd === item.accType);
+        const typeInfo = assetOptions.find((opt) => opt.cd === item.accType)
         return {
           ...item,
           accTypeLabel: typeInfo ? typeInfo.cdLabel : item.accType,
           accTypeIcon: typeInfo ? typeInfo.cdIcon : 'pi pi-tag',
-        };
+        }
       })
       .sort((a, b) => {
         // accOrder 기준 정렬 (순서가 없으면 이름순)
-        const orderA = a.accOrder || 999;
-        const orderB = b.accOrder || 999;
-        if (orderA !== orderB) return orderA - orderB;
-        return (a.accLabel || '').localeCompare(b.accLabel || '');
-      });
-  }, [sheet자산Data, assetOptions]);
+        const orderA = a.accOrder || 999
+        const orderB = b.accOrder || 999
+        if (orderA !== orderB) return orderA - orderB
+        return (a.accLabel || '').localeCompare(b.accLabel || '')
+      })
+  }, [sheet자산Data, assetOptions])
 
-  const listRef = useRef(null);
-  const sortableRef = useRef(null);
-  const menuLeft = useRef(null);
+  const listRef = useRef(null)
+  const sortableRef = useRef(null)
+  const menuLeft = useRef(null)
 
   useEffect(() => {
     // DataView 렌더링 후 DOM이 안정될 때까지 대기
     const timer = setTimeout(() => {
-      if (!listRef.current) return;
+      if (!listRef.current) return
 
       // .list-item들을 직접 감싸고 있는 컨테이너를 타겟팅
-      const firstItem = listRef.current.querySelector('.list-item');
-      const container = firstItem ? firstItem.parentElement : null;
+      const firstItem = listRef.current.querySelector('.list-item')
+      const container = firstItem ? firstItem.parentElement : null
 
       if (container && sortedAssetData.length > 0) {
         if (sortableRef.current) {
-          sortableRef.current.destroy();
+          sortableRef.current.destroy()
         }
 
         sortableRef.current = new Sortable(container, {
@@ -69,27 +69,27 @@ export default function AssetList() {
           handle: '.drag-handle',
           ghostClass: 'sortable-ghost',
           onEnd: (evt) => {
-            const { oldIndex, newIndex } = evt;
-            if (oldIndex === newIndex) return;
+            const { oldIndex, newIndex } = evt
+            if (oldIndex === newIndex) return
 
-            const newOrder = [...sortedAssetData];
-            const [movedItem] = newOrder.splice(oldIndex, 1);
-            newOrder.splice(newIndex, 0, movedItem);
+            const newOrder = [...sortedAssetData]
+            const [movedItem] = newOrder.splice(oldIndex, 1)
+            newOrder.splice(newIndex, 0, movedItem)
 
-            saveAssetOrder(newOrder);
+            saveAssetOrder(newOrder)
           },
-        });
+        })
       }
-    }, 100);
+    }, 100)
 
     return () => {
-      clearTimeout(timer);
+      clearTimeout(timer)
       if (sortableRef.current) {
-        sortableRef.current.destroy();
-        sortableRef.current = null;
+        sortableRef.current.destroy()
+        sortableRef.current = null
       }
-    };
-  }, [sortedAssetData, saveAssetOrder]);
+    }
+  }, [sortedAssetData, saveAssetOrder])
 
   const menuItems = [
     {
@@ -102,17 +102,17 @@ export default function AssetList() {
       icon: 'pi pi-list',
       command: () => fnOpenDialogTransList(selectedItem),
     },
-  ];
+  ]
 
   // Functions -------------------------------------------------------------------------------------
   const fnOpenDialogAsset = (asset) => {
-    setAsset(asset);
-    setShowDialogAsset(true);
-  };
+    setAsset(asset)
+    setShowDialogAsset(true)
+  }
 
   const fnHideDialogAsset = () => {
-    setShowDialogAsset(false);
-  };
+    setShowDialogAsset(false)
+  }
 
   const fnOpenDialogTransList = () => {
     setDialogTransListParams({
@@ -120,24 +120,24 @@ export default function AssetList() {
       header: `${selectedItem.accType}) ${selectedItem.accLabel}`,
       startYear: 2021,
       endYear: new Date().getFullYear(),
-    });
-    setShowDialogTransList(true);
-  };
+    })
+    setShowDialogTransList(true)
+  }
 
   const fnHideDialogTransList = () => {
-    setShowDialogTransList(false);
-  };
+    setShowDialogTransList(false)
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateDataViewItem = (item) => (
     <AssetListItem
       item={item}
       onClick={(e) => {
-        setSelectedItem(item);
-        menuLeft.current.toggle(e);
+        setSelectedItem(item)
+        menuLeft.current.toggle(e)
       }}
     />
-  );
+  )
 
   return (
     <>
@@ -198,5 +198,5 @@ export default function AssetList() {
         />
       </Suspense>
     </>
-  );
+  )
 }

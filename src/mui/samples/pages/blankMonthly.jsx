@@ -1,16 +1,16 @@
-import { Panel } from '@/assets/js/PrimeReact';
-import { useData } from '@/context/DataContext';
-import { useMonthSync } from '@/hooks/useMonthSync';
-import MonthNavigator from '@/components/common/MonthNavigator';
-import dayjs from 'dayjs';
+import { Panel } from '@/assets/js/PrimeReact'
+import { useData } from '@/context/DataContext'
+import { useMonthSync } from '@/hooks/useMonthSync'
+import MonthNavigator from '@/components/common/MonthNavigator'
+import dayjs from 'dayjs'
 
 export default function BlankMonthly() {
-  const { selectedDate } = useData();
+  const { selectedDate } = useData()
 
   // 이벤트 핸들러 ---------------------------------------------------------------------------------------
   const { handleMonthChange, handleViewDateChange } = useMonthSync(
     '/samples/blankMonthly',
-  );
+  )
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -34,5 +34,5 @@ export default function BlankMonthly() {
         </section>
       </div>
     </Panel>
-  );
+  )
 }

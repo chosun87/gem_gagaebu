@@ -1,4 +1,4 @@
-import { Calendar as PrimeCalendar, Dropdown } from '@/assets/js/PrimeReact';
+import { Calendar as PrimeCalendar, Dropdown } from '@/assets/js/PrimeReact'
 
 const templateMonthNavigator = (e) => (
   <Dropdown
@@ -7,7 +7,7 @@ const templateMonthNavigator = (e) => (
     options={e.options}
     onChange={(event) => e.onChange(event.originalEvent, event.value)}
   />
-);
+)
 
 const templateYearNavigator = (e) => (
   <Dropdown
@@ -16,7 +16,7 @@ const templateYearNavigator = (e) => (
     options={e.options}
     onChange={(event) => e.onChange(event.originalEvent, event.value)}
   />
-);
+)
 
 export default function MonthNavigator({
   selectedDate,
@@ -36,5 +36,5 @@ export default function MonthNavigator({
       onMonthChange={onMonthChange}
       onViewDateChange={onViewDateChange}
     />
-  );
+  )
 }

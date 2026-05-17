@@ -1,7 +1,7 @@
-import { Badge, InputSwitch } from '@/assets/js/PrimeReact';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
-import { getSignedAmount } from '@/assets/js/dataUtils';
-import dayjs from 'dayjs';
+import { Badge, InputSwitch } from '@/assets/js/PrimeReact'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
+import { getSignedAmount } from '@/assets/js/dataUtils'
+import dayjs from 'dayjs'
 
 /**
  * 자산 거래내역 리스트 아이템 템플릿
@@ -19,11 +19,11 @@ export default function AssetTransListItem({
   onClick,
   onExecuteChange,
 }) {
-  const { trType } = getSignedAmount(item, accCode);
+  const { trType } = getSignedAmount(item, accCode)
 
-  const gTypeClass = `gType-${item.gType}`;
-  const transClass = `trans-${trType}`;
-  const gExecutedClass = `gExecuted-${item.gExecuted ? 'Y' : 'N'}`;
+  const gTypeClass = `gType-${item.gType}`
+  const transClass = `trans-${trType}`
+  const gExecutedClass = `gExecuted-${item.gExecuted ? 'Y' : 'N'}`
 
   return (
     <div
@@ -64,5 +64,5 @@ export default function AssetTransListItem({
         onClick={(e) => e.stopPropagation()}
       />
     </div>
-  );
+  )
 }

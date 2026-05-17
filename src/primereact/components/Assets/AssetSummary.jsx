@@ -1,8 +1,8 @@
-import { DataTable, Column, ColumnGroup, Row } from '@/assets/js/PrimeReact';
-import { TRANSACTION_TYPE } from '@/assets/js/constants';
+import { DataTable, Column, ColumnGroup, Row } from '@/assets/js/PrimeReact'
+import { TRANSACTION_TYPE } from '@/assets/js/constants'
 
 export default function AssetSummary({ summary }) {
-  const summaryA = [];
+  const summaryA = []
 
   if (
     !(
@@ -16,7 +16,7 @@ export default function AssetSummary({ summary }) {
       실행전: summary?.deposit0 || 0,
       실행후: summary?.deposit1 || 0,
       합계: summary?.depositA || 0,
-    });
+    })
   }
   if (
     !(
@@ -30,7 +30,7 @@ export default function AssetSummary({ summary }) {
       실행전: summary?.withdraw0 || 0,
       실행후: summary?.withdraw1 || 0,
       합계: summary?.withdrawA || 0,
-    });
+    })
   }
   if (
     !(
@@ -44,13 +44,13 @@ export default function AssetSummary({ summary }) {
       실행전: summary?.revenue0 || 0,
       실행후: summary?.revenue1 || 0,
       합계: summary?.revenueA || 0,
-    });
+    })
   }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   const templateAmountBody = (rowData, field) => {
-    return <>{(rowData[field] || 0).toLocaleString()}</>;
-  };
+    return <>{(rowData[field] || 0).toLocaleString()}</>
+  }
 
   const footerGroup = (
     <ColumnGroup>
@@ -85,7 +85,7 @@ export default function AssetSummary({ summary }) {
         />
       </Row>
     </ColumnGroup>
-  );
+  )
 
   return (
     summaryA.length > 0 && (
@@ -115,5 +115,5 @@ export default function AssetSummary({ summary }) {
         ))}
       </DataTable>
     )
-  );
+  )
 }

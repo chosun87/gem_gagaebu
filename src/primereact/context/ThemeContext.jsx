@@ -1,88 +1,88 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import PrimeReact from 'primereact/api';
-import { THEME_NODES } from '@/assets/js/PrimeReactThemes';
+import React, { createContext, useContext, useState, useEffect } from 'react'
+import PrimeReact from 'primereact/api'
+import { THEME_NODES } from '@/assets/js/PrimeReactThemes'
 
-const ThemeContext = createContext();
+const ThemeContext = createContext()
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => useContext(ThemeContext)
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(
     localStorage.getItem('app-theme') || 'lara-light-cyan',
-  );
+  )
   const [scale, set_scale] = useState(
     parseInt(localStorage.getItem('app-scale')) || 14,
-  );
+  )
   const [ripple, set_ripple] = useState(
     localStorage.getItem('app-ripple') === 'false' ? false : true,
-  );
+  )
   const [inputStyle, set_inputStyle] = useState(
     localStorage.getItem('app-inputStyle') || 'outlined',
-  );
+  )
   const [condensed, set_condensed] = useState(
     localStorage.getItem('app-condensed') === 'true',
-  );
+  )
   const [chartColor, set_chartColor] = useState(
     localStorage.getItem('app-chartColor') || 'blue',
-  );
+  )
 
   useEffect(() => {
-    const themeLink = document.getElementById('theme-link');
+    const themeLink = document.getElementById('theme-link')
     if (themeLink) {
       const finalTheme =
         condensed && theme.startsWith('md-')
           ? theme.replace('md-', 'mdc-')
-          : theme;
-      themeLink.href = `https://unpkg.com/primereact/resources/themes/${finalTheme}/theme.css`;
+          : theme
+      themeLink.href = `https://unpkg.com/primereact/resources/themes/${finalTheme}/theme.css`
     }
 
     // 다크 모드 판별 (singleMode 고려)
-    const allThemes = THEME_NODES.flatMap((group) => group.children || []);
+    const allThemes = THEME_NODES.flatMap((group) => group.children || [])
     const currentThemeNode = allThemes.find((t) => {
-      const pattern = t.key.replace('{MODE}', '(light|dark)');
-      const regex = new RegExp(`^${pattern}$`);
-      return regex.test(theme);
-    });
+      const pattern = t.key.replace('{MODE}', '(light|dark)')
+      const regex = new RegExp(`^${pattern}$`)
+      return regex.test(theme)
+    })
 
     const isDarkMode = currentThemeNode?.singleMode
       ? currentThemeNode.singleMode === 'dark'
-      : theme.includes('dark');
+      : theme.includes('dark')
 
     if (isDarkMode) {
-      document.documentElement.classList.add('dark-mode');
+      document.documentElement.classList.add('dark-mode')
     } else {
-      document.documentElement.classList.remove('dark-mode');
+      document.documentElement.classList.remove('dark-mode')
     }
 
-    localStorage.setItem('app-theme', theme);
-  }, [theme, condensed]);
+    localStorage.setItem('app-theme', theme)
+  }, [theme, condensed])
 
   useEffect(() => {
-    document.documentElement.style.fontSize = scale + 'px';
-    localStorage.setItem('app-scale', scale);
-  }, [scale]);
+    document.documentElement.style.fontSize = scale + 'px'
+    localStorage.setItem('app-scale', scale)
+  }, [scale])
 
   useEffect(() => {
-    PrimeReact.ripple = ripple;
-    localStorage.setItem('app-ripple', ripple);
-  }, [ripple]);
+    PrimeReact.ripple = ripple
+    localStorage.setItem('app-ripple', ripple)
+  }, [ripple])
 
   useEffect(() => {
-    PrimeReact.inputStyle = inputStyle;
-    localStorage.setItem('app-inputStyle', inputStyle);
-  }, [inputStyle]);
+    PrimeReact.inputStyle = inputStyle
+    localStorage.setItem('app-inputStyle', inputStyle)
+  }, [inputStyle])
 
   useEffect(() => {
-    localStorage.setItem('app-condensed', condensed);
-  }, [condensed]);
+    localStorage.setItem('app-condensed', condensed)
+  }, [condensed])
 
   useEffect(() => {
-    localStorage.setItem('app-chartColor', chartColor);
-  }, [chartColor]);
+    localStorage.setItem('app-chartColor', chartColor)
+  }, [chartColor])
 
   const changeTheme = (newTheme) => {
-    setTheme(newTheme);
-  };
+    setTheme(newTheme)
+  }
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   return (
@@ -104,5 +104,5 @@ export const ThemeProvider = ({ children }) => {
     >
       {children}
     </ThemeContext.Provider>
-  );
-};
+  )
+}

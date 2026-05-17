@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef } from 'react'
 
 /**
  * 터치 스와이프 이벤트를 처리하는 커스텀 훅
@@ -11,28 +11,28 @@ export const useSwipe = ({
   onSwipeRight,
   minSwipeDistance = 50,
 }) => {
-  const touchStart = useRef(null);
+  const touchStart = useRef(null)
 
   const onTouchStart = (e) => {
-    touchStart.current = e.targetTouches[0].clientX;
-  };
+    touchStart.current = e.targetTouches[0].clientX
+  }
 
   const onTouchEnd = (e) => {
-    if (!touchStart.current) return;
-    const touchEnd = e.changedTouches[0].clientX;
-    const distance = touchStart.current - touchEnd;
+    if (!touchStart.current) return
+    const touchEnd = e.changedTouches[0].clientX
+    const distance = touchStart.current - touchEnd
 
     if (Math.abs(distance) > minSwipeDistance) {
       if (distance > 0) {
         // 왼쪽으로 스와이프 (다음으로 이동)
-        if (onSwipeLeft) onSwipeLeft();
+        if (onSwipeLeft) onSwipeLeft()
       } else {
         // 오른쪽으로 스와이프 (이전으로 이동)
-        if (onSwipeRight) onSwipeRight();
+        if (onSwipeRight) onSwipeRight()
       }
     }
-    touchStart.current = null;
-  };
+    touchStart.current = null
+  }
 
-  return { onTouchStart, onTouchEnd };
-};
+  return { onTouchStart, onTouchEnd }
+}

@@ -1,23 +1,23 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App.jsx';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.jsx'
 
 // Custom Global Styles
-import '@/assets/css/all.scss';
+import '@/assets/css/all.scss'
 
 // PrimeReact Configuration
-import PrimeReact from 'primereact/api';
-import { PrimeReactProvider, addLocale } from 'primereact/api';
-import { PrimeReact_locale } from '@/assets/js/PrimeReact';
+import PrimeReact from 'primereact/api'
+import { PrimeReactProvider, addLocale } from 'primereact/api'
+import { PrimeReact_locale } from '@/assets/js/PrimeReact'
 
-addLocale('ko', PrimeReact_locale.ko.Calendar);
+addLocale('ko', PrimeReact_locale.ko.Calendar)
 
-import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '@/context/AuthContext';
-import { DataProvider } from '@/context/DataContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { BrowserRouter } from 'react-router-dom'
+import { AuthProvider } from '@/context/AuthContext'
+import { DataProvider } from '@/context/DataContext'
+import { ThemeProvider } from '@/context/ThemeContext'
 
-PrimeReact.ripple = true;
+PrimeReact.ripple = true
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -33,4 +33,4 @@ createRoot(document.getElementById('root')).render(
       </ThemeProvider>
     </PrimeReactProvider>
   </StrictMode>,
-);
+)
