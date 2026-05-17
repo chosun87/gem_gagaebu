@@ -37,15 +37,19 @@ const AuthInternalProvider = ({ children }) => {
         // GAPI 초기화 (index.html에서 로드됨)
         await initGoogleApi();
 
-        const storedToken = localStorage.getItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
-        const tokenExpiry = localStorage.getItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
+        const storedToken = sessionStorage.getItem(
+          GOOGLE_AUTH_PARAMS.TOKEN_KEY,
+        );
+        const tokenExpiry = sessionStorage.getItem(
+          GOOGLE_AUTH_PARAMS.EXPIRY_KEY,
+        );
 
         if (storedToken && tokenExpiry && Date.now() < Number(tokenExpiry)) {
           setToken(storedToken);
           setIsSignedIn(true);
         } else {
-          localStorage.removeItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
-          localStorage.removeItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
+          sessionStorage.removeItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
+          sessionStorage.removeItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
         }
 
         setIsInitialized(true);
@@ -61,11 +65,11 @@ const AuthInternalProvider = ({ children }) => {
   const googleLogin = useGoogleLogin({
     onSuccess: (tokenResponse) => {
       const sessionMs = GOOGLE_AUTH_PARAMS.TOKEN_EXPIRY_MIN * 60 * 1000;
-      localStorage.setItem(
+      sessionStorage.setItem(
         GOOGLE_AUTH_PARAMS.TOKEN_KEY,
         tokenResponse.access_token,
       );
-      localStorage.setItem(
+      sessionStorage.setItem(
         GOOGLE_AUTH_PARAMS.EXPIRY_KEY,
         Date.now() + sessionMs,
       );
@@ -85,8 +89,8 @@ const AuthInternalProvider = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       await signOut();
-      localStorage.removeItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
-      localStorage.removeItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
+      sessionStorage.removeItem(GOOGLE_AUTH_PARAMS.TOKEN_KEY);
+      sessionStorage.removeItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
       setIsSignedIn(false);
     } catch (error) {
       console.error('Logout failed:', error);
@@ -103,7 +107,9 @@ const AuthInternalProvider = ({ children }) => {
 
     if (isSignedIn) {
       const updateRemainingTime = () => {
-        const tokenExpiry = localStorage.getItem(GOOGLE_AUTH_PARAMS.EXPIRY_KEY);
+        const tokenExpiry = sessionStorage.getItem(
+          GOOGLE_AUTH_PARAMS.EXPIRY_KEY,
+        );
         if (tokenExpiry) {
           const remaining = Math.max(
             0,
@@ -138,7 +144,7 @@ const AuthInternalProvider = ({ children }) => {
           if (remaining <= 0) {
             if (intervalId) clearInterval(intervalId);
 
-            const currentToken = localStorage.getItem(
+            const currentToken = sessionStorage.getItem(
               GOOGLE_AUTH_PARAMS.TOKEN_KEY,
             );
             if (!currentToken) return;
