@@ -9,7 +9,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isInitialized && isSignedIn) {
-      navigate('/gem_gagaebu/ledger', { replace: true })
+      navigate('/ledger', { replace: true })
     }
   }, [isInitialized, isSignedIn, navigate])
 
@@ -26,8 +26,8 @@ export default function Login() {
     <div className="full-page flex-column">
       <Message severity="info" text="로그인이 필요합니다." />
       <Button
-        className="p-button-raised p-button-google"
-        size="large"
+        size="large" raised
+        className="btn-login p-button-google"
         icon="pi pi-google"
         label="Google 계정으로 로그인"
         onClick={login}
