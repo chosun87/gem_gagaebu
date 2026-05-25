@@ -15,6 +15,7 @@ import AuthGuard from '@/components/common/AuthGuard'
 const Ledger = lazy(() => import('@/pages/Ledger'))
 const Statistics = lazy(() => import('@/pages/Statistics'))
 const Assets = lazy(() => import('@/pages/Assets'))
+const Login = lazy(() => import('@/pages/Login')) // Login 페이지 추가
 
 // 다이얼로그 컴포넌트 다이나믹 로딩
 const DialogSettings = lazy(
@@ -95,46 +96,41 @@ function App() {
       />
 
       <main className="app-content">
-        <AuthGuard>
-          {/* background가 있으면 해당 위치를 렌더링하여 배경 유지 */}
-          <Suspense fallback={<PageLoading />}>
-            <Routes location={background || location}>
-              {/* 기본 리다이렉트 */}
-              <Route path="/" element={<Navigate to="/ledger" replace />} />
+        {/* AuthGuard 밖으로 Login 페이지와 다이얼로그 라우트를 이동 */}
+        <Routes location={background || location}>
+          <Route path="/login" element={<Suspense fallback={<PageLoading />}><Login /></Suspense>} />
+          <Route path="/theme" element={<Suspense fallback={<PageLoading />}><DialogTheme /></Suspense>} />
+          <Route
+            path="/*"
+            element={
+              <AuthGuard>
+                {/* background가 있으면 해당 위치를 렌더링하여 배경 유지 */}
+                <Suspense fallback={<PageLoading />}>
+                  <Routes>
+                    <Route path="/ledger/*" element={<Ledger />} />
+                    <Route path="/statistics" element={<Statistics />} />
+                    <Route path="/assets/*" element={<Assets />} />
+                    <Route path="/settings" element={<DialogSettings />} />
+                    <Route path="/settings/repeat" element={<Repeat />} />
+                    <Route path="/" element={<Navigate replace to="/ledger" />} />
+                    {/* 샘플 페이지 라우트 */}
+                    <Route path="/blank" element={<Blank />} />
+                    <Route path="/blankSidebarRight" element={<BlankSidebarRight />} />
+                    <Route path="/blankSidebarBottom" element={<BlankSidebarBottom />} />
+                    <Route path="/blankMonthly" element={<BlankMonthly />} />
+                  </Routes>
+                </Suspense>
+              </AuthGuard>
+            }
+          />
+        </Routes>
 
-              <Route
-                path="/login"
-                element={<Navigate to="/ledger" replace />}
-              />
-
-              {/* 메인 라우트 */}
-              <Route path="/ledger/*" element={<Ledger />} />
-              <Route path="/assets/*" element={<Assets />} />
-              <Route path="/statistics" element={<Statistics />} />
-              <Route path="/settings/repeat" element={<Repeat />} />
-
-              {/* 직접 접근 시 배경이 없을 경우를 위해 가계부를 기본으로 둠 */}
-              <Route path="/settings" element={<Ledger />} />
-              <Route path="/theme" element={<Ledger />} />
-
-              {/* 샘플 라우트 */}
-              <Route path="/samples/blank" element={<Blank />} />
-              <Route
-                path="/samples/blankSidebarRight"
-                element={<BlankSidebarRight />}
-              />
-              <Route
-                path="/samples/blankSidebarBottom"
-                element={<BlankSidebarBottom />}
-              />
-              <Route
-                path="/samples/blankMonthly/:yearMonth"
-                element={<BlankMonthly />}
-              />
-              <Route path="/samples/blankMonthly" element={<BlankMonthly />} />
-            </Routes>
-          </Suspense>
-        </AuthGuard>
+        {/* background가 있으면 다이얼로그를 렌더링 (AuthGuard 안으로 이동) */}
+        {background && (
+          <Routes>
+            <Route path="/theme" element={<Suspense fallback={<PageLoading />}><DialogTheme /></Suspense>} />
+          </Routes>
+        )}
       </main>
 
       {isSignedIn && (

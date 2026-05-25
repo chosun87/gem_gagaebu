@@ -1,8 +1,18 @@
+import { useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import { Message, Button, Panel, ProgressSpinner } from '@/assets/js/PrimeReact'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export default function AuthGuard({ children }) {
   const { isInitialized, isSignedIn, login } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    if (isInitialized && !isSignedIn && location.pathname !== '/login') {
+      navigate('/login', { replace: true })
+    }
+  }, [isInitialized, isSignedIn, location.pathname, navigate])
 
   // HTML 렌더링 구역 -----------------------------------------------------------------------------------
   if (!isInitialized) {
@@ -17,14 +27,8 @@ export default function AuthGuard({ children }) {
   if (!isSignedIn) {
     return (
       <div className="full-page">
-        <Message severity="warn" text="구글 로그인이 필요합니다." />
-        <Button
-          className="btn-login"
-          size="large"
-          icon="pi pi-google"
-          label="구글 로그인"
-          onClick={login}
-        />
+        <ProgressSpinner />
+        <p>로그인 페이지로 이동 중...</p>
       </div>
     )
   }

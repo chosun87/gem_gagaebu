@@ -1,6 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
+import App from '@/App.jsx'
+import packageJson from "../../package.json";
+
+const APP_NAME = packageJson.name
 
 // Custom Global Styles
 import '@/assets/css/all.scss'
@@ -25,7 +28,7 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <AuthProvider>
           <DataProvider>
-            <BrowserRouter basename="/gem_gagaebu">
+            <BrowserRouter basename={`/${APP_NAME}`}>
               <App />
             </BrowserRouter>
           </DataProvider>
