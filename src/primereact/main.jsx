@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from '@/App.jsx'
-import packageJson from "../../package.json";
+import packageJson from '../../package.json'
 
 const APP_NAME = packageJson.name
 

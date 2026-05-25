@@ -98,8 +98,22 @@ function App() {
       <main className="app-content">
         {/* AuthGuard 밖으로 Login 페이지와 다이얼로그 라우트를 이동 */}
         <Routes location={background || location}>
-          <Route path="/login" element={<Suspense fallback={<PageLoading />}><Login /></Suspense>} />
-          <Route path="/theme" element={<Suspense fallback={<PageLoading />}><DialogTheme /></Suspense>} />
+          <Route
+            path="/login"
+            element={
+              <Suspense fallback={<PageLoading />}>
+                <Login />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/theme"
+            element={
+              <Suspense fallback={<PageLoading />}>
+                <DialogTheme />
+              </Suspense>
+            }
+          />
           <Route
             path="/*"
             element={
@@ -112,11 +126,20 @@ function App() {
                     <Route path="/assets/*" element={<Assets />} />
                     <Route path="/settings" element={<DialogSettings />} />
                     <Route path="/settings/repeat" element={<Repeat />} />
-                    <Route path="/" element={<Navigate replace to="/ledger" />} />
+                    <Route
+                      path="/"
+                      element={<Navigate replace to="/ledger" />}
+                    />
                     {/* 샘플 페이지 라우트 */}
                     <Route path="/blank" element={<Blank />} />
-                    <Route path="/blankSidebarRight" element={<BlankSidebarRight />} />
-                    <Route path="/blankSidebarBottom" element={<BlankSidebarBottom />} />
+                    <Route
+                      path="/blankSidebarRight"
+                      element={<BlankSidebarRight />}
+                    />
+                    <Route
+                      path="/blankSidebarBottom"
+                      element={<BlankSidebarBottom />}
+                    />
                     <Route path="/blankMonthly" element={<BlankMonthly />} />
                   </Routes>
                 </Suspense>
@@ -128,7 +151,14 @@ function App() {
         {/* background가 있으면 다이얼로그를 렌더링 (AuthGuard 안으로 이동) */}
         {background && (
           <Routes>
-            <Route path="/theme" element={<Suspense fallback={<PageLoading />}><DialogTheme /></Suspense>} />
+            <Route
+              path="/theme"
+              element={
+                <Suspense fallback={<PageLoading />}>
+                  <DialogTheme />
+                </Suspense>
+              }
+            />
           </Routes>
         )}
       </main>

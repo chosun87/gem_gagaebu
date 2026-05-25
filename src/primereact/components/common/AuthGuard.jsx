@@ -4,7 +4,7 @@ import { Message, Button, Panel, ProgressSpinner } from '@/assets/js/PrimeReact'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 export default function AuthGuard({ children }) {
-  const { isInitialized, isSignedIn, login } = useAuth()
+  const { isInitialized, isSignedIn } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
