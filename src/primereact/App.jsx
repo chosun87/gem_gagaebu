@@ -12,10 +12,10 @@ import Footer from '@/components/common/Footer'
 import AuthGuard from '@/components/common/AuthGuard'
 
 // 페이지 컴포넌트 다이나믹 로딩 (Code Splitting)
+const Login = lazy(() => import('@/pages/Login')) // Login 페이지 추가
 const Ledger = lazy(() => import('@/pages/Ledger'))
 const Statistics = lazy(() => import('@/pages/Statistics'))
 const Assets = lazy(() => import('@/pages/Assets'))
-const Login = lazy(() => import('@/pages/Login')) // Login 페이지 추가
 
 // 다이얼로그 컴포넌트 다이나믹 로딩
 const DialogSettings = lazy(

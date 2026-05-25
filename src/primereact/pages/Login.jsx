@@ -26,7 +26,8 @@ export default function Login() {
     <div className="full-page flex-column">
       <Message severity="info" text="로그인이 필요합니다." />
       <Button
-        size="large" raised
+        size="large"
+        raised
         className="btn-login p-button-google"
         icon="pi pi-google"
         label="Google 계정으로 로그인"

@@ -1,7 +1,7 @@
 {
   "name": "gem_gagaebu",
   "private": true,
-  "version": "0.2.41",
+  "version": "0.2.42",
   "type": "module",
   "homepage": "https://chosun87.github.io/gem_gagaebu",
   "scripts": {
