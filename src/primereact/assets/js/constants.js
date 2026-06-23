@@ -119,3 +119,9 @@ export const RP_TYPE = {
   지출: { label: TRANSACTION_TYPE.EXPENSE, value: TRANSACTION_TYPE.EXPENSE },
   이체: { label: TRANSACTION_TYPE.TRANSFER, value: TRANSACTION_TYPE.TRANSFER },
 }
+
+// 주식거래 유형
+export const T_TYPE = {
+  BUY: { label: '매수', value: 'BUY' },
+  SELL: { label: '매도', value: 'SELL' },
+}
