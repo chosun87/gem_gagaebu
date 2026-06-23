@@ -11,6 +11,7 @@ export const SHEET_NAME_RANGE = {
   ASSET: '자산!A1:J',
   REPEAT: '반복!A1:O',
   YEAR: 'YYYY!A1:K',
+  STOCK_TRADE: '주식거래!A1:I',
 }
 
 // Google Sheets 시트 컬럼 인덱스
@@ -75,6 +76,19 @@ export const SHEET_COL_INDEX = {
     g_rpID: 8,
     gDeleted: 9,
     gTimestamp: 10,
+  },
+
+  // 주식거래 시트 컬럼 인덱스
+  STOCK_TRADE: {
+    tDate: 0,
+    tType: 1,
+    tAcc: 2,
+    tStockCode: 3,
+    tQuantity: 4,
+    tPrice: 5,
+    tTaxFee: 6,
+    tDeleted: 7,
+    tTimestamp: 8,
   },
 }
 
